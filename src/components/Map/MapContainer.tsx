@@ -350,7 +350,7 @@ export default function MapContainer() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="在 GitHub 查看项目"
-        className="absolute left-0 bottom-0 z-10 inline-flex items-center gap-2 rounded-md bg-white/30 px-4 py-2 text-xs font-medium text-gray-800 shadow backdrop-blur hover:bg-white"
+        className="absolute right-0 top-0 z-10 inline-flex items-center gap-2 rounded-md bg-white/30 px-4 py-2 text-xs font-medium text-gray-800 shadow backdrop-blur hover:bg-white"
       >
         <Github className="h-4 w-4" />
         <span>GitHub</span>
@@ -403,8 +403,8 @@ export default function MapContainer() {
               on3DAngleToggle={handle3DAngleToggle}
               currentPitch={currentPitch}
             /> */}
-            <MapConsole mapInstance={mapInstance} />
           </div>
+          <MapConsole mapInstance={mapInstance} />
         </>
       )}
     </div>

@@ -40,7 +40,7 @@ export function MapConsole({ mapInstance }: { mapInstance: UtilsMap }) {
   return isExpanded ? (
     <div
       ref={panelRef}
-      className="fixed top-4 right-4 bg-white rounded-lg shadow-xl border w-80 max-h-[80vh] z-[9999]"
+      className="fixed top-10 right-2 bg-white rounded-lg shadow-xl border w-80 max-h-[80vh] z-[9999]"
     >
       <div className="border-b bg-gray-50 rounded-t-lg">
         <div className="flex items-center justify-between">
@@ -75,7 +75,7 @@ export function MapConsole({ mapInstance }: { mapInstance: UtilsMap }) {
   ) : (
     <button
       onClick={() => setIsExpanded(true)}
-      className="fixed top-4 right-4 bg-white border rounded-full shadow-xl p-3 hover:shadow-2xl transition z-[9999]"
+      className="fixed top-10 right-2 bg-white border rounded-full shadow-xl p-3 hover:shadow-2xl transition z-[9999]"
       title="打开控制台"
       aria-label="打开控制台"
     >
