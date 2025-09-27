@@ -43,7 +43,7 @@ https://shanghai-heritage-map.openda.top/
 
    ```sql
 
-   # 终极地理空间查询：在上海地理范围内，查找所有文物保护单位 (由于文保单位有限， 查找范围扩大至所有含有坐标)
+   # 在上海地理范围内，查找所有文物保护单位 (由于文保单位有限， 查找范围扩大至所有含有坐标的地点)
    SELECT DISTINCT ?item ?itemLabel ?itemDescription ?coords ?heritage_statusLabel ?image ?zhwiki_url ?commons_url WHERE {
 
    # 核心逻辑：查找所有 ?item，其“位于行政区实体”(P131)是“上海市”(Q8686)或其下级行政区
@@ -53,7 +53,7 @@ https://shanghai-heritage-map.openda.top/
    # 筛选条件：该条目必须有“坐标”(P625)属性
    ?item wdt:P625 ?coords.
 
-   # 筛选条件：条目拥有“文物保护等级”(P1435) 属性
+   # 筛选条件：条目拥有“文物保护等级”(P1435) 属性 （可选）
    # ?item wdt:P1435 ?heritage_status .
    OPTIONAL { ?item wdt:P1435 ?heritage_status. }
 
