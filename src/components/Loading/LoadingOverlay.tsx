@@ -1,5 +1,5 @@
 import { cn } from "@/utils/helpers";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Loader2 } from "lucide-react";
 import { state as stateH } from "@/components/Map/historical/data";
 import { state as stateB } from "@/components/Map/building/data";
@@ -7,13 +7,10 @@ import { useSnapshot } from "valtio";
 
 interface LoadingOverlayProps {
   message?: string;
-  isVisible: boolean;
+  styleReady: boolean;
 }
 
-export function LoadingOverlay({
-  message = "正在渲染地图，请稍候...",
-  isVisible,
-}: LoadingOverlayProps) {
+export function LoadingOverlay({ styleReady }: LoadingOverlayProps) {
   const snapshotH = useSnapshot(stateH);
   const snapshotB = useSnapshot(stateB);
 
@@ -21,7 +18,7 @@ export function LoadingOverlay({
     snapshotH.loading.processing.length > 0 ||
     snapshotB.loading.processing.length > 0;
 
-  if (!isLoading && !isVisible) return null;
+  if (!isLoading && styleReady) return null;
 
   return (
     <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
@@ -31,15 +28,17 @@ export function LoadingOverlay({
           <h3 className="text-lg font-semibold text-gray-800">
             上海历史建筑地图
           </h3>
-          <p className="text-gray-600">{message}</p>
-          <div className="text-sm text-gray-500">
-            数据文件下载进度：{" "}
-            {snapshotH.loading.processing.length +
-              snapshotB.loading.processing.length}{" "}
-            {" > "}
-            {snapshotH.loading.completed.length +
-              snapshotB.loading.completed.length}
-          </div>
+          <p className="text-gray-600">正在渲染地图，请稍候...</p>
+          {isLoading && (
+            <div className="text-sm text-gray-500">
+              数据文件下载进度：{" "}
+              {snapshotH.loading.processing.length +
+                snapshotB.loading.processing.length}{" "}
+              {" > "}
+              {snapshotH.loading.completed.length +
+                snapshotB.loading.completed.length}
+            </div>
+          )}
         </div>
       </div>
     </div>

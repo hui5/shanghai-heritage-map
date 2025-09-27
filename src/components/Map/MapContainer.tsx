@@ -339,10 +339,7 @@ export default function MapContainer() {
     <div className="relative h-full w-full">
       <div ref={mapContainer} className="h-full w-full" />
 
-      <LoadingOverlay
-        isVisible={!styleReady}
-        message="正在渲染地图，请稍候..."
-      />
+      <LoadingOverlay styleReady={styleReady} />
 
       {/* GitHub 链接 */}
       <a
