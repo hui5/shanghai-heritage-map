@@ -18,7 +18,7 @@ import { LocationInfo } from "../../helper/map-data/LocationInfo";
 import { addEventListeners } from "./interaction/addInteraction";
 import { getParamsFromUrl } from "../../helper/mapbox/getParamsFromUrl";
 
-const defaultPitch = 10;
+const defaultPitch = 0;
 
 export default function MapContainer() {
   const mapContainer = useRef<HTMLDivElement>(null);
