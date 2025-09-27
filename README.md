@@ -2,7 +2,7 @@
 
 https://shanghai-heritage-map.openda.top/
 
-##### 坐标数据
+#### 坐标数据
 
 1. 上海图书馆开放数据平台
 
@@ -88,7 +88,7 @@ https://shanghai-heritage-map.openda.top/
 
 6. [Virtual Shanghai Buildings（1803）](https://www.virtualshanghai.net/Data/Buildings)
 
-##### 查询数据
+#### 查询数据
 
 1. 维基百科
 2. 维基共享
@@ -97,13 +97,13 @@ https://shanghai-heritage-map.openda.top/
 5. [上海图书馆·年谱（16091）](https://scc.library.sh.cn/#/np/result)
 6. [老早上海（2747）](https://laozaoshanghai.com/)
 
-##### 快捷键
+#### 快捷键
 
 - `鼠标放在地图的符号、标签上`，会自动弹出查询面板，这时候，点击`鼠标左键`或按`Space`键，可以全屏展示。
 - `ArrowLeft`, `ArrowRight` 快速切换查询面板 tab 显示。
 - 查询面板全屏时，`Space` 键快速切换概览和 tab 显示（会自动切换到`鼠标`所在的 tab）
 
-##### 截图
+#### 截图
 
 ![](public/doc/image.jpg)
 ![](public/doc/image1.jpg)
