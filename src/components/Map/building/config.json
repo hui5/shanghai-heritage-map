@@ -1,0 +1,120 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-01",
+  "metadata": {
+    "clustering": {
+      "enabled": true,
+      "clusterMaxZoom": 15,
+      "clusterMinZoom": 10,
+      "clusterRadius": 150,
+      "clusterMinPoints": 5,
+      "labelMinZoom": 13
+    },
+    "performance": {
+      "buffer": 128,
+      "tolerance": 3,
+      "maxzoom": 16
+    }
+  },
+  "categories": [
+    {
+      "id": "heritage_buildings",
+      "name": "文物保护建筑",
+      "icon": "🏛️",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "data_national",
+          "name": "全国重点文物保护单位",
+          "dataFile": "data.json",
+          "geometryType": "Point",
+          "enabled": true,
+          "priority": 1,
+          "style": {
+            "color": "#67000d",
+            "fillColor": "#DC2626",
+            "icon-image": "star-stroked"
+          },
+
+          "labels": {
+            "enabled": true,
+            "field": "name",
+            "style": {
+              "fontSizeStops": [
+                [13, 13],
+                [16, 13],
+                [20, 15]
+              ],
+              "fontSizeBase": 1,
+              "color": "#000000",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "offset": [0.8, 0]
+            }
+          }
+        },
+        {
+          "id": "data_municipal",
+          "name": "上海市文物保护单位",
+          "dataFile": "data.json",
+          "geometryType": "Point",
+          "enabled": true,
+          "priority": 2,
+          "style": {
+            "color": "#cb181d",
+            "fillColor": "#EA580C",
+            "icon-image": "square-stroked"
+          }
+        },
+        {
+          "id": "data_district",
+          "name": "区级文物保护单位",
+          "dataFile": "data.json",
+          "geometryType": "Point",
+          "enabled": true,
+          "priority": 3,
+          "style": {
+            "color": "#fb6a4a",
+            "fillColor": "#F59E0B",
+            "icon-image": "triangle-stroked"
+          }
+        },
+
+        {
+          "id": "data_points",
+          "name": "文物保护点",
+          "dataFile": "data.json",
+          "geometryType": "Point",
+          "enabled": true,
+          "priority": 5,
+          "style": {
+            "color": "#807dba",
+            "fillColor": "#84CC16",
+            "icon-image": "landmark-JP"
+          }
+        }
+      ]
+    },
+    {
+      "id": "historical_buildings",
+      "name": "历史建筑",
+      "icon": "🏰",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "data_1",
+          "name": "上海市优秀历史建筑",
+          "dataFile": "data_1.json",
+          "geometryType": "Point",
+          "enabled": true,
+          "priority": 4,
+          "style": {
+            "color": "#6a51a3",
+            "fillColor": "#8E44AD",
+            "icon-image": "circle-stroked"
+          }
+        }
+      ]
+    }
+  ]
+}

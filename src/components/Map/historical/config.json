@@ -1,0 +1,1020 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-01",
+  "categories": [
+    {
+      "id": "wikidata_locations",
+      "name": "维基数据地点",
+      "icon": "📍",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "wikidata_points",
+          "name": "维基数据地点",
+          "dataFile": "wikidata.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 17,
+          "coordinateSystem": "wgs84",
+          "style": {
+            "color": "#0066CC",
+            "symbol": {
+              "type": "icon",
+              "iconImage": "information",
+              "iconSizeStops": [
+                [17, 0.9],
+                [20, 1.1]
+              ],
+              "iconSizeBase": 1.2,
+              "iconAnchor": "center",
+              "iconOffset": [-1, 0],
+              "iconAllowOverlap": true,
+              "iconOpacity": 1
+            }
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 17,
+            "field": "itemLabel",
+            "style": {
+              "fontSizeStops": [
+                [17, 13],
+                [20, 15]
+              ],
+              "fontSizeBase": 1.2,
+              "color": "#08519c",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "textAnchor": "left",
+              "offset": [0.7, 0],
+              "opacity": 0.9
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "landmarks_1928",
+      "name": "今日之沪江地标",
+      "icon": "🏛️",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "hujiang_landmarks",
+          "name": "《今日之沪江》上海地图",
+          "dataFile": "table_Place_1928.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 11,
+          "style": {
+            "color": "#191970",
+            "symbol": {
+              "type": "icon",
+              "iconImage": "landmark",
+              "iconSizeStops": [
+                [11, 0.8],
+                [20, 1]
+              ],
+              "iconSizeBase": 1.2,
+              "iconAnchor": "center",
+              "iconOffset": [-1, 0],
+              "iconAllowOverlap": true,
+              "iconOpacity": 1
+            }
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 11,
+            "field": "NAME_CN",
+            "style": {
+              "fontSizeStops": [
+                [11, 13],
+                [13, 13],
+                [20, 15]
+              ],
+              "fontSizeBase": 1.4,
+              "color": "#252525",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "textAnchor": "left",
+              "offset": [0.7, 0],
+              "opacity": 1
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "celebrity_residences",
+      "name": "名人故居",
+      "icon": "🏠",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "famous_residences",
+          "name": "名人住所",
+          "dataFile": "table_ren_wu_zhu_suo.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 13,
+          "style": {
+            "color": "#B8860B",
+            "fillColor": "#DAA520",
+            "radius": 1.5,
+            "fillOpacity": 0.7,
+            "opacity": 0.9,
+            "weight": 1,
+            "symbol": {
+              "type": "text",
+              "textField": "title",
+              "textOffset": [0, 0],
+              "textSizeStops": [
+                [15, 13],
+                [20, 15]
+              ],
+              "textSizeBase": 1.3,
+              "textColor": "#8B4513",
+              "textHaloColor": "#ffffff",
+              "textHaloWidth": 1.5,
+              "textAnchor": "center"
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "qianli_map",
+      "name": "千里江山图",
+      "icon": "🗺️",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "historical_locations",
+          "name": "《千里江山图》上海地图",
+          "dataFile": "table_qian_li.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 14,
+          "style": {
+            "color": "#228B22",
+            "fillColor": "#90EE90",
+            "radius": 1.5,
+            "fillOpacity": 0.6,
+            "opacity": 0.8,
+            "weight": 1,
+            "symbol": {
+              "type": "icon",
+              "iconImage": "marker-stroked",
+              "iconSizeStops": [
+                [13, 0.8],
+                [20, 1]
+              ],
+              "iconSizeBase": 1.2,
+              "iconAnchor": "center",
+              "iconOffset": [-1, 0],
+              "iconAllowOverlap": true
+            }
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 14,
+            "field": "title",
+            "style": {
+              "fontSizeStops": [
+                [13, 12],
+                [20, 15]
+              ],
+              "fontSizeBase": 1.2,
+              "color": "#525252",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "textAnchor": "left",
+              "offset": [0.7, 0],
+              "opacity": 1
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "dayi_medical",
+      "name": "大医",
+      "icon": "⚕️",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "historical_medical",
+          "name": "《大医》上海地图",
+          "dataFile": "table_da_yi.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 14,
+          "style": {
+            "color": "#DC143C",
+            "fillColor": "#FFB6C1",
+            "radius": 1.5,
+            "fillOpacity": 0.6,
+            "opacity": 0.8,
+            "weight": 1,
+            "symbol": {
+              "type": "icon",
+              "iconImage": "marker2",
+              "iconSizeStops": [
+                [13, 0.8],
+                [20, 1]
+              ],
+              "iconSizeBase": 1.2,
+              "iconAnchor": "center",
+              "iconOffset": [-1, 0],
+              "iconAllowOverlap": true
+            }
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 14,
+            "field": "title",
+            "style": {
+              "fontSizeStops": [
+                [13, 12],
+                [20, 15]
+              ],
+              "fontSizeBase": 1.2,
+              "color": "#525252",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "textAnchor": "left",
+              "offset": [0.7, 0],
+              "opacity": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "entertainment_venues",
+      "name": "历史娱乐场所",
+      "icon": "🎭",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "historical_theaters_cinemas",
+          "name": "历史戏院影院",
+          "dataFile": "table_xiu_xian_chang_suo.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 14,
+          "style": {
+            "color": "#8B008B",
+            "fillColor": "#8B008B",
+            "radius": 1.5,
+            "fillOpacity": 0.6,
+            "opacity": 0.8,
+            "weight": 1,
+            "symbol": {
+              "type": "icon",
+              "iconImage": "music",
+              "iconSizeStops": [
+                [13, 0.8],
+                [20, 1]
+              ],
+              "iconSizeBase": 1.2,
+              "iconAnchor": "center",
+              "iconOffset": [-1, 0],
+              "iconAllowOverlap": true,
+              "iconOpacity": 0.6
+            }
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 14,
+            "field": "title",
+            "style": {
+              "fontSizeStops": [
+                [13, 12],
+                [20, 15]
+              ],
+              "fontSizeBase": 1.2,
+              "color": "#525252",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "textAnchor": "left",
+              "offset": [0.7, 0],
+              "opacity": 1
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "historical_buildings--",
+      "name": "历史建筑",
+      "icon": "🏛️",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "historical_architecture",
+          "name": "历史建筑",
+          "dataFile": "table_li_shi_jian_zhu.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 16,
+          "style": {
+            "color": "#8B4513",
+            "fillColor": "#DEB887",
+            "radius": 1.5,
+            "fillOpacity": 0.6,
+            "opacity": 0.8,
+            "weight": 1,
+            "symbol": {
+              "type": "icon",
+              "iconImage": "residential-community",
+              "iconSizeStops": [
+                [12, 0.8],
+                [20, 1]
+              ],
+              "iconSizeBase": 1.2,
+              "iconAnchor": "center",
+              "iconOffset": [0, 0],
+              "iconAllowOverlap": true
+            }
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 16,
+            "field": "title",
+            "style": {
+              "fontSizeStops": [
+                [16, 12],
+                [20, 14]
+              ],
+              "fontSizeBase": 1.2,
+              "color": "#8B4513",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "textAnchor": "top",
+              "offset": [0, 0.7],
+              "opacity": 0.8
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "trolleybuses",
+      "name": "无轨电车",
+      "icon": "🚎",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "trolleybus_routes",
+          "name": "无轨电车线路",
+          "dataFile": "table_wu_gui_dian_che.geojson",
+          "geometryType": "LineString",
+          "enabled": true,
+          "minzoom": 12,
+          "style": {
+            "color": "#9B59B6",
+            "weight": 1.5,
+            "opacity": 0.8
+          },
+          "slot": "middle",
+          "fontSizeBase": 1.2,
+          "labels": {
+            "enabled": true,
+            "minZoom": 12,
+            "maxZoom": 22,
+            "field": "title",
+            "pathLabels": true,
+            "style": {
+              "fontSizeStops": [
+                [12, 11],
+                [22, 12]
+              ],
+              "fontSizeBase": 1.6,
+              "color": "#6B3B85",
+              "haloColor": "#ffffff",
+              "haloWidth": 1.5,
+              "offset": [0, 0],
+              "textAlign": "center",
+              "repeat": 250,
+              "maxAngle": 40
+            }
+          }
+        },
+        {
+          "id": "trolleybus_stations",
+          "name": "无轨电车站点",
+          "dataFile": "table_wu_gui_dian_che_zhan_dian.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 15,
+          "style": {
+            "color": "#6B3B85",
+            "symbol": {
+              "type": "icon",
+              "iconImage": "bus",
+              "iconAnchor": "center",
+              "iconSizeStops": [
+                [13, 0.8],
+                [20, 1]
+              ],
+              "iconSizeBase": 1.2,
+              "iconOffset": [-1, 0],
+              "iconAllowOverlap": false
+            }
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 15,
+            "field": "title",
+            "style": {
+              "fontSizeStops": [
+                [13, 12],
+                [20, 14]
+              ],
+              "fontSizeBase": 1.2,
+              "color": "#3182bd",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "textAnchor": "left",
+              "offset": [1, 0]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "trams",
+      "name": "有轨电车",
+      "icon": "🚋",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "tram_routes",
+          "name": "有轨电车线路",
+          "dataFile": "table_you_gui_dian_che.geojson",
+          "geometryType": "LineString",
+          "enabled": true,
+          "minzoom": 12,
+          "style": {
+            "color": "#4ECDC4",
+            "weight": 1.5,
+            "opacity": 0.8
+          },
+          "slot": "middle",
+          "labels": {
+            "enabled": true,
+            "minZoom": 12,
+            "field": "title",
+            "pathLabels": true,
+            "style": {
+              "fontSizeStops": [
+                [12, 11],
+                [22, 12]
+              ],
+              "fontSizeBase": 1.6,
+              "color": "#2c7873",
+              "haloColor": "#ffffff",
+              "haloWidth": 1.5,
+              "offset": [0, 0],
+              "textAlign": "center",
+              "repeat": 250,
+              "maxAngle": 40
+            }
+          }
+        },
+        {
+          "id": "tram_stations",
+          "name": "有轨电车站点",
+          "dataFile": "table_you_gui_dian_che_zhan_dian.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 15,
+          "style": {
+            "color": "#2c7873",
+            "symbol": {
+              "type": "icon",
+              "iconImage": "bus",
+              "iconAnchor": "center",
+              "iconSizeStops": [
+                [13, 0.8],
+                [20, 1]
+              ],
+              "iconSizeBase": 1.2,
+              "iconOffset": [-1, 0],
+              "iconAllowOverlap": false
+            }
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 15,
+            "field": "title",
+            "style": {
+              "fontSizeStops": [
+                [13, 12],
+                [20, 14]
+              ],
+              "fontSizeBase": 1.2,
+              "color": "#3182bd",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "textAnchor": "left",
+              "offset": [1, 0]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "buses",
+      "name": "公共汽车",
+      "icon": "🚌",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "bus_routes",
+          "name": "公共汽车线路",
+          "dataFile": "table_gong_gong_qi_che.geojson",
+          "geometryType": "LineString",
+          "enabled": true,
+          "minzoom": 12,
+          "style": {
+            "color": "#FF6B35",
+            "weight": 1.5,
+            "opacity": 0.8
+          },
+          "slot": "middle",
+          "labels": {
+            "enabled": true,
+            "minZoom": 12,
+            "field": "title",
+            "pathLabels": true,
+            "style": {
+              "fontSizeStops": [
+                [12, 11],
+                [22, 12]
+              ],
+              "fontSizeBase": 1.6,
+              "color": "#C54824",
+              "haloColor": "#ffffff",
+              "haloWidth": 1.5,
+              "offset": [0, 0],
+              "textAlign": "center",
+              "repeat": 250,
+              "maxAngle": 40
+            }
+          }
+        },
+        {
+          "id": "bus_stations",
+          "name": "公共汽车站点",
+          "dataFile": "table_gong_gong_qi_che_zhan_dian.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 15,
+          "style": {
+            "color": "#C54824",
+            "symbol": {
+              "type": "icon",
+              "iconImage": "bus",
+              "iconAnchor": "center",
+              "iconSizeStops": [
+                [13, 0.8],
+                [20, 1]
+              ],
+              "iconSizeBase": 1.2,
+              "iconOffset": [-1, 0],
+              "iconAllowOverlap": false
+            }
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 15,
+            "field": "title",
+            "style": {
+              "fontSizeStops": [
+                [13, 12],
+                [20, 14]
+              ],
+              "fontSizeBase": 1.2,
+              "color": "#3182bd",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "textAnchor": "left",
+              "offset": [1, 0]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "historical_transportation",
+      "name": "历史交通",
+      "icon": "🛤️",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "historical_roads",
+          "name": "历史道路",
+          "dataFile": "table_li_shi_jiao_tong.geojson",
+          "geometryType": "LineString",
+          "enabled": true,
+          "minzoom": 9,
+          "style": {
+            "color": "#8B4513",
+            "weight": ["interpolate", ["linear"], ["zoom"], 16, 0.8, 23, 6],
+            "opacity": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              16,
+              0.7,
+              18,
+              0.3,
+              23,
+              0.1
+            ],
+            "dashArray": "8, 2"
+          },
+          "slot": "middle",
+          "labels": {
+            "enabled": true,
+            "minZoom": 12,
+            "field": "title",
+            "pathLabels": true,
+            "style": {
+              "fontSizeStops": [
+                [12, 11],
+                [20, 13]
+              ],
+              "fontSizeBase": 1.6,
+              "color": "#5D4E37",
+              "haloColor": "#ffffff",
+              "haloWidth": 1.5,
+              "offset": [0, 0],
+              "textAlign": "center",
+              "repeat": 200,
+              "maxAngle": 45
+            }
+          }
+        },
+        {
+          "id": "historical_railways",
+          "name": "历史铁路",
+          "dataFile": "table_li_shi_tie_lu.geojson",
+          "geometryType": "LineString",
+          "enabled": true,
+          "minzoom": 8,
+          "style": {
+            "color": "#2F4F4F",
+            "weight": 3,
+            "opacity": 0.7,
+            "dashArray": "10, 5, 2, 5"
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 11,
+            "field": "title",
+            "pathLabels": true,
+            "style": {
+              "fontSizeStops": [
+                [11, 11],
+                [22, 13]
+              ],
+              "fontSizeBase": 1.6,
+              "color": "#2F4F4F",
+              "haloColor": "#ffffff",
+              "haloWidth": 1.5,
+              "offset": [0, 0],
+              "textAlign": "center",
+              "repeat": 300,
+              "maxAngle": 30
+            }
+          }
+        },
+        {
+          "id": "historical_railway_stations",
+          "name": "历史火车站",
+          "dataFile": "table_li_shi_che_zhan.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 10,
+          "style": {
+            "color": "#2F4F4F",
+            "fillColor": "#2F4F4F",
+            "radius": 3,
+            "fillOpacity": 0.8,
+            "opacity": 1,
+            "weight": 1
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 11,
+            "field": "title",
+            "style": {
+              "fontSizeStops": [
+                [11, 12],
+                [20, 15]
+              ],
+              "fontSizeBase": 1.6,
+              "color": "#2F4F4F",
+              "haloColor": "#ffffff",
+              "haloWidth": 1.5,
+              "offset": [0, 1]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "virtual_shanghai",
+      "name": "可视上海",
+      "icon": "📍",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "virtual_shanghai_1",
+          "name": "Virtual Shanghai：建筑",
+          "dataFile": "virtual_shanghai_buildings.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 17,
+          "coordinateSystem": "wgs84",
+          "style": {
+            "symbol": {
+              "type": "icon",
+              "iconImage": "highway-rest-area",
+              "iconSizeStops": [
+                [17, 0.8],
+                [20, 1]
+              ],
+
+              "iconSizeBase": 1.2,
+              "iconAnchor": "center",
+              "iconOffset": [0, -1],
+              "iconAllowOverlap": true,
+              "iconOpacity": 0.8
+            }
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 17,
+            "field": "name_zh",
+            "style": {
+              "fontSizeStops": [
+                [17, 12],
+                [20, 14]
+              ],
+              "fontSizeBase": 1.2,
+              "color": "#636363",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "offset": [0, 0.9],
+              "textAnchor": "top"
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "openstreetmap_data",
+      "name": "开放街道地图数据",
+      "icon": "🗺️",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "osm_points",
+          "name": "OSM 点数据",
+          "dataFile": "openstreetmap.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "coordinateSystem": "wgs84",
+          "minzoom": 17,
+          "style": {
+            "color": "#FF6B35",
+            "weight": 2,
+            "radius": 8,
+            "opacity": 0,
+            "haloColor": "#FF6B35",
+            "symbol": {
+              "type": "icon",
+              "iconImage": "attraction",
+              "iconSize": 1.2,
+              "iconAnchor": "center",
+              "iconOffset": [0, 0],
+              "iconAllowOverlap": true
+            }
+          }
+        },
+        {
+          "id": "osm_buildings",
+          "name": "OSM 建筑数据",
+          "dataFile": "openstreetmap.geojson",
+          "geometryType": "Polygon",
+          "enabled": true,
+          "coordinateSystem": "wgs84",
+          "minzoom": 11,
+          "style": {
+            "color": "#d95f0e",
+            "fillColor": "#fed98e",
+            "weight": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              11,
+              1,
+              16,
+              1.5,
+              20,
+              5
+            ],
+            "opacity": 0.7,
+            "fillOpacity": 0.3
+          },
+          "slot": "middle",
+          "labels": {
+            "enabled": true,
+            "minZoom": 15,
+            "field": "name",
+            "style": {
+              "fontSize": 12,
+              "fontSizeStops": [
+                [11, 12],
+                [20, 14]
+              ],
+              "fontSizeBase": 1.2,
+              "color": "#d95f0e",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "offset": [0, 0],
+              "opacity": 0.8
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "parks",
+      "name": "历史公园",
+      "icon": "🌳",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "historical_parks",
+          "name": "历史公园",
+          "dataFile": "table_li_shi_gong_yuan.geojson",
+          "geometryType": "Polygon",
+          "enabled": true,
+          "style": {
+            "color": "#74c476",
+            "fillColor": "#31a354",
+            "weight": 0.5,
+            "opacity": 0.3,
+            "fillOpacity": 0.2
+          },
+          "slot": "middle",
+          "labels": {
+            "enabled": true,
+            "field": "title",
+            "minZoom": 11,
+            "maxZoom": 18,
+            "style": {
+              "fontSizeStops": [
+                [12, 13],
+                [22, 16]
+              ],
+              "fontSizeBase": 1.4,
+              "color": "#006d2c",
+              "haloColor": "#FFFFFF",
+              "haloWidth": 1,
+              "offset": [0, 0]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "heritage_areas",
+      "name": "风貌保护区",
+      "icon": "🏛️",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "heritage_preservation_areas",
+          "name": "风貌保护区",
+          "dataFile": "table_feng_mao_bao_hu_qu.geojson",
+          "geometryType": "Polygon",
+          "enabled": true,
+          "style": {
+            "color": "#6699CC",
+            "fillColor": "#CCE5FF",
+            "weight": 2,
+            "opacity": 0.3,
+            "fillOpacity": 0.15
+          },
+          "slot": "middle",
+          "labels": {
+            "enabled": true,
+            "field": "title",
+            "minZoom": 12,
+            "maxZoom": 18,
+            "style": {
+              "fontSizeStops": [
+                [12, 14],
+                [22, 16]
+              ],
+              "fontSizeBase": 1.4,
+              "color": "#336699",
+              "haloColor": "#FFFFFF",
+              "haloWidth": 2,
+              "offset": [0, 0]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "districts",
+      "name": "历史区划",
+      "icon": "🗺️",
+      "enabled": false,
+      "subtypes": [
+        {
+          "id": "foreign_settlement",
+          "name": "公共租界",
+          "dataFile": "table_li_shi_qu_hua.geojson",
+          "geometryType": "Polygon",
+          "enabled": true,
+          "filter": {
+            "property": "title",
+            "values": ["公共租界"]
+          },
+          "slot": "middle",
+          "style": {
+            "color": "#CC6666",
+            "fillColor": "#FFCCCC",
+            "weight": 5,
+            "opacity": 0.1,
+            "fillOpacity": 0.1
+          },
+          "labels": {
+            "enabled": true,
+            "field": "title",
+            "minZoom": 10,
+            "maxZoom": 18,
+            "style": {
+              "fontSize": 14,
+              "color": "#993333",
+              "haloColor": "#FFFFFF",
+              "haloWidth": 2,
+              "offset": [0, 0]
+            }
+          }
+        },
+        {
+          "id": "french_concession",
+          "name": "法租界",
+          "dataFile": "table_li_shi_qu_hua.geojson",
+          "geometryType": "Polygon",
+          "enabled": true,
+          "filter": {
+            "property": "title",
+            "values": ["法租界"]
+          },
+          "slot": "middle",
+          "style": {
+            "color": "#CCCC66",
+            "fillColor": "#FFFF99",
+            "weight": 5,
+            "opacity": 0.1,
+            "fillOpacity": 0.1
+          },
+          "labels": {
+            "enabled": true,
+            "field": "title",
+            "minZoom": 10,
+            "maxZoom": 18,
+            "style": {
+              "fontSize": 14,
+              "color": "#999933",
+              "haloColor": "#FFFFFF",
+              "haloWidth": 2,
+              "offset": [0, 0]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
