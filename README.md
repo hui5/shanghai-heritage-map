@@ -5,16 +5,13 @@ https://shanghai-heritage-map.openda.top/
 #### 坐标数据
 
 1. 上海图书馆开放数据平台
-
    - [上海年华-上海市优秀历史建筑(1086)](https://data.library.sh.cn/shnh/wkl/webapi/building/toAllBuilding)
    - [上海年华-上海市不可移动文物名录(3452)](https://data.library.sh.cn/shnh/wkl/webapi/hsly/building/toRelicDirectory)
-
 2. [地图书: 上海历史建筑数字地图集](https://www.ditushu.com/book/645/table)
 3. [OpenStreetMap（polygon:674, point:717）](https://overpass-turbo.eu/)
    <details><summary>查询语句</summary>
 
    ```sql
-
    /*
    Overpass API 查询 -
    */
@@ -85,7 +82,6 @@ https://shanghai-heritage-map.openda.top/
    </details>
 
 5. [WikiMap](https://wikimap.toolforge.org/?wp=false&cluster=false&zoom=16&lat=031.245900&lon=0121.485733)
-
 6. [Virtual Shanghai Buildings（1803）](https://www.virtualshanghai.net/Data/Buildings)
 
 #### 查询数据
