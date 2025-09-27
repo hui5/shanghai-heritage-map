@@ -97,7 +97,7 @@ https://shanghai-heritage-map.openda.top/
 
 - `鼠标放在地图的符号、标签上`，会自动弹出查询面板，这时候，点击`鼠标左键`或按`Space`键，可以全屏展示。
 - `ArrowLeft`, `ArrowRight` 快速切换查询面板 tab 显示。
-- 查询面板全屏时，`Space` 键快速切换概览和 tab 显示（会自动切换到`鼠标`所在的 tab）
+- 查询面板全屏时，`Space` 键快速切换概览和 tab 显示（会自动切换到`鼠标`所在的 tab）, 鼠标`点击空白区域`快速关闭面板。
 
 #### 截图
 
