@@ -17,6 +17,7 @@ import U, { UtilsMap } from "map-gl-utils";
 import { LocationInfo } from "../../helper/map-data/LocationInfo";
 import { addEventListeners } from "./interaction/addInteraction";
 import { getParamsFromUrl } from "../../helper/mapbox/getParamsFromUrl";
+import { Github } from "lucide-react";
 
 const defaultPitch = 0;
 
@@ -342,6 +343,18 @@ export default function MapContainer() {
         isVisible={!styleReady}
         message="正在渲染地图，请稍候..."
       />
+
+      {/* GitHub 链接 */}
+      <a
+        href="https://github.com/hui5/shanghai-heritage-map.git"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="在 GitHub 查看项目"
+        className="absolute left-0 bottom-0 z-10 inline-flex items-center gap-2 rounded-md bg-white/30 px-4 py-2 text-xs font-medium text-gray-800 shadow backdrop-blur hover:bg-white"
+      >
+        <Github className="h-4 w-4" />
+        <span>GitHub</span>
+      </a>
 
       {/* 确保样式和图层都准备就绪后才渲染自定义组件 */}
       {mapInstance && styleReady && (
