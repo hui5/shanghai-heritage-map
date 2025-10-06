@@ -95,12 +95,11 @@ export const useBuildingClusterInteractions = ({
         const feature = features[0];
         const coordinates = (feature.geometry as any).coordinates.slice();
         const props = feature.properties;
-        const _pointCount = props.point_count;
 
         // 构建各类型建筑的数量统计
         const typeStats = BUILDING_TYPES.map((type) => ({
           ...type,
-          count: props[type.key] || 0,
+          count: props?.[type.key] || 0,
         })).filter((type) => type.count > 0);
 
         const popupContent = `
