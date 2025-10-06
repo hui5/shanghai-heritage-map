@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/complexity/noImportantStyles: <explanation> */
+/** biome-ignore-all lint/suspicious/noUnknownAtRules: <explanation> */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
