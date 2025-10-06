@@ -117,7 +117,7 @@ export default function MapContainer() {
   }, [mapInstance, styleReady]);
 
   // 3D角度切换回调
-  const handle3DAngleToggle = useCallback(() => {
+  const _handle3DAngleToggle = useCallback(() => {
     if (!mapInstance) return;
 
     if (mapMode === "middle") {
@@ -221,7 +221,9 @@ export default function MapContainer() {
         pitch: defaultPitch,
 
         config: {
-          basemap: {},
+          basemap: {
+            // theme: "monochrome",
+          },
         },
 
         language: "zh-Hans", // 简体中文
@@ -275,7 +277,7 @@ export default function MapContainer() {
 
       const autoHideRoadLables = () => {
         const zoom = newMap.getZoom();
-        if (zoom < 13) {
+        if (zoom < 16) {
           newMap.setConfigProperty("basemap", "showRoadLabels", false);
         } else {
           newMap.setConfigProperty("basemap", "showRoadLabels", true);

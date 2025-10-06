@@ -8,10 +8,10 @@ export const getParamsFromUrl = () => {
   if (centerParam) {
     try {
       const [lat, lng] = centerParam.split(",").map(Number);
-      if (!isNaN(lat) && !isNaN(lng)) {
+      if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
         result.center = [lat, lng];
       }
-    } catch (error) {
+    } catch (_error) {
       // 忽略解析错误
     }
   }
@@ -20,7 +20,7 @@ export const getParamsFromUrl = () => {
   const zoomParam = params.get("zoom");
   if (zoomParam) {
     const zoom = parseInt(zoomParam, 10);
-    if (!isNaN(zoom)) {
+    if (!Number.isNaN(zoom)) {
       result.zoom = zoom;
     }
   }
