@@ -13,7 +13,7 @@ const photos: VirtualShanghaiPhotoZh[] =
   rawPhotos as any[] as VirtualShanghaiPhotoZh[];
 
 const idToPhoto: Map<string, VirtualShanghaiPhotoZh> = new Map(
-  photos.map((p) => [String(p.id), p])
+  photos.map((p) => [String(p.id), p]),
 );
 
 /**
@@ -22,7 +22,7 @@ const idToPhoto: Map<string, VirtualShanghaiPhotoZh> = new Map(
  * - 未找到的 id 将被忽略
  */
 export function getPhotosByIds(
-  ids: Array<string | number>
+  ids: Array<string | number>,
 ): VirtualShanghaiPhotoZh[] {
   if (!Array.isArray(ids) || ids.length === 0) return [];
   const result: VirtualShanghaiPhotoZh[] = [];
@@ -40,7 +40,7 @@ export function getPhotosByIds(
  */
 export function searchPhotosByName(
   name: string,
-  limit: number = 10
+  limit: number = 10,
 ): VirtualShanghaiPhotoZh[] {
   const q = String(name || "").trim();
   if (!q) return [];

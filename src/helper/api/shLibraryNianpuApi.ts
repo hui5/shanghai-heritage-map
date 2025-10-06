@@ -73,7 +73,7 @@ export interface SearchNianpuParams {
 const NIANPU_ENDPOINT = "https://names.library.sh.cn/whzk/nianpu/search";
 
 export async function searchSHLibraryNianpu(
-  params: SearchNianpuParams
+  params: SearchNianpuParams,
 ): Promise<NianpuSearchResponse> {
   const {
     freetext,

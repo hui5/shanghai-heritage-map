@@ -4,57 +4,57 @@ import useSWR from "swr";
 import usePanelStore from "./panelStore";
 
 interface WikipediaMobileProps {
-	wikipediaSpec?: string | null; // if provided, skip computing
-	className?: string;
+  wikipediaSpec?: string | null; // if provided, skip computing
+  className?: string;
 }
 
 export const WikipediaPreview: React.FC<WikipediaMobileProps> = ({
-	wikipediaSpec,
-	className = "",
+  wikipediaSpec,
+  className = "",
 }) => {
-	const { data, isLoading, error } = useSWR(
-		wikipediaSpec
-			? `/api/wiki?title=${encodeURIComponent(wikipediaSpec)}`
-			: null,
-		(url) =>
-			fetch(url).then(async (res) => {
-				const text = await res.text();
-				return (
-					text
-						// Proxy Wikimedia upload host through images.weserv.nl
-						// Replace all occurrences, including within srcset lists
-						.replace(
-							/\/\/upload\.wikimedia\.org/g,
-							"https://images.weserv.nl/?url=//upload.wikimedia.org",
-						)
-						// add target="_blank" rel="noopener noreferrer" to all links
-						.replace(
-							/<a(?![^>]*target=)([^>]*)(>)/gi,
-							'<a$1 target="_blank" rel="noopener noreferrer"$2',
-						)
-				);
-			}),
-	);
+  const { data, isLoading, error } = useSWR(
+    wikipediaSpec
+      ? `/api/wiki?title=${encodeURIComponent(wikipediaSpec)}`
+      : null,
+    (url) =>
+      fetch(url).then(async (res) => {
+        const text = await res.text();
+        return (
+          text
+            // Proxy Wikimedia upload host through images.weserv.nl
+            // Replace all occurrences, including within srcset lists
+            .replace(
+              /\/\/upload\.wikimedia\.org/g,
+              "https://images.weserv.nl/?url=//upload.wikimedia.org",
+            )
+            // add target="_blank" rel="noopener noreferrer" to all links
+            .replace(
+              /<a(?![^>]*target=)([^>]*)(>)/gi,
+              '<a$1 target="_blank" rel="noopener noreferrer"$2',
+            )
+        );
+      }),
+  );
 
-	if (!wikipediaSpec) {
-		return (
-			<div className={`text-xs text-gray-500 ${className}`}>暂无维基内容</div>
-		);
-	}
+  if (!wikipediaSpec) {
+    return (
+      <div className={`text-xs text-gray-500 ${className}`}>暂无维基内容</div>
+    );
+  }
 
-	return (
-		<div
-			className={`max-w-[450px] px-10 py-3  bg-white rounded-lg  shadow-xl border border-white/10   ${className}`}
-		>
-			{isLoading ? (
-				<div className="absolute  inset-0 flex items-center justify-center bg-white/60 z-10">
-					<div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-transparent" />
-				</div>
-			) : null}
-			{/** biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
-			<StyledContainer dangerouslySetInnerHTML={{ __html: data as any }} />
-		</div>
-	);
+  return (
+    <div
+      className={`max-w-[450px] px-10 py-3  bg-white rounded-lg  shadow-xl border border-white/10   ${className}`}
+    >
+      {isLoading ? (
+        <div className="absolute  inset-0 flex items-center justify-center bg-white/60 z-10">
+          <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-transparent" />
+        </div>
+      ) : null}
+      {/** biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
+      <StyledContainer dangerouslySetInnerHTML={{ __html: data as any }} />
+    </div>
+  );
 };
 
 const StyledContainer = styled.div`

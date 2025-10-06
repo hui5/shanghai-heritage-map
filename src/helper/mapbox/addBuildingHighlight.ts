@@ -12,7 +12,7 @@ export const addBuildingHighlight = (map: mapboxgl.Map) => {
         if (osmId) {
           const q = `[out:json];way(${osmId});out tags center;`;
           const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-            q
+            q,
           )}`;
           // console.log(url);
         }

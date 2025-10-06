@@ -83,13 +83,13 @@ const convertTraditionalToSimplifiedLite = (input: string): string =>
 
 // 尝试动态加载 opencc-js 做更全面的繁简转换；失败则回退到轻量映射
 const convertTraditionalToSimplified = async (
-  input: string
+  input: string,
 ): Promise<string> => {
   try {
     // 通过 new Function 动态 import，避免 TS 模块解析错误
     const dynamicImport: (m: string) => Promise<any> = new Function(
       "m",
-      "return import(m)"
+      "return import(m)",
     ) as any;
     if (OpenCC?.Converter) {
       const converter = await OpenCC.Converter({ from: "tw", to: "cn" });
@@ -112,7 +112,7 @@ const removeCommonQualifiers = (input: string): string => {
   // 1) 去除括号里的纯修饰词（全局）
   const parenRegex = new RegExp(
     `\\s*[\\(\\[]\\s*(?:${qGroup})\\s*[\\)\\]]\\s*`,
-    "g"
+    "g",
   );
   out = out.replace(parenRegex, " ");
 
@@ -131,7 +131,7 @@ const removeCommonQualifiers = (input: string): string => {
 
 // 规范化查询名称：去噪、统一标点/空白、去尾号、繁体转简体
 export async function normalizeQueryName(
-  raw: string | undefined | null
+  raw: string | undefined | null,
 ): Promise<string> {
   let s = String(raw ?? "").trim();
   if (!s) return "";
@@ -169,7 +169,7 @@ export async function normalizeQueryName(
   };
   s = s.replace(
     /[（）。，．：；、【】「」『』“”‘’—－～·・‧／]/g,
-    (ch) => punctMap[ch] || ch
+    (ch) => punctMap[ch] || ch,
   );
 
   // 去除结尾编号/序号（如: "(1)", "-2", " 3" 等）

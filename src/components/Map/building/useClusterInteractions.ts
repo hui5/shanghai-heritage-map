@@ -1,7 +1,7 @@
+import mapboxgl from "mapbox-gl";
 import { useEffect, useRef } from "react";
-import mapboxgl, { GeoJSONFeature } from "mapbox-gl";
-import { canInteract } from "@/components/Map/interaction/interactionConfig";
 import { createInfoTag } from "@/components/Map/interaction/building";
+import { canInteract } from "@/components/Map/interaction/interactionConfig";
 
 // 建筑类型配置
 const BUILDING_TYPES = [
@@ -28,7 +28,7 @@ interface BuildingClusterInteractionsProps {
 export const useBuildingClusterInteractions = ({
   mapInstance,
 }: BuildingClusterInteractionsProps) => {
-  const eventListenersRef = useRef<{ [key: string]: any }>({});
+  const _eventListenersRef = useRef<{ [key: string]: any }>({});
 
   useEffect(() => {
     if (!mapInstance) return;
@@ -41,10 +41,6 @@ export const useBuildingClusterInteractions = ({
 
     const clusterLayerId = "openda_building-clusters";
     const sourceId = "openda_building-source";
-
-    // 防抖处理，避免频繁的hover事件
-    let hoverTimeoutId: NodeJS.Timeout | null = null;
-    let currentHoveredFeature: GeoJSONFeature | null = null;
 
     // 集群点击事件 - 放大集群
     const onClusterClick = (e: mapboxgl.MapMouseEvent) => {
@@ -61,7 +57,7 @@ export const useBuildingClusterInteractions = ({
 
       if (!features.length) return;
 
-      const clusterId = features[0].properties!.cluster_id;
+      const clusterId = features[0].properties?.cluster_id;
       const source = mapInstance.getSource(sourceId) as mapboxgl.GeoJSONSource;
 
       source.getClusterExpansionZoom(clusterId, (err, zoom) => {
@@ -71,7 +67,7 @@ export const useBuildingClusterInteractions = ({
         const currentZoom = mapInstance.getZoom();
         const targetZoom = Math.max(
           zoom || currentZoom + 2, // 至少放大2级
-          16 // 最小缩放到16级，确保可以看清建筑细节
+          16, // 最小缩放到16级，确保可以看清建筑细节
         );
 
         mapInstance.easeTo({
@@ -98,8 +94,8 @@ export const useBuildingClusterInteractions = ({
       if (features.length > 0) {
         const feature = features[0];
         const coordinates = (feature.geometry as any).coordinates.slice();
-        const props = feature.properties!;
-        const pointCount = props.point_count;
+        const props = feature.properties;
+        const _pointCount = props.point_count;
 
         // 构建各类型建筑的数量统计
         const typeStats = BUILDING_TYPES.map((type) => ({
@@ -118,8 +114,8 @@ export const useBuildingClusterInteractions = ({
                       type.name.split(" ")[0], // 提取图标
                       type.name.substring(type.name.indexOf(" ") + 1), // 提取名称
                       type.count,
-                      type.color
-                    )
+                      type.color,
+                    ),
                   )
                   .join("")}
               </div>

@@ -35,7 +35,7 @@ export let GLOBAL_INTERACTION_CONFIG: InteractionConfig = {
  * 更新全局交互配置
  */
 export const updateInteractionConfig = (
-  newConfig: Partial<InteractionConfig>
+  newConfig: Partial<InteractionConfig>,
 ) => {
   GLOBAL_INTERACTION_CONFIG = {
     ...GLOBAL_INTERACTION_CONFIG,
@@ -55,7 +55,7 @@ export const resetInteractionConfig = () => {
  */
 export const canInteract = (
   currentZoom: number,
-  interactionType: keyof InteractionConfig
+  interactionType: keyof InteractionConfig,
 ): boolean => {
   return currentZoom > GLOBAL_INTERACTION_CONFIG[interactionType];
 };

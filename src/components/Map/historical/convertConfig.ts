@@ -1,7 +1,6 @@
 // 历史图层配置系统 - 基于统一配置架构
 
 import {
-  buildHaloWidthExpression,
   buildIconSizeExpression,
   buildTextSizeExpression,
 } from "@/utils/unifiedConfig";
@@ -11,7 +10,7 @@ export function generateHistoricalLayerConfig(
   subtype: any,
   sourceId: string,
   dataType: string,
-  isVisible: boolean
+  isVisible: boolean,
 ): any[] {
   const layerId = `openda_${dataType}-${subtype.id}-layer`;
   const style = subtype.style;
@@ -41,7 +40,7 @@ export function generateHistoricalLayerConfig(
             symbolConfig.iconSize,
             symbolConfig.iconSizeStops,
             symbolConfig.iconSizeBase,
-            1
+            1,
           );
           layout["icon-anchor"] = symbolConfig.iconAnchor ?? "center";
           layout["icon-offset"] = symbolConfig.iconOffset ?? [0, 0];
@@ -71,12 +70,12 @@ export function generateHistoricalLayerConfig(
               fontSizeStops: symbolConfig.textSizeStops,
               fontSizeBase: symbolConfig.textSizeBase,
             },
-            style.fontSize || 12
+            style.fontSize || 12,
           );
         } else {
           layout["text-size"] = buildTextSizeExpression(
             style as any,
-            style.fontSize || 12
+            style.fontSize || 12,
           );
         }
 
@@ -128,7 +127,7 @@ export function generateHistoricalLayerConfig(
           "text-field": ["get", style.field || "name"],
           "text-size": buildTextSizeExpression(
             style as any,
-            style.fontSize || 12
+            style.fontSize || 12,
           ),
           "text-offset": style.offset || [0, 0],
           visibility: targetVisibility,
@@ -191,7 +190,7 @@ export function generateHistoricalLayerConfig(
         ...(style.dashArray && {
           "line-dasharray": style.dashArray
             .split(",")
-            .map((x: string) => parseInt(x.trim())),
+            .map((x: string) => parseInt(x.trim(), 10)),
         }),
       },
       ...(subtype.minzoom !== undefined && {
@@ -204,8 +203,8 @@ export function generateHistoricalLayerConfig(
     });
   } else if (subtype.geometryType === "Polygon") {
     // 为 OSM 建筑数据添加基于 wiki 信息的颜色区分
-    let fillColorExpression: any = style.fillColor || style.color;
-    let outlineColorExpression: any = style.color;
+    const fillColorExpression: any = style.fillColor || style.color;
+    const outlineColorExpression: any = style.color;
 
     // if (subtype.id === "osm_buildings") {
     //   // 数据驱动的颜色：有 wiki 信息的建筑使用不同颜色
@@ -288,15 +287,13 @@ export function generateHistoricalLayerConfig(
   }
 
   // 添加标签图层（如果配置了标签且不是 text-only 样式）
-  if (subtype.labels && subtype.labels.enabled && style.type !== "text-only") {
-    const labelLayerId = `openda_${dataType}-${subtype.id}-labels`;
-
+  if (subtype.labels?.enabled && style.type !== "text-only") {
     // 根据几何类型配置标签布局
     const isLineGeometry = subtype.geometryType === "LineString";
     const pathLabelsEnabled = subtype.labels?.pathLabels === true;
 
     // 为 OSM 建筑数据的标签添加基于 wiki 信息的颜色区分
-    let labelColorExpression: any = subtype.labels.style.color;
+    const labelColorExpression: any = subtype.labels.style.color;
 
     // if (subtype.id === "osm_buildings") {
     //   labelColorExpression = [
@@ -323,7 +320,7 @@ export function generateHistoricalLayerConfig(
         "text-field": ["get", subtype.labels.field],
         "text-size": buildTextSizeExpression(
           subtype.labels.style as any,
-          subtype.labels.style.fontSize
+          subtype.labels.style.fontSize,
         ),
         "text-offset": subtype.labels.style.offset,
         "text-anchor": subtype.labels.style.textAnchor ?? "center",

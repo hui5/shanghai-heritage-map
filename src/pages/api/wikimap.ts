@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const {
     lat,
@@ -20,9 +20,9 @@ export default async function handler(
 
   const base = "https://wikimap.toolforge.org/api.php";
   const url = `${base}?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(
-    lon
+    lon,
   )}&dist=${encodeURIComponent(String(dist))}&commons&lang=${encodeURIComponent(
-    String(lang)
+    String(lang),
   )}`;
 
   try {

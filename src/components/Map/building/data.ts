@@ -1,12 +1,12 @@
-import {
+import _, { difference } from "lodash";
+import type { UtilsMap } from "map-gl-utils";
+import { proxy } from "valtio";
+import type {
   DataCategory,
   DataSubtype,
   UnifiedConfig,
 } from "@/components/Map/historical/types";
 import { convertCoordinatesForChina } from "@/utils/coordinateConverter";
-import _, { difference } from "lodash";
-import { UtilsMap } from "map-gl-utils";
-import { proxy } from "valtio";
 import buildingConfig from "./config.json";
 
 const sourceId = "openda_building-source";
@@ -71,7 +71,7 @@ files.forEach(async (url) => {
       subtypeData.visible && state.data.features.push(...newFeatures);
     });
     state.loading.completed = [...state.loading.completed, url];
-  } catch (e) {
+  } catch (_e) {
     state.loading.failed = [...state.loading.failed, url];
   } finally {
     state.loading.processing = difference(state.loading.processing, [url]);
@@ -98,8 +98,8 @@ export const toggleSubtypeVisible = ({
       categoryId
         ? category.id === categoryId
         : subtypeId
-        ? subtype.id === subtypeId
-        : true
+          ? subtype.id === subtypeId
+          : true,
     )
     .forEach(toggle);
 
@@ -124,7 +124,11 @@ function processCoordinates(buildings: BuildingData[]): BuildingData[] {
       const lng = parseFloat(building.long);
 
       // 跳过无效坐标
-      if (lat === 0 || lng === 0 || isNaN(lat) || isNaN(lng)) {
+      if (
+        lat === 0 ||
+        lng === 0 ||
+        Number.isNaN(lNumber.isNaN | Number.isNaN(lng))
+      ) {
         return building;
       }
 
@@ -133,7 +137,7 @@ function processCoordinates(buildings: BuildingData[]): BuildingData[] {
         lng,
         lat,
         "bd09",
-        "wgs84"
+        "wgs84",
       );
 
       building.lat_corrected = latCorrected;
@@ -148,7 +152,7 @@ function processCoordinates(buildings: BuildingData[]): BuildingData[] {
 }
 
 export const convertToGeoJSON = (
-  data: BuildingData[]
+  data: BuildingData[],
 ): GeoJSON.FeatureCollection => {
   return {
     type: "FeatureCollection",
@@ -158,7 +162,7 @@ export const convertToGeoJSON = (
         type: "Point",
         coordinates: [item.lng_corrected, item.lat_corrected] as [
           number,
-          number
+          number,
         ],
       },
       properties: item,

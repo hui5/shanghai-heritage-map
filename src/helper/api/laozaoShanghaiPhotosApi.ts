@@ -28,10 +28,10 @@ const BASE = "https://service.laozaoshanghai.com/api/contentItems";
 export async function searchLaozaoPhotos(
   keyword: string,
   pageIndex: number = 0,
-  pageSize: number = 30
+  pageSize: number = 30,
 ): Promise<LaozaoSearchResponse> {
   const url = `${BASE}?pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${encodeURIComponent(
-    keyword
+    keyword,
   )}`;
   const res = await fetchJSON(url);
   // Basic shape guard
