@@ -291,6 +291,7 @@ export function generateHistoricalLayerConfig(
     // 根据几何类型配置标签布局
     const isLineGeometry = subtype.geometryType === "LineString";
     const pathLabelsEnabled = subtype.labels?.pathLabels === true;
+    const labelLayerId = `openda_${dataType}-${subtype.id}-labels`;
 
     // 为 OSM 建筑数据的标签添加基于 wiki 信息的颜色区分
     const labelColorExpression: any = subtype.labels.style.color;

@@ -71,8 +71,8 @@ _(state.subtypeDatas)
             const filter = subtype.filter;
             const geometryType = subtype.geometryType;
             if (
-              filter &&
-              !filter?.values.includes(properties?.[filter?.property])
+              filter?.values &&
+              !filter.values.includes(properties?.[filter.property])
             ) {
               return false;
             }

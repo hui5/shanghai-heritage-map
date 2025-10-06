@@ -124,11 +124,7 @@ function processCoordinates(buildings: BuildingData[]): BuildingData[] {
       const lng = parseFloat(building.long);
 
       // 跳过无效坐标
-      if (
-        lat === 0 ||
-        lng === 0 ||
-        Number.isNaN(lNumber.isNaN | Number.isNaN(lng))
-      ) {
+      if (lat === 0 || lng === 0 || Number.isNaN(lat) || Number.isNaN(lng)) {
         return building;
       }
 
