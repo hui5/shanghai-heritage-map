@@ -2,7 +2,7 @@
 type ExtremumMode = "top" | "bottom" | "left" | "right";
 export const getExtremeCoordinate = (
   geometry: any,
-  mode: ExtremumMode = "left"
+  mode: ExtremumMode = "left",
 ): [number, number] => {
   if (!geometry) return [0, 0];
   const { type, coordinates } = geometry;
@@ -40,10 +40,10 @@ export const getExtremeCoordinate = (
   traverse(coordinates);
 
   if (
-    !isFinite(bounds.minLng) ||
-    !isFinite(bounds.maxLng) ||
-    !isFinite(bounds.minLat) ||
-    !isFinite(bounds.maxLat)
+    !Number.isFinite(bounds.minLng) ||
+    !Number.isFinite(bounds.maxLng) ||
+    !Number.isFinite(bounds.minLat) ||
+    !Number.isFinite(bounds.maxLat)
   ) {
     return [0, 0];
   }
@@ -58,7 +58,6 @@ export const getExtremeCoordinate = (
       return [centerLng, bounds.minLat];
     case "right":
       return [bounds.maxLng, centerLat];
-    case "left":
     default:
       return [bounds.minLng, centerLat];
   }
