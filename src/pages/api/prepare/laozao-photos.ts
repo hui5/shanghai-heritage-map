@@ -23,9 +23,9 @@ export default async function handler(
       return res.status(400).json({ error: "Invalid location info" });
     }
     const normalizedName = await normalizeQueryName(locationInfo.name);
-    const resp = await searchLaozaoPhotos(normalizedName, 0, 200);
+    const resp = await searchLaozaoPhotos(normalizedName, 0, 20);
     return res.status(200).json({ items: resp?.data ?? null });
-  } catch (e) {
+  } catch (_e) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }
