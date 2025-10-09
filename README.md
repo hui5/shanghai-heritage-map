@@ -2,12 +2,29 @@
 
 https://shanghai-heritage-map.openda.top/
 
-#### 坐标数据
+这是一个关于上海、历史、建筑的地图应用，包含上海的文保单位、优秀历史建筑、历史道路、历史交通、历史公园、名人故居等等。鼠标放在感兴趣的标签上， 能立即查询、展示相关的图文信息（维基百科、维基共享、虚拟上海、上图老照片、上图年谱、老早上海）。
+
+
+
+#### 地图数据
 
 1. 上海图书馆开放数据平台
    - [上海年华-上海市优秀历史建筑(1086)](https://data.library.sh.cn/shnh/wkl/webapi/building/toAllBuilding)
    - [上海年华-上海市不可移动文物名录(3452)](https://data.library.sh.cn/shnh/wkl/webapi/hsly/building/toRelicDirectory)
 2. [地图书: 上海历史建筑数字地图集](https://www.ditushu.com/book/645/table)
+   - 租界区 (2)
+   - 风貌保护区 (12)
+   - 历史公园 (31)
+   - 历史交通 (铁路：3，火车站：19， 道路： 927)
+   - 公共汽车 (站点：152， 线路：22)
+   - 有轨电车 (站点：88， 线路：20)
+   - 无轨电车 (站点：62，线路：9)
+   - 历史建筑 (663)
+   - 历史戏院影院 (90)
+   - 《大医》上海地图 (140)
+   - 《千里江山图》上海地图 (122)
+   - 名人故居 (137)
+   - 《今日之沪江》上海地标 (37)
 3. [OpenStreetMap（polygon:674, point:717）](https://overpass-turbo.eu/)
    <details><summary>查询语句</summary>
 
@@ -89,6 +106,7 @@ https://shanghai-heritage-map.openda.top/
 1. 维基百科
 2. 维基共享
 3. [Virtual Shanghai Images（5860）](https://www.virtualshanghai.net/Photos/Images)
+   https://github.com/hui5/VirtualShanghai-photos
 4. [上海图书馆·老照片（33397）](https://scc.library.sh.cn/#/result)
 5. [上海图书馆·年谱（16091）](https://scc.library.sh.cn/#/np/result)
 6. [老早上海（2747）](https://laozaoshanghai.com/)
@@ -96,7 +114,7 @@ https://shanghai-heritage-map.openda.top/
 #### 快捷键
 
 - `鼠标放在地图的符号、标签上`，会自动弹出查询面板，这时候，点击`鼠标左键`或按`Space`键，可以全屏展示。
-- `ArrowLeft`, `ArrowRight` 快速切换查询面板 tab 显示。
+- `←`, `→` 键快速切换查询面板 tab 显示。
 - 查询面板全屏时，`Space` 键快速切换概览和 tab 显示（会自动切换到`鼠标`所在的 tab）, 鼠标`点击空白区域`快速关闭面板。
 
 #### 截图
