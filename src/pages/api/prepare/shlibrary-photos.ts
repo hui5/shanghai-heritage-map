@@ -25,7 +25,7 @@ export default async function handler(
     const normalizedName = await normalizeQueryName(locationInfo.name);
     const photos = await searchSHLibraryPhotos({
       freetext: normalizedName,
-      pageSize: 100,
+      pageSize: 20,
     }).then((r) => r.datas ?? null);
     return res.status(200).json({ photos });
   } catch (_e) {

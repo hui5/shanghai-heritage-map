@@ -32,10 +32,10 @@ export default async function handler(
     ) {
       photos = await getPhotosByIds(locationInfo.images);
     } else {
-      photos = await searchPhotosByName(normalizedName, 200);
+      photos = await searchPhotosByName(normalizedName, 20);
     }
     return res.status(200).json({ photos });
-  } catch (e) {
+  } catch (_e) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }

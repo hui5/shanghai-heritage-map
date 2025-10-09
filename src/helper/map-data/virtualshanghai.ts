@@ -4,6 +4,7 @@ import {
   escapeHtml,
   isNonEmptyArray,
 } from "@/utils/helpers";
+import { proxyImage } from "../proxyImage";
 import type { CommonFields, LocationInfo } from "./LocationInfo";
 
 export type LocationInfo_VirtualShanghai = CommonFields & {
@@ -50,6 +51,18 @@ export const getVirtualShanghaiImageUrl_jsdelivr = (
 ): { thumbnailUrl: string; imageUrl: string; ref: string } => ({
   thumbnailUrl: `https://cdn.jsdelivr.net/gh/hui5/VirtualShanghai-photos@main/images/${imageId}.jpeg`,
   imageUrl: `https://cdn.jsdelivr.net/gh/hui5/VirtualShanghai-photos@main/images/${imageId}.jpeg`,
+  ref: `https://www.virtualshanghai.net/Photos/Images?ID=${imageId}`,
+});
+
+export const getVirtualShanghaiImageUrl_proxy = (
+  imageId: string | number,
+): { thumbnailUrl: string; imageUrl: string; ref: string } => ({
+  thumbnailUrl: proxyImage(
+    `https://cdn.jsdelivr.net/gh/hui5/VirtualShanghai-photos@main/images/${imageId}.jpeg`,
+  ),
+  imageUrl: proxyImage(
+    `https://cdn.jsdelivr.net/gh/hui5/VirtualShanghai-photos@main/images/${imageId}.jpeg`,
+  ),
   ref: `https://www.virtualshanghai.net/Photos/Images?ID=${imageId}`,
 });
 

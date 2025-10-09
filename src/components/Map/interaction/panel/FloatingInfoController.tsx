@@ -10,7 +10,7 @@ import {
 import type { VirtualShanghaiPhotoZh } from "@/helper/api/virtualShanghaiPhotosApi";
 import {
   getVirtualShanghaiBuildingLink,
-  getVirtualShanghaiImageUrl_jsdelivr,
+  getVirtualShanghaiImageUrl_proxy,
 } from "../../../../helper/map-data/virtualshanghai";
 import { ImagesPreview } from "./_Images";
 import { NianpuPreview } from "./_Nianpu";
@@ -207,7 +207,7 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
                   images: vsPhotos.map((photo: VirtualShanghaiPhotoZh) => {
                     const { id, title_zh, note_zh, street_zh, date } = photo;
                     const { imageUrl, thumbnailUrl, ref } =
-                      getVirtualShanghaiImageUrl_jsdelivr(id);
+                      getVirtualShanghaiImageUrl_proxy(id);
                     return {
                       title: (title_zh as string) || "",
                       description: (note_zh as string) || "",
