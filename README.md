@@ -195,6 +195,10 @@ https://shanghai-heritage-map.openda.top/
   
   ![](public/doc/20251010191610.png)
 
+- 张爱玲：上图·年谱
+  
+  <img src="public/doc/20251010205530.png" width="450" alt="screenshot">
+
 
 - 上海图书馆： 老早上海
   
