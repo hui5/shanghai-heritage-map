@@ -195,7 +195,7 @@ https://shanghai-heritage-map.openda.top/
 
   <img src="public/doc/20251011015231.webp" width="700" alt="screenshot">
   <img src="public/doc/20251010220509.webp" width="700" alt="screenshot">
-  <img src="public/doc/20251010220546.webp" width="700" alt="screenshot">
+  <img src="public/doc/20251011015858.webp" width="700" alt="screenshot">
 
 - 百老汇大厦：维基共享
   
