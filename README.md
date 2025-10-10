@@ -192,9 +192,9 @@ https://shanghai-heritage-map.openda.top/
 
 - 江海关：虚拟中国
 
-  ![](public/doc/20251010220435.webp)
-  ![](public/doc/20251010220509.webp)
-  ![](public/doc/20251010220546.webp)
+  <img src="public/doc/20251010220435.webp" width="700" alt="screenshot">
+  <img src="public/doc/20251010220509.webp" width="700" alt="screenshot">
+  <img src="public/doc/20251010220546.webp" width="700" alt="screenshot">
 
 - 百老汇大厦：维基共享
   
