@@ -184,7 +184,7 @@ https://shanghai-heritage-map.openda.top/
 
 - 哈同花园：虚拟上海
   
-  ![](public/doc/20251010193346.webp)
+   <img src="public/doc/20251010193346.webp" width="700" alt="screenshot">
 
 - 外滩：上图·照片
   
