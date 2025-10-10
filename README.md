@@ -151,7 +151,7 @@ https://shanghai-heritage-map.openda.top/
 
 - 外滩
   
-  <img src="public/doc/20251010194513.webp" width="800" alt="screenshot">
+  <img src="public/doc/20251010194513.webp" width="700" alt="screenshot">
 
 
 - 武康大楼
