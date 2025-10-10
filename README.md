@@ -5,6 +5,7 @@ https://shanghai-heritage-map.openda.top/
 这是一个关于上海、历史、建筑的地图应用，包含上海的文保单位、优秀历史建筑、历史道路、历史交通、历史公园、名人故居等等。鼠标放在感兴趣的标签上， 能立即查询、展示相关的图文信息（维基百科、维基共享、虚拟上海、上图老照片、上图年谱、老早上海）。
 
 
+### 数据
 
 #### 地图数据
 
@@ -111,15 +112,67 @@ https://shanghai-heritage-map.openda.top/
 5. [上海图书馆·年谱（16091）](https://scc.library.sh.cn/#/np/result)
 6. [老早上海（2747）](https://laozaoshanghai.com/)
 
-#### 快捷键
+### 操作
 
 - `鼠标放在地图的符号、标签上`，会自动弹出查询面板，这时候，点击`鼠标左键`或按`Space`键，可以全屏展示。
 - `←`, `→` 键快速切换查询面板 tab 显示。
 - 查询面板全屏时，`Space` 键快速切换概览和 tab 显示（会自动切换到`鼠标`所在的 tab）, 鼠标`点击空白区域`快速关闭面板。
 
-#### 截图
+### 截图
 
-![](public/doc/image.jpg)
-![](public/doc/image1.jpg)
-![](public/doc/image2.jpg)
-![](public/doc/image3.jpg)
+
+
+
+
+
+
+#### 地图示例
+
+- 全景
+  ![](public/doc/image.jpg)
+
+- 外滩
+- <img src="public/doc/20251010194513.png" width="800" alt="screenshot">
+
+
+- 老城厢
+  ![](public/doc/20251010194215.png)
+
+
+- 武康大楼
+  ![](public/doc/image1.jpg)
+
+- 外白渡桥
+  ![](public/doc/20251010192539.png)
+
+
+#### 查询示例
+- 黄埔公园
+  ![](public/doc/image2.jpg)
+
+- 礼查饭店
+  ![](public/doc/image3.jpg)
+
+- 北京路：虚拟上海
+  <img src="public/doc/20251010190918.png" width="700" alt="screenshot">
+
+- 霞飞路: 虚拟上海
+  <img src="public/doc/20251010185806.png" width="700" alt="screenshot">
+
+- 林风眠
+  ![](public/doc/20251010191610.png)
+
+- 哈同花园：虚拟上海
+  ![](public/doc/20251010193346.png)
+
+- 外滩：上图·照片
+  ![](public/doc/20251010193632.png)
+
+- 大世界：老早上海
+  <img src="public/doc/20251010190610.png" width="450" alt="screenshot">
+
+- 上海图书馆： 老早上海
+  ![](public/doc/20251010191801.png)
+
+- 外国坟山：维基百科
+  <img src="public/doc/20251010191226.png" width="440" alt="screenshot">
