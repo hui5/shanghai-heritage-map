@@ -213,11 +213,11 @@ https://shanghai-heritage-map.openda.top/
 
 - 上海图书馆： 老早上海
   
-  ![](public/doc/20251010191801.webp)
+  <img src="public/doc/20251010191801.webp" width="700" alt="screenshot">
 
 - 十六铺：老早上海
   
-  <img src="public/doc/20251010223810.webp" width="700" alt="screenshot">
+  <img src="public/doc/20251010223810.webp" width="600" alt="screenshot">
 
 - 大世界：老早上海
   
