@@ -141,12 +141,12 @@ https://shanghai-heritage-map.openda.top/
 
 - 全景
   
-  ![](public/doc/image.jpg)
+  ![](public/doc/image.webp)
 
 
 - 老城厢
   
-  ![](public/doc/20251010194215.png)
+  ![](public/doc/20251010194215.webp)
 
 
 - 外滩
@@ -156,74 +156,74 @@ https://shanghai-heritage-map.openda.top/
 
 - 武康大楼
   
-  ![](public/doc/image1.jpg)
+  ![](public/doc/image1.webp)
 
 - 外白渡桥
   
-  ![](public/doc/20251010192539.png)
+  ![](public/doc/20251010192539.webp)
 
 
 #### 查询示例
 
 - 黄埔公园
   
-  ![](public/doc/image2.jpg)
+  ![](public/doc/image2.webp)
 
 - 礼查饭店
   
-  ![](public/doc/image3.jpg)
+  ![](public/doc/image3.webp)
 
 - 北京路：虚拟上海
   
-  <img src="public/doc/20251010190918.png" width="700" alt="screenshot">
+  <img src="public/doc/20251010190918.webp" width="700" alt="screenshot">
 
 - 霞飞路: 虚拟上海
   
-  <img src="public/doc/20251010185806.png" width="700" alt="screenshot">
+  <img src="public/doc/20251010185806.webp" width="700" alt="screenshot">
 
 
 - 哈同花园：虚拟上海
   
-  ![](public/doc/20251010193346.png)
+  ![](public/doc/20251010193346.webp)
 
 - 外滩：上图·照片
   
-  ![](public/doc/20251010193632.png)
+  ![](public/doc/20251010193632.webp)
 
 - 江海关：虚拟中国
 
-  ![](public/doc/20251010220435.png)
-  ![](public/doc/20251010220509.png)
-  ![](public/doc/20251010220546.png)
+  ![](public/doc/20251010220435.webp)
+  ![](public/doc/20251010220509.webp)
+  ![](public/doc/20251010220546.webp)
 
 - 百老汇大厦：维基共享
   
-  <img src="public/doc/20251010222839.png" width="500" alt="screenshot">
+  <img src="public/doc/20251010222839.webp" width="500" alt="screenshot">
 
 
 - 林风眠
   
-  ![](public/doc/20251010191610.png)
+  ![](public/doc/20251010191610.webp)
 
 - 张爱玲：上图·年谱
   
-  <img src="public/doc/20251010205530.png" width="450" alt="screenshot">
+  <img src="public/doc/20251010205530.webp" width="450" alt="screenshot">
 
 
 - 上海图书馆： 老早上海
   
-  ![](public/doc/20251010191801.png)
+  ![](public/doc/20251010191801.webp)
 
 - 十六铺：老早上海
   
-  <img src="public/doc/20251010223810.png" width="700" alt="screenshot">
+  <img src="public/doc/20251010223810.webp" width="700" alt="screenshot">
 
 - 大世界：老早上海
   
-  <img src="public/doc/20251010190610.png" width="450" alt="screenshot">
+  <img src="public/doc/20251010190610.webp" width="450" alt="screenshot">
 
 
 
 - 外国坟山：维基百科
   
-  <img src="public/doc/20251010191226.png" width="440" alt="screenshot">
+  <img src="public/doc/20251010191226.webp" width="440" alt="screenshot">
