@@ -122,57 +122,69 @@ https://shanghai-heritage-map.openda.top/
 
 
 
-
-
-
-
 #### 地图示例
 
 - 全景
+  
   ![](public/doc/image.jpg)
 
 - 外滩
+  
 - <img src="public/doc/20251010194513.png" width="800" alt="screenshot">
 
 
 - 老城厢
+  
   ![](public/doc/20251010194215.png)
 
 
 - 武康大楼
+  
   ![](public/doc/image1.jpg)
 
 - 外白渡桥
+  
   ![](public/doc/20251010192539.png)
 
 
 #### 查询示例
+
 - 黄埔公园
+  
   ![](public/doc/image2.jpg)
 
 - 礼查饭店
+  
   ![](public/doc/image3.jpg)
 
 - 北京路：虚拟上海
+  
   <img src="public/doc/20251010190918.png" width="700" alt="screenshot">
 
 - 霞飞路: 虚拟上海
+  
   <img src="public/doc/20251010185806.png" width="700" alt="screenshot">
 
 - 林风眠
+  
   ![](public/doc/20251010191610.png)
 
 - 哈同花园：虚拟上海
+  
   ![](public/doc/20251010193346.png)
 
 - 外滩：上图·照片
+  
   ![](public/doc/20251010193632.png)
 
 - 大世界：老早上海
+  
   <img src="public/doc/20251010190610.png" width="450" alt="screenshot">
 
 - 上海图书馆： 老早上海
+  
   ![](public/doc/20251010191801.png)
 
 - 外国坟山：维基百科
+  
   <img src="public/doc/20251010191226.png" width="440" alt="screenshot">
