@@ -192,7 +192,7 @@ https://shanghai-heritage-map.openda.top/
   - 虚拟上海 
     
     <img src='public/doc/20251011035310.webp' width='700'/>
-    
+
     <img src='public/doc/20251011035012.webp' width='700'/>
 
   - 上图·照片
@@ -200,7 +200,7 @@ https://shanghai-heritage-map.openda.top/
     <img src="public/doc/20251010193632.webp" width="700" alt="screenshot">
 
 
-- 江海关：虚拟中国
+- 江海关：虚拟上海
 
   <img src="public/doc/20251011015231.webp" width="700" alt="screenshot">
   <img src="public/doc/20251010220509.webp" width="700" alt="screenshot">
