@@ -186,9 +186,18 @@ https://shanghai-heritage-map.openda.top/
   
    <img src="public/doc/20251010193346.webp" width="700" alt="screenshot">
 
-- 外滩：上图·照片
+- 外滩：
   
-  <img src="public/doc/20251010193632.webp" width="700" alt="screenshot">
+  
+  - 虚拟上海 
+    
+    <img src='public/doc/20251011035310.webp' width='700'/>
+    
+    <img src='public/doc/20251011035012.webp' width='700'/>
+
+  - 上图·照片
+    
+    <img src="public/doc/20251010193632.webp" width="700" alt="screenshot">
 
 
 - 江海关：虚拟中国
@@ -223,7 +232,9 @@ https://shanghai-heritage-map.openda.top/
   
   <img src="public/doc/20251010190610.webp" width="450" alt="screenshot">
 
-
+- 外滩：老早上海
+  
+  <img src='public/doc/20251011043531.webp' width='700'/>
 
 - 外国坟山：维基百科
   
