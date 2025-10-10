@@ -188,7 +188,8 @@ https://shanghai-heritage-map.openda.top/
 
 - 外滩：上图·照片
   
-  ![](public/doc/20251010193632.webp)
+  <img src="public/doc/20251010193632.webp" width="700" alt="screenshot">
+
 
 - 江海关：虚拟中国
 
