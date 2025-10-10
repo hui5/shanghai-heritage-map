@@ -857,7 +857,7 @@
       "id": "districts",
       "name": "租借区",
       "icon": "🗺️",
-      "enabled": false,
+      "enabled": true,
       "subtypes": [
         {
           "id": "foreign_settlement",
