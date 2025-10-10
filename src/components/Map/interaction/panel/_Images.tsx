@@ -1,4 +1,5 @@
 import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import usePanelStore from "./panelStore";
 
 export interface Image {
@@ -22,6 +23,7 @@ interface ImagesPreviewProps {
   className?: string;
   title: string;
   maxWidth?: number;
+  pageSize?: number; // 每页显示的图片数量
 }
 
 export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
@@ -29,9 +31,75 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
   className = "",
   maxWidth = 500,
   title,
+  pageSize = 10, // 默认每页显示10张图片
 }) => {
   const setPinned = usePanelStore((s) => s.setPinned);
   const isFullscreen = usePanelStore((s) => s.isFullscreen);
+
+  // 当前显示的图片数量
+  const [displayCount, setDisplayCount] = useState(pageSize);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  // 用于检测滚动到底部
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  // 当数据变化时重置显示数量
+  const dataRef = useRef(data);
+  useEffect(() => {
+    if (dataRef.current !== data) {
+      setDisplayCount(pageSize);
+      dataRef.current = data;
+    }
+  }, [data, pageSize]);
+
+  // 加载更多的回调
+  const loadMore = useCallback(() => {
+    if (!data?.images || displayCount >= data.images.length) return;
+
+    setIsLoadingMore(true);
+    // 模拟加载延迟，避免图片闪烁
+    setTimeout(() => {
+      setDisplayCount((prev) => Math.min(prev + pageSize, data.images.length));
+      setIsLoadingMore(false);
+    }, 300);
+  }, [data?.images, displayCount, pageSize]);
+
+  // 使用 IntersectionObserver 监听滚动到底部
+  useEffect(() => {
+    const element = loadMoreRef.current;
+    if (!element || !data?.images || displayCount >= data.images.length) return;
+
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && !isLoadingMore) {
+          loadMore();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "100px",
+        threshold: 0.1,
+      },
+    );
+
+    observerRef.current.observe(element);
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [loadMore, data?.images, displayCount, isLoadingMore]);
+
+  // 获取当前要显示的图片
+  const displayedImages = data?.images.slice(0, displayCount) ?? [];
+  const hasMore = (data?.images?.length ?? 0) > displayCount;
 
   return (
     <div
@@ -44,17 +112,17 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
 
       <div className="p-4">
         {/* 所有图片以大图形式显示 */}
-        {data && data.images?.length > 0 && (
+        {displayedImages.length > 0 && (
           <div className="space-y-3 mb-4">
-            {data.images.map((image) => (
+            {displayedImages.map((image, index) => (
               <div
-                key={image.thumbnail}
+                key={`${image.thumbnail}-${index}`}
                 className="block rounded-lg hover:shadow-lg transition-all duration-200 group"
               >
                 <a
                   href={image.ref || image.url}
                   target="_blank"
-                  onClick={(e) => {
+                  onClick={(_e) => {
                     setPinned(true);
                   }}
                   rel="noopener noreferrer"
@@ -113,6 +181,33 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* 显示已加载数量和总数 */}
+        {data?.images && data.images.length > 0 && (
+          <div className="text-center text-xs text-gray-500 py-2">
+            已显示 {displayCount} / {data.images.length} 张图片
+          </div>
+        )}
+
+        {/* 加载更多触发器 */}
+        {hasMore && (
+          <div ref={loadMoreRef} className="py-4 text-center">
+            {isLoadingMore ? (
+              <div className="flex items-center justify-center gap-2 text-gray-600">
+                <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                <span className="text-sm">加载中...</span>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={loadMore}
+                className="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
+              >
+                加载更多
+              </button>
+            )}
           </div>
         )}
 

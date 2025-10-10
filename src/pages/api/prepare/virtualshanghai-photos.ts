@@ -32,7 +32,7 @@ export default async function handler(
     ) {
       photos = await getPhotosByIds(locationInfo.images);
     } else {
-      photos = await searchPhotosByName(normalizedName, 20);
+      photos = await searchPhotosByName(normalizedName, 200);
     }
     return res.status(200).json({ photos });
   } catch (_e) {

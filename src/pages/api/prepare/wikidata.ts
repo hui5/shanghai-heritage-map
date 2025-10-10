@@ -81,7 +81,7 @@ export default async function handler(
       commonsData: commonsData ?? null,
       hasShanghaiConstraint: hasShanghaiConstraint ?? true,
     });
-  } catch (e) {
+  } catch (_e) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }

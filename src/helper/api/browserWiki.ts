@@ -123,7 +123,7 @@ export const fetchWikipediaSummary = async (
     }
 
     throw new Error("No summary");
-  } catch (err) {
+  } catch (_err) {
     return {};
   }
 };
@@ -215,7 +215,7 @@ export const fetchWikicommonsImages = async (
       : commons;
     const api = `https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=${encodeURIComponent(
       category,
-    )}&gcmtype=file&gcmlimit=20&prop=imageinfo&iiprop=url|mime&iiurlwidth=${width}&format=json&origin=*`;
+    )}&gcmtype=file&gcmlimit=50&prop=imageinfo&iiprop=url|mime&iiurlwidth=${width}&format=json&origin=*`;
     const data = await fetchJSON(api);
     const pages = data?.query?.pages || {};
     const images = Object.values(pages)

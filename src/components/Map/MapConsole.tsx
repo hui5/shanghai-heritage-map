@@ -65,7 +65,7 @@ export function MapConsole({ mapInstance }: { mapInstance: UtilsMap }) {
           toggle={toggleBuildingSubtypeVisible}
         />
         <LayerSection
-          title="历史背景堆叠"
+          title="历史背景数据"
           icon="📜"
           mapInstance={mapInstance}
           subtypeDatas={snapshotH.subtypeDatas as SubtypeData[]}
@@ -121,12 +121,7 @@ function LayerSection({
           <div className="flex items-center space-x-2">
             <button
               type="button"
-              onClick={() =>
-                toggle({
-                  visible: !isGlobalVisible,
-                  mapInstance,
-                })
-              }
+              onClick={() => setIsExpanded(!isExpanded)}
               className="p-1 hover:bg-gray-200 rounded"
             >
               {isExpanded ? (
@@ -161,7 +156,7 @@ function LayerSection({
             {categoryDatas.map((categoryData) => {
               const isCategoryVisible = !!_.find(categoryData, "visible");
 
-              const categoryCount = _(categoryData)
+              const _categoryCount = _(categoryData)
                 .map(({ data }) => data?.features?.length || 0)
                 .sum();
 

@@ -56,7 +56,7 @@
       "subtypes": [
         {
           "id": "hujiang_landmarks",
-          "name": "《今日之沪江》上海地图",
+          "name": "《今日之沪江》上海地标",
           "dataFile": "table_Place_1928.geojson",
           "geometryType": "Point",
           "enabled": true,
@@ -659,7 +659,7 @@
 
     {
       "id": "virtual_shanghai",
-      "name": "可视上海",
+      "name": "虚拟上海",
       "icon": "📍",
       "enabled": true,
       "subtypes": [
@@ -855,7 +855,7 @@
 
     {
       "id": "districts",
-      "name": "历史区划",
+      "name": "租借区",
       "icon": "🗺️",
       "enabled": false,
       "subtypes": [
