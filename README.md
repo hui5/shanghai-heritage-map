@@ -190,6 +190,16 @@ https://shanghai-heritage-map.openda.top/
   
   ![](public/doc/20251010193632.png)
 
+- 江海关：虚拟中国
+
+  ![](public/doc/20251010220435.png)
+  ![](public/doc/20251010220509.png)
+  ![](public/doc/20251010220546.png)
+
+- 百老汇大厦：维基共享
+  
+  <img src="public/doc/20251010222839.png" width="500" alt="screenshot">
+
 
 - 林风眠
   
@@ -204,6 +214,9 @@ https://shanghai-heritage-map.openda.top/
   
   ![](public/doc/20251010191801.png)
 
+- 十六铺：老早上海
+  
+  <img src="public/doc/20251010223810.png" width="700" alt="screenshot">
 
 - 大世界：老早上海
   
