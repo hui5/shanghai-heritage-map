@@ -83,6 +83,9 @@ export function generateHistoricalLayerConfig(
           style.offset ?? [0, 0];
         layout["text-anchor"] = symbolConfig.textAnchor ?? "center";
 
+        layout["text-allow-overlap"] =
+          symbolConfig.textAllowOverlap ?? style.textAllowOverlap ?? true;
+
         paint["text-color"] = [
           "case",
           ["boolean", ["feature-state", "hover"], false],

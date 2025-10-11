@@ -122,7 +122,8 @@
               "textColor": "#8B4513",
               "textHaloColor": "#ffffff",
               "textHaloWidth": 1.5,
-              "textAnchor": "center"
+              "textAnchor": "center",
+              "textAllowOverlap": true
             }
           }
         }
