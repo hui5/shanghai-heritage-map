@@ -172,13 +172,22 @@ export class MultiLocationHighlighter {
    */
   highlight(locations: HighlightLocation[]) {
     try {
-      const source = this.map.getSource(
-        this.sourceId,
-      ) as mapboxgl.GeoJSONSource;
-
-      if (!source) {
-        console.warn("Highlight source not found");
+      // 确保地图样式已加载
+      if (!this.map.isStyleLoaded()) {
+        console.warn("Map style not loaded yet");
         return;
+      }
+
+      // 如果源不存在，尝试重新初始化
+      let source = this.map.getSource(this.sourceId) as mapboxgl.GeoJSONSource;
+      if (!source) {
+        console.log("Source not found, reinitializing...");
+        this.initialize();
+        source = this.map.getSource(this.sourceId) as mapboxgl.GeoJSONSource;
+        if (!source) {
+          console.warn("Failed to create highlight source");
+          return;
+        }
       }
 
       const features = locations.map((location) => ({
@@ -225,6 +234,11 @@ export class MultiLocationHighlighter {
    */
   clear() {
     try {
+      // 确保地图样式已加载
+      if (!this.map.isStyleLoaded()) {
+        return;
+      }
+
       const source = this.map.getSource(
         this.sourceId,
       ) as mapboxgl.GeoJSONSource;
