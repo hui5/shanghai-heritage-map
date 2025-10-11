@@ -1,5 +1,6 @@
 import type React from "react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { createLocationHighlighter } from "@/helper/mapbox/locationHighlight";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
 import { ImagesPreview } from "./_Images";
 import { useFavoriteStore } from "./favoriteStore";
@@ -19,6 +20,10 @@ export const FavoriteController: React.FC<FavoriteControllerProps> = ({
 
   const scheduleOpen = usePanelStore((s) => s.scheduleOpen);
 
+  const highlighterRef = useRef<ReturnType<
+    typeof createLocationHighlighter
+  > | null>(null);
+
   // 按分类分组收藏的图片
   const groupedFavorites = useMemo(() => {
     const groups: Record<string, typeof favorites> = {};
@@ -31,6 +36,20 @@ export const FavoriteController: React.FC<FavoriteControllerProps> = ({
     return groups;
   }, [favorites]);
 
+  // 初始化位置高亮管理器
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    highlighterRef.current = createLocationHighlighter(mapInstance, {
+      layerIdPrefix: "favorite-tag-highlight",
+    });
+
+    return () => {
+      highlighterRef.current?.destroy();
+      highlighterRef.current = null;
+    };
+  }, [mapInstance]);
+
   // 处理 tag 点击，跳转到对应的位置信息面板
   const handleTagClick = useCallback(
     (_tag: string, locationInfo?: LocationInfo) => {
@@ -39,13 +58,21 @@ export const FavoriteController: React.FC<FavoriteControllerProps> = ({
       // 关闭收藏面板
       closePanel();
 
-      // 如果有坐标，飞到该位置
+      // 如果有坐标，飞到该位置并高亮显示
       if (locationInfo.coordinates) {
+        const coordinates = locationInfo.coordinates;
+        const name = locationInfo.name;
+
         mapInstance.flyTo({
-          center: locationInfo.coordinates,
+          center: coordinates,
           zoom: 16,
           duration: 1000,
         });
+
+        // 高亮显示位置（延迟一点，等待飞行动画完成后再显示高亮效果更明显）
+        setTimeout(() => {
+          highlighterRef.current?.highlight(coordinates, name);
+        }, 1000);
       }
 
       // 打开位置信息面板
