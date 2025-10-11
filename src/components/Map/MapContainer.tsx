@@ -14,6 +14,7 @@ import { useGlobalClick } from "@/components/Map/interaction/useGlobalClick";
 import { MapConsole } from "@/components/Map/MapConsole";
 import MapContextMenu from "@/components/Map/MapContextMenu";
 import { WikimapLayer } from "@/components/Map/WikimapLayer";
+import { MapHelpButton } from "@/components/Map/MapHelpButton";
 import { localStorageUtil } from "@/utils/localStorage";
 import type { LocationInfo } from "../../helper/map-data/LocationInfo";
 import { getParamsFromUrl } from "../../helper/mapbox/getParamsFromUrl";
@@ -410,6 +411,8 @@ export default function MapContainer() {
             /> */}
           </div>
           <MapConsole mapInstance={mapInstance} />
+          {/* 帮助按钮 */}
+          <MapHelpButton />
         </>
       )}
     </div>

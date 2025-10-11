@@ -77,7 +77,7 @@ export function MapConsole({ mapInstance }: { mapInstance: UtilsMap }) {
     <button
       type="button"
       onClick={() => setIsExpanded(true)}
-      className="fixed top-10 right-2 bg-white border rounded-full shadow-xl p-3 hover:shadow-2xl transition z-[9999]"
+      className="fixed top-10 right-2 bg-white border rounded-full shadow-xl p-3 hover:shadow-2xl transition z-[9999] hover:scale-110"
       title="打开控制台"
       aria-label="打开控制台"
     >
