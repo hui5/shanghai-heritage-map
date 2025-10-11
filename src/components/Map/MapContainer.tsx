@@ -7,6 +7,8 @@ import { LoadingOverlay } from "@/components/Loading/LoadingOverlay";
 import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
 import { HistoricalLayers } from "@/components/Map/historical/Layers";
 import DetailedInfoModal from "@/components/Map/interaction/AI/DetailedInfoModal";
+import FavoriteButton from "@/components/Map/interaction/panel/FavoriteButton";
+import FavoriteController from "@/components/Map/interaction/panel/FavoriteController";
 import FloatingInfoController from "@/components/Map/interaction/panel/FloatingInfoController";
 import { useGlobalClick } from "@/components/Map/interaction/useGlobalClick";
 import { MapConsole } from "@/components/Map/MapConsole";
@@ -351,11 +353,19 @@ export default function MapContainer() {
         <span>GitHub</span>
       </a>
 
+      {/* 收藏按钮 */}
+      <div className="absolute top-24 right-2 z-10">
+        <FavoriteButton />
+      </div>
+
       {/* 确保样式和图层都准备就绪后才渲染自定义组件 */}
       {mapInstance && styleReady && (
         <>
           {/* 悬浮信息面板控制器 */}
           <FloatingInfoController mapInstance={mapInstance} />
+
+          {/* 收藏面板控制器 */}
+          <FavoriteController mapInstance={mapInstance} />
 
           {/* 详细信息模态框 */}
           {selectedLocationInfo && (

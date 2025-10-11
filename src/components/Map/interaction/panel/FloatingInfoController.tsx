@@ -129,6 +129,8 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
                 title=""
                 className=""
                 maxWidth={500}
+                category="维基共享"
+                locationInfo={locationInfo}
               />
             )}
           </div>
@@ -188,6 +190,8 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
                 title=""
                 className=""
                 maxWidth={700}
+                category="老早上海"
+                locationInfo={locationInfo}
               />
             )}
           </div>
@@ -234,6 +238,8 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
                 title=""
                 className=""
                 maxWidth={700}
+                category="虚拟上海"
+                locationInfo={locationInfo}
               />
             )}
           </div>
@@ -272,6 +278,8 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
                 title=""
                 className=""
                 maxWidth={700}
+                category="上图·照片"
+                locationInfo={locationInfo}
               />
             )}
           </div>

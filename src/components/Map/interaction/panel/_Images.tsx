@@ -1,5 +1,7 @@
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
+import { useFavoriteStore } from "./favoriteStore";
 import usePanelStore from "./panelStore";
 
 export interface Image {
@@ -11,6 +13,7 @@ export interface Image {
   ref?: string;
   date?: string;
   source?: string;
+  tags?: string[];
 }
 
 interface Data {
@@ -24,17 +27,47 @@ interface ImagesPreviewProps {
   title: string;
   maxWidth?: number;
   pageSize?: number; // 每页显示的图片数量
+  category?: string; // 分类名称，用于收藏功能
+  locationInfo?: LocationInfo; // 位置信息，用于收藏功能
+  showFavoriteButton?: boolean; // 是否显示收藏按钮
+  onTagClick?: (tag: string, locationInfo?: LocationInfo) => void; // tag 点击回调
 }
 
 export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
   data,
   className = "",
   maxWidth = 500,
-  title,
   pageSize = 10, // 默认每页显示10张图片
+  category = "",
+  locationInfo,
+  showFavoriteButton = true,
+  onTagClick,
 }) => {
   const setPinned = usePanelStore((s) => s.setPinned);
   const isFullscreen = usePanelStore((s) => s.isFullscreen);
+
+  // 订阅收藏列表，这样当收藏状态改变时组件会重新渲染
+  const favorites = useFavoriteStore((s) => s.favorites);
+  const addFavorite = useFavoriteStore((s) => s.addFavorite);
+  const removeFavorite = useFavoriteStore((s) => s.removeFavorite);
+
+  // 在组件中计算是否已收藏和获取 favoriteId
+  const isFavorited = useCallback(
+    (imageUrl: string, cat: string) => {
+      const favoriteId = `${cat}::${imageUrl}`;
+      return favorites.some((f) => f.favoriteId === favoriteId);
+    },
+    [favorites],
+  );
+
+  const getFavoriteId = useCallback(
+    (imageUrl: string, cat: string) => {
+      const favoriteId = `${cat}::${imageUrl}`;
+      const favorite = favorites.find((f) => f.favoriteId === favoriteId);
+      return favorite ? favorite.favoriteId : null;
+    },
+    [favorites],
+  );
 
   // 当前显示的图片数量
   const [displayCount, setDisplayCount] = useState(pageSize);
@@ -101,6 +134,41 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
   const displayedImages = data?.images.slice(0, displayCount) ?? [];
   const hasMore = (data?.images?.length ?? 0) > displayCount;
 
+  // 处理收藏按钮点击
+  const handleFavoriteClick = useCallback(
+    (image: Image, e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!locationInfo || !category) return;
+
+      const imageUrl = image.url || image.thumbnail;
+      const favoriteId = getFavoriteId(imageUrl, category);
+
+      if (favoriteId) {
+        removeFavorite(favoriteId);
+      } else {
+        addFavorite(image, category, locationInfo);
+      }
+    },
+    [locationInfo, category, addFavorite, removeFavorite, getFavoriteId],
+  );
+
+  // 处理 tag 点击
+  const handleTagClick = useCallback(
+    (tag: string, image: Image, e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // 如果是收藏的图片，可以从 locationInfo 中获取
+      const imageLocationInfo = (image as any).locationInfo;
+      if (onTagClick) {
+        onTagClick(tag, imageLocationInfo);
+      }
+    },
+    [onTagClick],
+  );
+
   return (
     <div
       className={` backdrop-blur-md rounded-lg  shadow-xl border border-white/10   overflow-hidden  ${className}`}
@@ -114,73 +182,124 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
         {/* 所有图片以大图形式显示 */}
         {displayedImages.length > 0 && (
           <div className="space-y-3 mb-4">
-            {displayedImages.map((image, index) => (
-              <div
-                key={`${image.thumbnail}-${index}`}
-                className="block rounded-lg hover:shadow-lg transition-all duration-200 group"
-              >
-                <a
-                  href={image.ref || image.url}
-                  target="_blank"
-                  onClick={(_e) => {
-                    setPinned(true);
-                  }}
-                  rel="noopener noreferrer"
+            {displayedImages.map((image, index) => {
+              const imageUrl = image.url || image.thumbnail;
+              const favorited =
+                showFavoriteButton && category && locationInfo
+                  ? isFavorited(imageUrl, category)
+                  : false;
+
+              return (
+                <div
+                  key={`${image.thumbnail}-${index}`}
+                  className="block rounded-lg hover:shadow-lg transition-all duration-200 group"
                 >
-                  <div className="flex items-center justify-center p-3 min-h-[120px]  bg-gradient-to-br from-transparent via-white/5 to-white/10  rounded-lg ">
-                    <img
-                      src={image.thumbnail}
-                      alt={image.title}
-                      className={` ${
-                        isFullscreen ? "max-h-[550px]" : "max-h-[450px]"
-                      } object-contain hover:scale-105 transition-transform duration-200 rounded shadow-md `}
-                      onError={(e) => {
-                        e.currentTarget.alt = "图片缺失";
-                      }}
-                    />
+                  <a
+                    href={image.ref || image.url}
+                    target="_blank"
+                    onClick={(_e) => {
+                      setPinned(true);
+                    }}
+                    rel="noopener noreferrer"
+                  >
+                    <div className="relative flex items-center justify-center p-3 min-h-[120px]  bg-gradient-to-br from-transparent via-white/5 to-white/10  rounded-lg ">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={image.thumbnail}
+                        alt={image.title || "历史图片"}
+                        className={` ${
+                          isFullscreen ? "max-h-[550px]" : "max-h-[450px]"
+                        } object-contain hover:scale-105 transition-transform duration-200 rounded shadow-md `}
+                        onError={(e) => {
+                          e.currentTarget.alt = "图片缺失";
+                        }}
+                      />
+                      {/* 收藏按钮 */}
+                      {showFavoriteButton && locationInfo && category && (
+                        <button
+                          type="button"
+                          onClick={(e) => handleFavoriteClick(image, e)}
+                          className="absolute top-5 right-5 p-2 bg-white/90 hover:bg-white rounded-lg shadow-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
+                          title={favorited ? "取消收藏" : "收藏"}
+                        >
+                          <svg
+                            className={`w-5 h-5 transition-colors ${
+                              favorited ? "text-blue-600" : "text-gray-500"
+                            }`}
+                            fill={favorited ? "currentColor" : "none"}
+                            stroke="currentColor"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                            />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  </a>
+                  {/* 图片标题 */}
+                  <div className="px-4 pb-4 ">
+                    {image.title && (
+                      <div className="  pt-1 rounded-b-lg">
+                        <p
+                          className={`${
+                            isFullscreen ? "text-sm" : "text-xs"
+                          }  text-gray-800  font-medium `}
+                          title={image.title}
+                        >
+                          {image.title}
+                        </p>
+                      </div>
+                    )}
+                    {image.description && (
+                      <div className="  pt-1 rounded-b-lg">
+                        <p
+                          className={`${
+                            isFullscreen ? "text-sm" : "text-xs"
+                          }  text-gray-700  font-medium`}
+                          title={image.description}
+                        >
+                          {image.description}
+                        </p>
+                      </div>
+                    )}
+                    {(image.address || image.date || image.source) && (
+                      <div className="  pt-1 rounded-b-lg">
+                        <p
+                          className={`${
+                            isFullscreen ? "text-sm" : "text-xs"
+                          }  text-gray-500  font-medium`}
+                        >
+                          {image.date || ""} {image.address || ""}
+                          {image.source || ""}
+                        </p>
+                      </div>
+                    )}
+                    {/* Tags 标签 */}
+                    {image.tags && image.tags.length > 0 && (
+                      <div className="pt-2 flex flex-wrap gap-1">
+                        {image.tags.map((tag) => (
+                          <button
+                            key={`${image.url}-${tag}`}
+                            type="button"
+                            onClick={(e) => handleTagClick(tag, image, e)}
+                            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors"
+                            title={`查看 ${tag}`}
+                          >
+                            {tag}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                </a>
-                {/* 图片标题 */}
-                <div className="px-4 pb-4 ">
-                  {image.title && (
-                    <div className="  pt-1 rounded-b-lg">
-                      <p
-                        className={`${
-                          isFullscreen ? "text-sm" : "text-xs"
-                        }  text-gray-800  font-medium `}
-                        title={image.title}
-                      >
-                        {image.title}
-                      </p>
-                    </div>
-                  )}
-                  {image.description && (
-                    <div className="  pt-1 rounded-b-lg">
-                      <p
-                        className={`${
-                          isFullscreen ? "text-sm" : "text-xs"
-                        }  text-gray-700  font-medium`}
-                        title={image.description}
-                      >
-                        {image.description}
-                      </p>
-                    </div>
-                  )}
-                  {(image.address || image.date || image.source) && (
-                    <div className="  pt-1 rounded-b-lg">
-                      <p
-                        className={`${
-                          isFullscreen ? "text-sm" : "text-xs"
-                        }  text-gray-500  font-medium`}
-                      >
-                        {image.date || ""} {image.address || ""}
-                        {image.source || ""}
-                      </p>
-                    </div>
-                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
