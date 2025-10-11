@@ -63,25 +63,44 @@ export const FavoriteController: React.FC<FavoriteControllerProps> = ({
         const coordinates = locationInfo.coordinates;
         const name = locationInfo.name;
 
+        // 监听飞行结束事件
+        const onMoveEnd = () => {
+          mapInstance.off("moveend", onMoveEnd);
+
+          // 飞行结束后显示高亮（highlight 方法内部会等待样式加载并确保图层在最上层）
+          highlighterRef.current?.highlight(coordinates, name);
+
+          // 打开位置信息面板
+          const currentZoom = mapInstance.getZoom();
+          scheduleOpen({
+            locationInfo,
+            triggerPoint: {
+              x: window.innerWidth / 2,
+              y: window.innerHeight / 2,
+            },
+            currentZoom,
+          });
+        };
+
+        mapInstance.once("moveend", onMoveEnd);
+
         mapInstance.flyTo({
           center: coordinates,
-          zoom: 16,
+          zoom: 17,
           duration: 1000,
         });
-
-        // 高亮显示位置（延迟一点，等待飞行动画完成后再显示高亮效果更明显）
-        setTimeout(() => {
-          highlighterRef.current?.highlight(coordinates, name);
-        }, 1000);
+      } else {
+        // 如果没有坐标，直接打开面板
+        const currentZoom = mapInstance.getZoom();
+        scheduleOpen({
+          locationInfo,
+          triggerPoint: {
+            x: window.innerWidth / 2,
+            y: window.innerHeight / 2,
+          },
+          currentZoom,
+        });
       }
-
-      // 打开位置信息面板
-      const currentZoom = mapInstance.getZoom();
-      scheduleOpen({
-        locationInfo,
-        triggerPoint: null,
-        currentZoom,
-      });
     },
     [mapInstance, closePanel, scheduleOpen],
   );
