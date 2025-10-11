@@ -87,7 +87,7 @@ const convertTraditionalToSimplified = async (
 ): Promise<string> => {
   try {
     // 通过 new Function 动态 import，避免 TS 模块解析错误
-    const dynamicImport: (m: string) => Promise<any> = new Function(
+    const _dynamicImport: (m: string) => Promise<any> = new Function(
       "m",
       "return import(m)",
     ) as any;
@@ -125,7 +125,10 @@ const removeCommonQualifiers = (input: string): string => {
   out = out.replace(tightSuffixRegex, "");
 
   // 折叠空白并去尾部空白/标点
-  out = out.replace(/\s{2,}/g, " ").replace(/[\s\-_,./:;]+$/, "");
+  out = out
+    .replace(/\s{2,}/g, " ")
+    .replace(/[\s\-_,./:;]+$/, "")
+    .split("\\")[0];
   return out.trim() || input;
 };
 
@@ -173,7 +176,7 @@ export async function normalizeQueryName(
   );
 
   // 去除结尾编号/序号（如: "(1)", "-2", " 3" 等）
-  s = s.replace(/[\s\-_,:;#]*[\(\[]?\s*\d{1,4}\s*[\)\]]?\s*$/, "");
+  s = s.replace(/[\s\-_,:;#]*[([]?\s*\d{1,4}\s*[)\]]?\s*$/, "");
 
   // 去除尾随标点/空白
   s = s.replace(/[\s\-_,./:;]+$/, "");

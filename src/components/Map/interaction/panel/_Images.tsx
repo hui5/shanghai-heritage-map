@@ -224,7 +224,7 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <title>查看更多</title>
+              <title>查看原始分类页面</title>
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
