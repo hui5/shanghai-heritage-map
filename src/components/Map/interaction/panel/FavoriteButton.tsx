@@ -9,7 +9,7 @@ export const FavoriteButton: React.FC = () => {
     <button
       type="button"
       onClick={openPanel}
-      className="group relative inline-flex items-center justify-center p-3 bg-white/90 hover:bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200/50 hover:scale-110"
+      className="group relative inline-flex items-center justify-center p-2 bg-white/90 hover:bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200/50 hover:scale-110"
       title="查看收藏的图片"
     >
       {/* 书签图标 */}

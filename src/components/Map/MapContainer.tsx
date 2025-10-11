@@ -13,8 +13,8 @@ import FloatingInfoController from "@/components/Map/interaction/panel/FloatingI
 import { useGlobalClick } from "@/components/Map/interaction/useGlobalClick";
 import { MapConsole } from "@/components/Map/MapConsole";
 import MapContextMenu from "@/components/Map/MapContextMenu";
-import { WikimapLayer } from "@/components/Map/WikimapLayer";
 import { MapHelpButton } from "@/components/Map/MapHelpButton";
+import { WikimapLayer } from "@/components/Map/WikimapLayer";
 import { localStorageUtil } from "@/utils/localStorage";
 import type { LocationInfo } from "../../helper/map-data/LocationInfo";
 import { getParamsFromUrl } from "../../helper/mapbox/getParamsFromUrl";
@@ -355,7 +355,7 @@ export default function MapContainer() {
       </a>
 
       {/* 收藏按钮 */}
-      <div className="absolute top-24 right-2 z-10">
+      <div className="absolute top-24 right-3 z-10">
         <FavoriteButton />
       </div>
 
