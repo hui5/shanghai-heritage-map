@@ -1,3 +1,4 @@
+import type { Geometry } from "@/components/Map/historical/types";
 import type { LocationInfo_Mapbook } from "./mapbook";
 import type { LocationInfo_OpenStreetMap } from "./openstreetmap";
 import type { LocationInfo_SHLibrary } from "./shlibrary";
@@ -19,6 +20,7 @@ export interface CommonFields {
   properties: any;
 
   coordinates?: [number, number];
+  geometry?: Geometry;
 }
 
 export type LocationInfo =

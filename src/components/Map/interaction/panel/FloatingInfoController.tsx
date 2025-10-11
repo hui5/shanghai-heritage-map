@@ -1,5 +1,5 @@
 import type React from "react";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import useSWR from "swr";
 import { LoadingSpinner } from "@/components/Loading/LoadingOverlay";
 import type { LaozaoItem } from "@/helper/api/laozaoShanghaiPhotosApi";
@@ -8,6 +8,7 @@ import {
   getShLibraryThumbnailUrl,
 } from "@/helper/api/shLibraryPhotosApi";
 import type { VirtualShanghaiPhotoZh } from "@/helper/api/virtualShanghaiPhotosApi";
+import { createLocationHighlighter } from "@/helper/mapbox/locationHighlight";
 import {
   getVirtualShanghaiBuildingLink,
   getVirtualShanghaiImageUrl_proxy,
@@ -32,13 +33,19 @@ export interface FloatingInfoControllerProps {
 
 export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
   mapInstance,
-  behavior,
 }) => {
   const locationInfo = usePanelStore((s) => s.locationInfo);
   const triggerPoint = usePanelStore((s) => s.triggerPoint);
 
   const forceHide = usePanelStore((s) => s.forceHide);
   const isOpen = usePanelStore((s) => s.isOpen);
+  const isFullscreen = usePanelStore((s) => s.isFullscreen);
+
+  const prevIsOpenRef = useRef<boolean>(isOpen);
+  const prevIsFullscreenRef = useRef<boolean>(isFullscreen);
+  const highlighterRef = useRef<ReturnType<
+    typeof createLocationHighlighter
+  > | null>(null);
   // Split endpoints per requirement
   const fetcher = useCallback((url: string, body: any) => {
     return fetch(url, {
@@ -295,6 +302,39 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
       forceHide();
     }
   }, [locationInfo, contents, forceHide]);
+
+  // 初始化位置高亮管理器
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    highlighterRef.current = createLocationHighlighter(mapInstance, {
+      layerIdPrefix: "panel-close-highlight",
+    });
+
+    return () => {
+      highlighterRef.current?.destroy();
+      highlighterRef.current = null;
+    };
+  }, [mapInstance]);
+
+  // 监听 panel 关闭事件，在地图上高亮显示位置（仅全屏模式）
+  useEffect(() => {
+    const wasOpen = prevIsOpenRef.current;
+    const wasFullscreen = prevIsFullscreenRef.current;
+    const isNowClosed = wasOpen && !isOpen;
+
+    // 更新 ref
+    prevIsOpenRef.current = isOpen;
+    prevIsFullscreenRef.current = isFullscreen;
+
+    // 只在全屏模式下关闭时，才显示高亮
+    if (isNowClosed && wasFullscreen && locationInfo?.coordinates) {
+      highlighterRef.current?.highlight(
+        locationInfo.coordinates,
+        locationInfo.name,
+      );
+    }
+  }, [isOpen, isFullscreen, locationInfo]);
 
   return (
     <>

@@ -1,5 +1,7 @@
+import { cloneDeep } from "lodash";
 import type { GeoJSONFeature } from "mapbox-gl";
 import type { LocationInfo } from "@/helper/map-data/LocationInfo";
+import type { Geometry } from "../historical/types";
 
 export const unclusteredLayerIds = [
   "openda_building-unclustered-point",
@@ -25,10 +27,7 @@ export const getBuildingLocationInfo = (
     properties: props,
     subtypeId: "",
 
-    coordinates:
-      feature.geometry.type === "Point"
-        ? (feature.geometry as any).coordinates.slice()
-        : undefined,
+    geometry: cloneDeep(feature.geometry) as Geometry,
   };
 };
 

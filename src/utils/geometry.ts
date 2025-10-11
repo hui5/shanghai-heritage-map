@@ -1,5 +1,5 @@
-// 获取几何体的极值坐标点（支持 top/bottom/left/right）
-type ExtremumMode = "top" | "bottom" | "left" | "right";
+// 获取几何体的极值坐标点（支持 top/bottom/left/right/center）
+type ExtremumMode = "top" | "bottom" | "left" | "right" | "center";
 export const getExtremeCoordinate = (
   geometry: any,
   mode: ExtremumMode = "left",
@@ -58,6 +58,8 @@ export const getExtremeCoordinate = (
       return [centerLng, bounds.minLat];
     case "right":
       return [bounds.maxLng, centerLat];
+    case "center":
+      return [centerLng, centerLat];
     default:
       return [bounds.minLng, centerLat];
   }

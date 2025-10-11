@@ -34,7 +34,11 @@ export const showPopup = ({
     : generateHistoricalPopupContent(feature);
 
   timeoutId = setTimeout(() => {
-    const coordinates = locationInfo.coordinates || lngLat;
+    const coordinates =
+      locationInfo.geometry?.type === "Point"
+        ? locationInfo.geometry.coordinates
+        : lngLat;
+    locationInfo.coordinates = coordinates;
     // 创建主弹出框
     mainPopup = new mapboxgl.Popup({
       closeButton: false,

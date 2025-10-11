@@ -1,4 +1,6 @@
+import { cloneDeep } from "lodash";
 import type { GeoJSONFeature } from "mapbox-gl";
+import type { Geometry } from "@/components/Map/historical/types";
 import {
   generateMapbookAttributeRows,
   getMapbookLocationInfo,
@@ -52,10 +54,7 @@ export const getHistoricalLocationInfo = (
     locationInfo = getMapbookLocationInfo(props, subtypeId);
   }
 
-  locationInfo.coordinates =
-    feature.geometry.type === "Point"
-      ? (feature.geometry as any).coordinates.slice()
-      : undefined;
+  locationInfo.geometry = cloneDeep(feature.geometry) as Geometry;
 
   return locationInfo;
 };
@@ -169,7 +168,7 @@ export const generateHistoricalPopupContent = (feature: GeoJSONFeature) => {
           <p style="margin: 0; font-size: 12px; color: #6B7280; line-height: 1.5;">
              ${
                description.length > 120
-                 ? description.substring(0, 120) + "..."
+                 ? `${description.substring(0, 120)}...`
                  : description
              }
           </p>
