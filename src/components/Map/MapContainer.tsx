@@ -238,6 +238,8 @@ export default function MapContainer() {
         // 设置中文字体支持
         localIdeographFontFamily:
           "'Noto Sans CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif",
+        attributionControl: false,
+        logoPosition: "bottom-right",
       });
 
       U.init(newMap as any, mapboxgl);
@@ -348,7 +350,7 @@ export default function MapContainer() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="在 GitHub 查看项目"
-        className="absolute right-0 bottom-0 z-10 inline-flex items-center gap-2 rounded-md bg-white/5 pr-4 pl-7 py-1 text-xs font-medium text-gray-800 shadow backdrop-blur hover:bg-white"
+        className="absolute right-1 bottom-2 z-10 inline-flex items-center gap-2 rounded-md bg-white/5 px-1 pt-1 text-xs font-medium text-gray-800 shadow backdrop-blur hover:bg-white"
       >
         <Github className="h-4 w-4" />
         <span>GitHub</span>
