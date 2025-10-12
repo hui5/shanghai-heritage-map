@@ -384,14 +384,14 @@ export default function MapContainer() {
             mapInstance={mapInstance}
             containerRef={mapContainer}
           />
-
+          {/* 建筑聚合图层 */}
+          <BuildingClusterLayers mapInstance={mapInstance} />
           {/* 历史背景图层 */}
           <HistoricalLayers
             mapInstance={mapInstance}
             configName="historical-context"
           />
-          {/* 建筑聚合图层 */}
-          <BuildingClusterLayers mapInstance={mapInstance} />
+
           {/* Wikimedia 照片点层（独立功能） */}
           <WikimapLayer mapInstance={mapInstance} />
           {/* 搜索功能 */}

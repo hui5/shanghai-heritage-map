@@ -44,7 +44,9 @@ export function generateHistoricalLayerConfig(
           );
           layout["icon-anchor"] = symbolConfig.iconAnchor ?? "center";
           layout["icon-offset"] = symbolConfig.iconOffset ?? [0, 0];
-          layout["icon-allow-overlap"] = symbolConfig.iconAllowOverlap ?? true;
+          layout["icon-allow-overlap"] = symbolConfig.iconAllowOverlap ?? false;
+          layout["icon-ignore-placement"] =
+            symbolConfig.iconIgnorePlacement ?? false;
 
           // 图标颜色应该放在 paint 中
           if (symbolConfig.iconColor || style.color) {
