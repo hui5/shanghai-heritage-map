@@ -20,7 +20,7 @@ export default function Document() {
         <link rel="dns-prefetch" href="https://api.mapbox.com" />
         <script
           defer
-          src="https://static.cloudflareinsights.com/beacon.min.js"
+          src="/beacon.min.js"
           data-cf-beacon='{"token": "5e5d550b57f543e48c8538d387318e48"}'
         ></script>
       </Head>
