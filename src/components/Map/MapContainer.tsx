@@ -348,38 +348,15 @@ export default function MapContainer() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="在 GitHub 查看项目"
-        className="absolute right-0 top-0 z-10 inline-flex items-center gap-2 rounded-md bg-white/30 px-4 py-2 text-xs font-medium text-gray-800 shadow backdrop-blur hover:bg-white"
+        className="absolute right-0 bottom-0 z-10 inline-flex items-center gap-2 rounded-md bg-white/5 pr-4 pl-7 py-1 text-xs font-medium text-gray-800 shadow backdrop-blur hover:bg-white"
       >
         <Github className="h-4 w-4" />
         <span>GitHub</span>
       </a>
 
-      {/* 收藏按钮 */}
-      <div className="absolute top-24 right-3 z-10">
-        <FavoriteButton />
-      </div>
-
       {/* 确保样式和图层都准备就绪后才渲染自定义组件 */}
       {mapInstance && styleReady && (
         <>
-          {/* 悬浮信息面板控制器 */}
-          <FloatingInfoController mapInstance={mapInstance} />
-
-          {/* 收藏面板控制器 */}
-          <FavoriteController mapInstance={mapInstance} />
-
-          {/* 详细信息模态框 */}
-          {selectedLocationInfo && (
-            <DetailedInfoModal
-              isOpen={detailedInfoModalOpen}
-              onClose={() => {
-                setDetailedInfoModalOpen(false);
-                setSelectedLocationInfo(null);
-              }}
-              locationInfo={selectedLocationInfo}
-            />
-          )}
-
           <MapContextMenu
             mapInstance={mapInstance}
             containerRef={mapContainer}
@@ -411,6 +388,29 @@ export default function MapContainer() {
             /> */}
           </div>
           <MapConsole mapInstance={mapInstance} />
+          {/* 详细信息模态框 */}
+          {selectedLocationInfo && (
+            <DetailedInfoModal
+              isOpen={detailedInfoModalOpen}
+              onClose={() => {
+                setDetailedInfoModalOpen(false);
+                setSelectedLocationInfo(null);
+              }}
+              locationInfo={selectedLocationInfo}
+            />
+          )}
+
+          {/* 悬浮信息面板控制器 */}
+          <FloatingInfoController mapInstance={mapInstance} />
+
+          {/* 收藏面板控制器 */}
+          <FavoriteController mapInstance={mapInstance} />
+
+          {/* 收藏按钮 */}
+          <div className="absolute top-16 right-3 z-10">
+            <FavoriteButton />
+          </div>
+
           {/* 帮助按钮 */}
           <MapHelpButton />
         </>
