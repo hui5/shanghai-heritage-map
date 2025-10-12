@@ -23,6 +23,7 @@
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
     "@upstash/redis": "^1.35.3",
+    "@vercel/analytics": "^1.5.0",
     "ai": "^5.0.27",
     "autoprefixer": "^10.4.16",
     "clsx": "^2.0.0",
