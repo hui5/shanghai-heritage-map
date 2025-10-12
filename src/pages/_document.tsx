@@ -18,11 +18,11 @@ export default function Document() {
         {/* 优化地图加载的预连接（Mapbox） */}
         <link rel="preconnect" href="https://api.mapbox.com" />
         <link rel="dns-prefetch" href="https://api.mapbox.com" />
-        <script
+        {/* <script
           defer
           src="https://analytics-proxy.openda.top/app.js"
           data-cf-beacon='{"token": "5e5d550b57f543e48c8538d387318e48"}'
-        ></script>
+        ></script> */}
         <script
           defer
           src="https://analytics-proxy-vercel.openda.top/app.js"
