@@ -378,10 +378,10 @@
             "symbol": {
               "type": "icon",
               "iconImage": "bus",
-              "iconAnchor": "center",
-              "iconSizeStops": [[13, 0.8], [20, 1]],
+              "iconAnchor": "right",
+              "iconSizeStops": [[15, 0.7], [20, 0.9]],
               "iconSizeBase": 1.2,
-              "iconOffset": [-1, 0],
+              "iconOffset": [0, 0],
               "iconAllowOverlap": false
             }
           },
@@ -390,13 +390,13 @@
             "minZoom": 15,
             "field": "title",
             "style": {
-              "fontSizeStops": [[13, 12], [20, 14]],
+              "fontSizeStops": [[15, 12], [20, 14]],
               "fontSizeBase": 1.2,
               "color": "#3182bd",
               "haloColor": "#ffffff",
               "haloWidth": 1,
               "textAnchor": "left",
-              "offset": [1, 0]
+              "offset": [0.4, 0]
             }
           }
         }
@@ -451,10 +451,10 @@
             "symbol": {
               "type": "icon",
               "iconImage": "bus",
-              "iconAnchor": "center",
-              "iconSizeStops": [[13, 0.8], [20, 1]],
+              "iconAnchor": "right",
+              "iconSizeStops": [[15, 0.7], [20, 0.9]],
               "iconSizeBase": 1.2,
-              "iconOffset": [-1, 0],
+              "iconOffset": [0, 0],
               "iconAllowOverlap": false
             }
           },
@@ -463,13 +463,13 @@
             "minZoom": 15,
             "field": "title",
             "style": {
-              "fontSizeStops": [[13, 12], [20, 14]],
+              "fontSizeStops": [[15, 12], [20, 14]],
               "fontSizeBase": 1.2,
               "color": "#3182bd",
               "haloColor": "#ffffff",
               "haloWidth": 1,
               "textAnchor": "left",
-              "offset": [1, 0]
+              "offset": [0.4, 0]
             }
           }
         }
@@ -524,10 +524,10 @@
             "symbol": {
               "type": "icon",
               "iconImage": "bus",
-              "iconAnchor": "center",
-              "iconSizeStops": [[13, 0.8], [20, 1]],
+              "iconAnchor": "right",
+              "iconSizeStops": [[15, 0.7], [20, 0.9]],
               "iconSizeBase": 1.2,
-              "iconOffset": [-1, 0],
+              "iconOffset": [0, 0],
               "iconAllowOverlap": false
             }
           },
@@ -536,13 +536,13 @@
             "minZoom": 15,
             "field": "title",
             "style": {
-              "fontSizeStops": [[13, 12], [20, 14]],
+              "fontSizeStops": [[15, 12], [20, 14]],
               "fontSizeBase": 1.2,
               "color": "#3182bd",
               "haloColor": "#ffffff",
               "haloWidth": 1,
               "textAnchor": "left",
-              "offset": [1, 0]
+              "offset": [0.4, 0]
             }
           }
         }
