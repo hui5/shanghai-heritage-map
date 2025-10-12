@@ -350,7 +350,7 @@ export default function MapContainer() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="在 GitHub 查看项目"
-        className="absolute right-1 bottom-2 z-10 inline-flex items-center gap-2 rounded-md bg-white/5 px-1 pt-1 text-xs font-medium text-gray-800 shadow backdrop-blur hover:bg-white"
+        className="absolute right-1 bottom-2 z-10 inline-flex items-center gap-1 rounded-md bg-white/70 pl-2 pr-1 pt-1 text-xs font-medium text-gray-800 shadow backdrop-blur hover:bg-white"
       >
         <Github className="h-4 w-4" />
         <span>GitHub</span>
