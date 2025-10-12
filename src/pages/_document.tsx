@@ -23,10 +23,10 @@ export default function Document() {
           src="https://analytics-proxy.openda.top/app.js"
           data-cf-beacon='{"token": "5e5d550b57f543e48c8538d387318e48"}'
         ></script> */}
-        <script
+        {/* <script
           defer
           src="https://analytics-proxy-vercel.openda.top/app.js"
-        ></script>
+        ></script> */}
       </Head>
       <body>
         <Main />
