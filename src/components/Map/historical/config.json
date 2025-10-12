@@ -304,7 +304,7 @@
               "iconSizeStops": [[12, 0.8], [20, 1]],
               "iconSizeBase": 1.2,
               "iconAnchor": "center",
-              "iconOffset": [0, 0],
+              "iconOffset": [-1, 0],
               "iconAllowOverlap": true
             }
           },
@@ -318,8 +318,8 @@
               "color": "#8B4513",
               "haloColor": "#ffffff",
               "haloWidth": 1,
-              "textAnchor": "top",
-              "offset": [0, 0.7],
+              "textAnchor": "left",
+              "offset": [0.7, 0],
               "opacity": 0.8
             }
           }
@@ -681,7 +681,7 @@
 
               "iconSizeBase": 1.2,
               "iconAnchor": "center",
-              "iconOffset": [0, -1],
+              "iconOffset": [-1, 0],
               "iconAllowOverlap": true,
               "iconOpacity": 0.8
             }
@@ -696,8 +696,8 @@
               "color": "#636363",
               "haloColor": "#ffffff",
               "haloWidth": 1,
-              "offset": [0, 0.9],
-              "textAnchor": "top"
+              "offset": [0.7, 0],
+              "textAnchor": "left"
             }
           }
         }
