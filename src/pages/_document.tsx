@@ -20,7 +20,7 @@ export default function Document() {
         <link rel="dns-prefetch" href="https://api.mapbox.com" />
         <script
           defer
-          src="/cf.min.js"
+          src="https://analytics-proxy.openda.top/app.js"
           data-cf-beacon='{"token": "5e5d550b57f543e48c8538d387318e48"}'
         ></script>
       </Head>
