@@ -382,7 +382,7 @@
               "iconSizeStops": [[15, 0.7], [20, 0.9]],
               "iconSizeBase": 1.2,
               "iconOffset": [0, 0],
-              "iconAllowOverlap": false
+              "iconAllowOverlap": true
             }
           },
           "labels": {
@@ -455,7 +455,7 @@
               "iconSizeStops": [[15, 0.7], [20, 0.9]],
               "iconSizeBase": 1.2,
               "iconOffset": [0, 0],
-              "iconAllowOverlap": false
+              "iconAllowOverlap": true
             }
           },
           "labels": {
@@ -528,7 +528,7 @@
               "iconSizeStops": [[15, 0.7], [20, 0.9]],
               "iconSizeBase": 1.2,
               "iconOffset": [0, 0],
-              "iconAllowOverlap": false
+              "iconAllowOverlap": true
             }
           },
           "labels": {
