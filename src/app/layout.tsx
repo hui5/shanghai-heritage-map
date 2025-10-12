@@ -1,4 +1,5 @@
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import type { Metadata } from "next";
 import "../styles/globals.css";
 import MapLayout from "./MapLayout";
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body>
         <MapLayout>{children}</MapLayout>
         <Analytics scriptSrc="/va/script.js" />
+        <SpeedInsights />
       </body>
     </html>
   );
