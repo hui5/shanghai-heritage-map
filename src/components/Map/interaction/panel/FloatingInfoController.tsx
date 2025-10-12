@@ -325,22 +325,40 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
     };
   }, [mapInstance]);
 
-  // 监听 panel 关闭事件，在地图上高亮显示位置（仅全屏模式）
+  // 监听全屏状态变化，处理高亮和URL同步
   useEffect(() => {
     const wasOpen = prevIsOpenRef.current;
     const wasFullscreen = prevIsFullscreenRef.current;
-    const isNowClosed = wasOpen && !isOpen;
 
-    // 更新 ref
+    // 检测状态变化
+    const didClose = wasOpen && !isOpen;
+    const didEnterFullscreen = !wasFullscreen && isFullscreen;
+    const didExitFullscreen = wasFullscreen && !isFullscreen;
+
+    // 更新ref（在所有逻辑之前）
     prevIsOpenRef.current = isOpen;
     prevIsFullscreenRef.current = isFullscreen;
 
-    // 只在全屏模式下关闭时，才显示高亮
-    if (isNowClosed && wasFullscreen && locationInfo?.coordinates) {
+    // 1. 全屏模式下关闭panel时，在地图上显示高亮
+    if (didClose && wasFullscreen && locationInfo?.coordinates) {
       highlighterRef.current?.highlight(
         locationInfo.coordinates,
         locationInfo.name,
       );
+    }
+
+    // 2. 进入全屏时，更新URL（不触发路由导航）
+    if (didEnterFullscreen && locationInfo?.name) {
+      window.history.pushState(
+        {},
+        "",
+        `/search/${encodeURIComponent(locationInfo.name)}`,
+      );
+    }
+
+    // 3. 退出全屏时，返回首页URL（不触发路由导航）
+    if (didExitFullscreen) {
+      window.history.pushState({}, "", "/");
     }
   }, [isOpen, isFullscreen, locationInfo]);
 
