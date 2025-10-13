@@ -240,7 +240,7 @@ export function GlobalLightbox() {
 
         initializePhotoSwipe(pswp, [currentImage]);
 
-        // 如果有高清图，在后台加载并替换
+        // 如果有高清图，在后台加载并无缝替换
         if (hasHighRes) {
           const fullImg = new Image();
           fullImg.src = fullSrc;
@@ -248,16 +248,20 @@ export function GlobalLightbox() {
           fullImg.onload = () => {
             // 检查 PhotoSwipe 是否还在打开状态
             if (pswp && !pswp.isDestroying) {
-              // 更新数据源为高清图
               const slide = pswp.currSlide;
-              if (slide) {
-                // 更新 slide 的数据
-                slide.data.src = fullSrc;
-                slide.data.width = fullImg.naturalWidth;
-                slide.data.height = fullImg.naturalHeight;
+              if (slide?.content?.element) {
+                // 找到当前显示的图片元素
+                const imgElement = slide.content.element.querySelector("img");
 
-                // 重新加载当前 slide
-                pswp.refreshSlideContent(0);
+                if (imgElement) {
+                  // 高清图已经完全加载到内存，直接替换 src 不会有闪烁
+                  imgElement.src = fullSrc;
+
+                  // 更新数据源（供缩放等操作使用）
+                  slide.data.src = fullSrc;
+                  slide.data.width = fullImg.naturalWidth;
+                  slide.data.height = fullImg.naturalHeight;
+                }
               }
             }
           };
