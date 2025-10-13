@@ -31,9 +31,7 @@ export const FloatingInfoPanelFullscreen: React.FC<
   const visibleContents = contents.filter((c) => c.visible !== false);
 
   return (
-    <div
-      className={`fixed inset-0 z-[2000000] pointer-events-auto ${className}`}
-    >
+    <div className={`fixed inset-0 z-[200] pointer-events-auto ${className}`}>
       <div
         className="h-full w-full flex flex-col bg-white/50 backdrop-blur-md border-t border-gray-200"
         role="dialog"

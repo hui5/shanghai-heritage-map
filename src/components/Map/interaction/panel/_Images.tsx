@@ -2,6 +2,7 @@ import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
 import { useFavoriteStore } from "./favoriteStore";
+import { openLightbox } from "./GlobalLightbox";
 import usePanelStore from "./panelStore";
 
 export interface Image {
@@ -134,6 +135,17 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
   const displayedImages = data?.images.slice(0, displayCount) ?? [];
   const hasMore = (data?.images?.length ?? 0) > displayCount;
 
+  // 处理图片点击，打开全局 Lightbox
+  const handleImageClick = useCallback(
+    (index: number) => {
+      // 传递完整的图片组，而不是当前显示的10个
+      const allImages = data?.images ?? [];
+      openLightbox(allImages, index, onTagClick, category, locationInfo);
+      setPinned(true);
+    },
+    [data?.images, onTagClick, category, locationInfo, setPinned],
+  );
+
   // 处理收藏按钮点击
   const handleFavoriteClick = useCallback(
     (image: Image, e: React.MouseEvent) => {
@@ -194,15 +206,12 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
                   key={`${image.thumbnail}-${index}`}
                   className="block rounded-lg hover:shadow-lg transition-all duration-200 group"
                 >
-                  <a
-                    href={image.ref || image.url}
-                    target="_blank"
-                    onClick={(_e) => {
-                      setPinned(true);
-                    }}
-                    rel="noopener noreferrer"
+                  <button
+                    type="button"
+                    onClick={() => handleImageClick(index)}
+                    className="w-full text-left"
                   >
-                    <div className="relative flex items-center justify-center p-3 min-h-[120px]  bg-gradient-to-br from-transparent via-white/5 to-white/10  rounded-lg ">
+                    <div className="relative flex items-center justify-center p-3 min-h-[120px]  bg-gradient-to-br from-transparent via-white/5 to-white/10  rounded-lg cursor-pointer">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={image.thumbnail}
@@ -241,7 +250,7 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
                         </button>
                       )}
                     </div>
-                  </a>
+                  </button>
                   {/* 图片标题 */}
                   <div className="px-4 pb-4 ">
                     {image.title && (

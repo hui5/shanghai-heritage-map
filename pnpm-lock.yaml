@@ -80,6 +80,9 @@ importers:
       opencc-js:
         specifier: ^1.0.5
         version: 1.0.5
+      photoswipe:
+        specifier: ^5.4.4
+        version: 5.4.4
       postcss:
         specifier: ^8.4.32
         version: 8.5.6
@@ -3052,6 +3055,10 @@ packages:
 
   performance-now@2.1.0:
     resolution: {integrity: sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==}
+
+  photoswipe@5.4.4:
+    resolution: {integrity: sha512-WNFHoKrkZNnvFFhbHL93WDkW3ifwVOXSW3w1UuZZelSmgXpIGiZSNlZJq37rR8YejqME2rHs9EhH9ZvlvFH2NA==}
+    engines: {node: '>= 0.12.0'}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -7923,6 +7930,8 @@ snapshots:
       resolve-protobuf-schema: 2.1.0
 
   performance-now@2.1.0: {}
+
+  photoswipe@5.4.4: {}
 
   picocolors@1.1.1: {}
 

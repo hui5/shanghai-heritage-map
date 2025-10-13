@@ -23,6 +23,7 @@ import { createPortal } from "react-dom";
 import { Rnd } from "react-rnd";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
 import { FloatingInfoPanelFullscreen } from "./FloatingInfoPanelFullscreen";
+import { isGlobalLightboxOpen } from "./GlobalLightbox";
 import { PANEL } from "./panelConfig";
 import { usePanelStore } from "./panelStore";
 
@@ -212,6 +213,10 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
       }
 
       if (key === "Escape") {
+        // 如果 lightbox 打开，不处理 ESC 键，让 lightbox 处理
+        if (isGlobalLightboxOpen()) {
+          return false;
+        }
         close();
         return true;
       }
@@ -391,7 +396,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
 
   const nonFullscreenPanel = isTouch ? (
     // 触摸屏：固定全屏大小的面板
-    <div className={`fixed inset-0 z-[2000000] ${className}`}>
+    <div className={`fixed inset-0 z-[2000] ${className}`}>
       <div
         ref={containerRef}
         className="h-full w-full flex flex-col bg-white/50 backdrop-blur-md border-t border-gray-200"

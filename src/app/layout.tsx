@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import type { Metadata } from "next";
 import "../styles/globals.css";
+import { GlobalLightbox } from "../components/Map/interaction/panel/GlobalLightbox";
 import MapLayout from "./MapLayout";
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({
       </head>
       <body>
         <MapLayout>{children}</MapLayout>
+        <GlobalLightbox />
         <Analytics scriptSrc="/va/script.js" />
         <SpeedInsights scriptSrc="/vercel-speed-script.js" />
       </body>
