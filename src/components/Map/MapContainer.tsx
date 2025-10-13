@@ -15,7 +15,6 @@ import MapContextMenu from "@/components/Map/MapContextMenu";
 import { MapHelpButton } from "@/components/Map/MapHelpButton";
 import { WikimapLayer } from "@/components/Map/WikimapLayer";
 import { localStorageUtil } from "@/utils/localStorage";
-import type { LocationInfo } from "../../helper/map-data/LocationInfo";
 import { getParamsFromUrl } from "../../helper/mapbox/getParamsFromUrl";
 import { addEventListeners } from "./interaction/addInteraction";
 
@@ -28,11 +27,6 @@ export default function MapContainer() {
   const [mapMode, setMapMode] = useState<"2d" | "3d" | "middle">("3d");
   const [currentPitch, setCurrentPitch] = useState<number>(defaultPitch);
   const [lastPitch, setLastPitch] = useState<number>(0);
-
-  // 显示详细信息的回调（保留以兼容旧逻辑，但实际不再使用）
-  const handleShowDetailedInfo = useCallback((_data: LocationInfo) => {
-    // 已弃用，功能已转移到 panel 中
-  }, []);
 
   // 统一的地图模式切换回调
   const handleMapModeToggle = useCallback(
@@ -148,7 +142,6 @@ export default function MapContainer() {
 
   useGlobalClick({
     mapInstance,
-    onShowDetailedInfo: handleShowDetailedInfo,
     minZoomLevel: 11,
   });
 

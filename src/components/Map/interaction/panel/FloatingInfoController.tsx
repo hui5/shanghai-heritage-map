@@ -299,7 +299,7 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
         id: "ai",
         label: "AI 分析",
         render: (
-          <div className="relative h-full">
+          <div className="relative h-full max-w-2xl">
             <AIStreamingDisplay
               key={`${locationInfo.coordinates?.[0]}-${locationInfo.coordinates?.[1]}-${locationInfo.name || "unknown"}`}
               requestData={{
@@ -336,25 +336,13 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
 
   useEffect(() => {
     if (locationInfo && contents.length === 0) {
-      forceHide();
+      if (isFullscreen && !aiActive) {
+        setAiActive(true);
+      } else {
+        forceHide();
+      }
     }
-  }, [locationInfo, contents, forceHide]);
-
-  // 自动触发AI：当全屏显示且查询结果都为空时
-  useEffect(() => {
-    if (!isFullscreen || !locationInfo) {
-      return;
-    }
-
-    // 计算非AI的内容数量
-    const nonAiContents = contents.filter((c) => c.id !== "ai");
-    const hasNonAiContent = nonAiContents.length > 0;
-
-    // 如果全屏且没有非AI内容，自动触发AI
-    if (!hasNonAiContent && !aiActive) {
-      setAiActive(true);
-    }
-  }, [isFullscreen, locationInfo, contents, aiActive, setAiActive]);
+  }, [locationInfo, contents, forceHide, isFullscreen, setAiActive, aiActive]);
 
   // 初始化位置高亮管理器
   useEffect(() => {

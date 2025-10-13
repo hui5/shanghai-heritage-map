@@ -114,6 +114,7 @@ export const usePanelStore = create<PanelState>((set, get) => ({
     if (isFullscreen) return;
     set({
       isOpen: false,
+      aiActive: false,
     });
   },
 

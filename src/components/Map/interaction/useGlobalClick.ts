@@ -9,13 +9,11 @@ import usePanelStore from "./panel/panelStore";
 
 interface GlobalClickProps {
   mapInstance: mapboxgl.Map | null;
-  onShowDetailedInfo?: (data: LocationInfo) => void;
   minZoomLevel?: number; // 触发详细信息查询的最小缩放级别
 }
 
 export const useGlobalClick = ({
   mapInstance,
-  onShowDetailedInfo,
   minZoomLevel = 17,
 }: GlobalClickProps) => {
   const hasRegisteredRef = useRef<boolean>(false);
@@ -45,7 +43,7 @@ export const useGlobalClick = ({
   // 全局统一事件处理 - 使用过滤后的图层查询
   const handleGlobalClick = useCallback(
     (e: mapboxgl.MapMouseEvent) => {
-      if (!mapInstance || !onShowDetailedInfo) {
+      if (!mapInstance) {
         return;
       }
 
@@ -119,16 +117,13 @@ export const useGlobalClick = ({
             locationInfo: locationInfo,
             triggerPoint: { x: e.point.x, y: e.point.y },
           });
-        } else {
-          // 如果已经打开，使用原有的回调
-          onShowDetailedInfo(locationInfo);
         }
 
         // 返回 false 进一步阻止事件传递
         return false;
       }
     },
-    [mapInstance, onShowDetailedInfo, minZoomLevel, queryInteractiveFeatures],
+    [mapInstance, minZoomLevel, queryInteractiveFeatures],
   );
 
   // 延迟注册全局事件监听器 - 只执行一次
