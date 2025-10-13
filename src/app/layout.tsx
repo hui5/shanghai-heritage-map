@@ -22,7 +22,7 @@ export default function RootLayout({
       <body>
         <MapLayout>{children}</MapLayout>
         <Analytics scriptSrc="/va/script.js" />
-        <SpeedInsights scriptSrc="vercel-speed-script.js" />
+        <SpeedInsights scriptSrc="/vercel-speed-script.js" />
       </body>
     </html>
   );
