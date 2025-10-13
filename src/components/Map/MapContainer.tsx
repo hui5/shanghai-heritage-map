@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { LoadingOverlay } from "@/components/Loading/LoadingOverlay";
 import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
 import { HistoricalLayers } from "@/components/Map/historical/Layers";
-import DetailedInfoModal from "@/components/Map/interaction/AI/DetailedInfoModal";
 import FavoriteButton from "@/components/Map/interaction/panel/FavoriteButton";
 import FavoriteController from "@/components/Map/interaction/panel/FavoriteController";
 import FloatingInfoController from "@/components/Map/interaction/panel/FloatingInfoController";
@@ -30,15 +29,9 @@ export default function MapContainer() {
   const [currentPitch, setCurrentPitch] = useState<number>(defaultPitch);
   const [lastPitch, setLastPitch] = useState<number>(0);
 
-  // 详细信息模态框状态
-  const [detailedInfoModalOpen, setDetailedInfoModalOpen] = useState(false);
-  const [selectedLocationInfo, setSelectedLocationInfo] =
-    useState<LocationInfo | null>(null);
-
-  // 显示详细信息的回调
-  const handleShowDetailedInfo = useCallback((data: LocationInfo) => {
-    setSelectedLocationInfo(data);
-    setDetailedInfoModalOpen(true);
+  // 显示详细信息的回调（保留以兼容旧逻辑，但实际不再使用）
+  const handleShowDetailedInfo = useCallback((_data: LocationInfo) => {
+    // 已弃用，功能已转移到 panel 中
   }, []);
 
   // 统一的地图模式切换回调
@@ -390,17 +383,6 @@ export default function MapContainer() {
             /> */}
           </div>
           <MapConsole mapInstance={mapInstance} />
-          {/* 详细信息模态框 */}
-          {selectedLocationInfo && (
-            <DetailedInfoModal
-              isOpen={detailedInfoModalOpen}
-              onClose={() => {
-                setDetailedInfoModalOpen(false);
-                setSelectedLocationInfo(null);
-              }}
-              locationInfo={selectedLocationInfo}
-            />
-          )}
 
           {/* 悬浮信息面板控制器 */}
           <FloatingInfoController mapInstance={mapInstance} />

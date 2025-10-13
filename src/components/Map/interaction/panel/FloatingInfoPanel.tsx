@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: <explanation> */
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: <explanation> */
 import { findLast, last, sortBy } from "lodash";
-import { Info, LayoutGrid, Maximize2, Minimize2, Pin, X } from "lucide-react";
+import { Info, LayoutGrid, Maximize2, Minimize2, Pin, Sparkles, X } from "lucide-react";
 import type React from "react";
 import {
   useCallback,
@@ -23,7 +23,8 @@ export type PanelTabId =
   | "virtualshanghai"
   | "shlibrary"
   | "nianpu"
-  | "laozao";
+  | "laozao"
+  | "ai";
 
 export interface PanelContent {
   id: PanelTabId;
@@ -80,6 +81,9 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
 
   const isFullscreen = usePanelStore((s) => s.isFullscreen);
   const toggleFullscreen = usePanelStore((s) => s.toggleFullscreen);
+
+  const aiActive = usePanelStore((s) => s.aiActive);
+  const toggleAiActive = usePanelStore((s) => s.toggleAiActive);
 
   const close = usePanelStore((s) => s.close);
   const scheduleHide = usePanelStore((s) => s.scheduleHide);
@@ -254,6 +258,20 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
 
   const Buttons = (
     <div className="flex items-center gap-1">
+      <button
+        type="button"
+        aria-pressed={aiActive}
+        aria-label={aiActive ? "关闭 AI 分析" : "AI 分析"}
+        title={aiActive ? "关闭 AI 分析" : "AI 分析"}
+        className={`p-1.5 rounded text-xs border ${
+          aiActive
+            ? "bg-gradient-to-r from-purple-100 to-pink-100 border-purple-300 text-purple-700"
+            : "bg-white/30 border-gray-300 text-gray-700 hover:bg-gray-100"
+        }`}
+        onClick={toggleAiActive}
+      >
+        <Sparkles size={16} className={aiActive ? "animate-pulse" : ""} />
+      </button>
       {isFullscreen ? (
         <button
           type="button"

@@ -9,6 +9,7 @@ interface PanelState {
   showOverview: boolean;
   locationInfo: LocationInfo | null;
   triggerPoint: { x: number; y: number } | null;
+  aiActive: boolean; // AI 是否激活
 
   hoverTimerId: number | null;
   hideTimerId: number | null;
@@ -37,6 +38,8 @@ interface PanelState {
   toggleFullscreen: () => void;
   setOverview: (v: boolean) => void;
   toggleOverview: () => void;
+  setAiActive: (v: boolean) => void;
+  toggleAiActive: () => void;
   close: () => void;
   hide: () => void;
   forceHide: () => void;
@@ -48,6 +51,7 @@ export const usePanelStore = create<PanelState>((set, get) => ({
   isPinned: false,
   isFullscreen: false,
   showOverview: false,
+  aiActive: false,
 
   hoverTimerId: null,
   hideTimerId: null,
@@ -126,6 +130,9 @@ export const usePanelStore = create<PanelState>((set, get) => ({
   setOverview: (v) => set({ showOverview: v }),
   toggleOverview: () => set((s) => ({ showOverview: !s.showOverview })),
 
+  setAiActive: (v) => set({ aiActive: v }),
+  toggleAiActive: () => set((s) => ({ aiActive: !s.aiActive })),
+
   forceHide: () => {
     const { cancelHide } = get();
     cancelHide();
@@ -135,6 +142,7 @@ export const usePanelStore = create<PanelState>((set, get) => ({
       isPinned: false,
       isFullscreen: false,
       showOverview: false,
+      aiActive: false,
     });
   },
 

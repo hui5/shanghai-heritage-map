@@ -13,6 +13,7 @@ import {
   getVirtualShanghaiBuildingLink,
   getVirtualShanghaiImageUrl_proxy,
 } from "../../../../helper/map-data/virtualshanghai";
+import { AIStreamingDisplay } from "../AI/AIStreamingDisplay";
 import { ImagesPreview } from "./_Images";
 import { NianpuPreview } from "./_Nianpu";
 import { WikipediaPreview } from "./_Wikipedia";
@@ -40,6 +41,8 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
   const forceHide = usePanelStore((s) => s.forceHide);
   const isOpen = usePanelStore((s) => s.isOpen);
   const isFullscreen = usePanelStore((s) => s.isFullscreen);
+  const aiActive = usePanelStore((s) => s.aiActive);
+  const setAiActive = usePanelStore((s) => s.setAiActive);
 
   const prevIsOpenRef = useRef<boolean>(isOpen);
   const prevIsFullscreenRef = useRef<boolean>(isFullscreen);
@@ -290,6 +293,31 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
       });
     }
 
+    // AI Tab
+    if (aiActive && locationInfo) {
+      items.push({
+        id: "ai",
+        label: "AI 分析",
+        render: (
+          <div className="relative h-full">
+            <AIStreamingDisplay
+              key={`${locationInfo.coordinates?.[0]}-${locationInfo.coordinates?.[1]}-${locationInfo.name || "unknown"}`}
+              requestData={{
+                name: locationInfo.name,
+                address: locationInfo.address,
+                coordinates: locationInfo.coordinates,
+                properties: locationInfo.properties,
+              }}
+              isOpen={aiActive}
+            />
+          </div>
+        ),
+        visible: true,
+        isLoading: false,
+        order: 0, // AI tab 排在最前面
+      });
+    }
+
     return items;
   }, [
     locationInfo,
@@ -303,6 +331,7 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
     shPhotosLoading,
     laozaoRes,
     laozaoLoading,
+    aiActive,
   ]);
 
   useEffect(() => {
@@ -310,6 +339,22 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
       forceHide();
     }
   }, [locationInfo, contents, forceHide]);
+
+  // 自动触发AI：当全屏显示且查询结果都为空时
+  useEffect(() => {
+    if (!isFullscreen || !locationInfo) {
+      return;
+    }
+
+    // 计算非AI的内容数量
+    const nonAiContents = contents.filter((c) => c.id !== "ai");
+    const hasNonAiContent = nonAiContents.length > 0;
+
+    // 如果全屏且没有非AI内容，自动触发AI
+    if (!hasNonAiContent && !aiActive) {
+      setAiActive(true);
+    }
+  }, [isFullscreen, locationInfo, contents, aiActive, setAiActive]);
 
   // 初始化位置高亮管理器
   useEffect(() => {

@@ -108,7 +108,21 @@ export const useGlobalClick = ({
         }
 
         locationInfo.coordinates = coordinates;
-        onShowDetailedInfo(locationInfo);
+
+        // 如果panel没有打开，打开panel全屏并传递locationInfo
+        if (!panelStore.isOpen) {
+          usePanelStore.setState({
+            isOpen: true,
+            isFullscreen: true,
+            showOverview: true,
+            isPinned: true,
+            locationInfo: locationInfo,
+            triggerPoint: { x: e.point.x, y: e.point.y },
+          });
+        } else {
+          // 如果已经打开，使用原有的回调
+          onShowDetailedInfo(locationInfo);
+        }
 
         // 返回 false 进一步阻止事件传递
         return false;
