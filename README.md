@@ -138,7 +138,7 @@ https://shanghai-heritage-map.openda.top/
   Github README.md 文件
 
 > [!TIP]
-> 手机，pad可正常访问大部分功能，但因为地图属于信息密集型应用，推荐使用电脑访问。 
+> 手机，pad可正常访问大部分功能，可以和电脑访问互为补充。 
 
 
 ### 截图
