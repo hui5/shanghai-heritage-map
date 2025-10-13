@@ -299,7 +299,7 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
         id: "ai",
         label: "AI 分析",
         render: (
-          <div className="relative h-full max-w-2xl">
+          <div className="relative h-full max-w-2xl bg-white/50 p-5">
             <AIStreamingDisplay
               key={`${locationInfo.coordinates?.[0]}-${locationInfo.coordinates?.[1]}-${locationInfo.name || "unknown"}`}
               requestData={{

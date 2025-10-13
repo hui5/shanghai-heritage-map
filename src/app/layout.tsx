@@ -7,6 +7,9 @@ import MapLayout from "./MapLayout";
 export const metadata: Metadata = {
   title: "上海历史建筑地图",
   description: "探索上海的历史建筑与文化遗产",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

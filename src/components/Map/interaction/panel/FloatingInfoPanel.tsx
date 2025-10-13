@@ -1,7 +1,15 @@
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: <explanation> */
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: <explanation> */
 import { findLast, last, sortBy } from "lodash";
-import { Info, LayoutGrid, Maximize2, Minimize2, Pin, Sparkles, X } from "lucide-react";
+import {
+  Info,
+  LayoutGrid,
+  Maximize2,
+  Minimize2,
+  Pin,
+  Sparkles,
+  X,
+} from "lucide-react";
 import type React from "react";
 import {
   useCallback,
@@ -14,8 +22,20 @@ import {
 import { createPortal } from "react-dom";
 import { Rnd } from "react-rnd";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
+import { FloatingInfoPanelFullscreen } from "./FloatingInfoPanelFullscreen";
 import { PANEL } from "./panelConfig";
 import { usePanelStore } from "./panelStore";
+
+// 检测是否为触摸屏设备
+const isTouchDevice = () => {
+  if (typeof window === "undefined") return false;
+  return (
+    "ontouchstart" in window ||
+    navigator.maxTouchPoints > 0 ||
+    // @ts-expect-error - legacy IE property
+    navigator.msMaxTouchPoints > 0
+  );
+};
 
 export type PanelTabId =
   | "wikipedia"
@@ -70,6 +90,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
   const [isResizing, setIsResizing] = useState<boolean>(false);
   const [activeId, setActiveId] = useState<PanelTabId>("shlibrary");
   const mousePosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isTouch, setIsTouch] = useState<boolean>(false);
 
   const isOpen = usePanelStore((s) => s.isOpen);
 
@@ -88,6 +109,12 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
   const close = usePanelStore((s) => s.close);
   const scheduleHide = usePanelStore((s) => s.scheduleHide);
   const cancelAll = usePanelStore((s) => s.cancelAll);
+
+  // 检测触摸屏设备
+  useEffect(() => {
+    setIsTouch(isTouchDevice());
+  }, []);
+
   // Default collapsed; when content available and not loading, expand to default unless user resized
   useEffect(() => {
     const current = findLast(contents, (c) => !c.isLoading) || last(contents);
@@ -132,7 +159,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
     e.preventDefault();
   }, []);
 
-  const handleMouseDownResize = useCallback((e: React.MouseEvent) => {
+  const _handleMouseDownResize = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
   }, []);
@@ -171,10 +198,11 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
     };
   }, []);
 
-  const visibleContents = useMemo(
-    () => contents.filter((c) => c.visible !== false),
-    [contents],
-  );
+  const visibleContents = useMemo(() => {
+    const filtered = contents.filter((c) => c.visible !== false);
+    // 非触摸屏全屏模式下按 order 排序，其他情况保持原始顺序
+    return !isTouch && isFullscreen ? sortBy(filtered, "order") : filtered;
+  }, [contents, isFullscreen, isTouch]);
 
   useEffect(() => {
     const processKey = (key: string) => {
@@ -214,17 +242,28 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
         return true;
       }
 
+      // 左右键切换 tab（tab 模式下）
       if (!showOverview && (key === "ArrowLeft" || key === "ArrowRight")) {
         const currentIndex = Math.max(
           0,
           visibleContents.findIndex((c) => c.id === activeId),
         );
-        const nextIndex =
-          key === "ArrowLeft"
-            ? (currentIndex - 1 + visibleContents.length) %
-              visibleContents.length
-            : (currentIndex + 1) % visibleContents.length;
-        setActiveId(visibleContents[nextIndex].id);
+
+        let nextIndex = currentIndex;
+        if (key === "ArrowLeft" && currentIndex > 0) {
+          // 向左切换，不在第一个时
+          nextIndex = currentIndex - 1;
+        } else if (
+          key === "ArrowRight" &&
+          currentIndex < visibleContents.length - 1
+        ) {
+          // 向右切换，不在最后一个时
+          nextIndex = currentIndex + 1;
+        }
+
+        if (nextIndex !== currentIndex) {
+          setActiveId(visibleContents[nextIndex].id);
+        }
 
         return true;
       }
@@ -256,6 +295,18 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
     isOpen,
   ]);
 
+  // 处理 AI 按钮点击
+  const handleAiToggle = useCallback(() => {
+    if (!aiActive) {
+      // 打开 AI：定位到 AI tab
+      setActiveId("ai");
+      toggleAiActive();
+    } else {
+      // 关闭 AI
+      toggleAiActive();
+    }
+  }, [aiActive, toggleAiActive]);
+
   const Buttons = (
     <div className="flex items-center gap-1">
       <button
@@ -268,11 +319,11 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
             ? "bg-gradient-to-r from-purple-100 to-pink-100 border-purple-300 text-purple-700"
             : "bg-white/30 border-gray-300 text-gray-700 hover:bg-gray-100"
         }`}
-        onClick={toggleAiActive}
+        onClick={handleAiToggle}
       >
         <Sparkles size={16} className={aiActive ? "animate-pulse" : ""} />
       </button>
-      {isFullscreen ? (
+      {isFullscreen && !isTouch ? (
         <button
           type="button"
           aria-pressed={showOverview}
@@ -292,39 +343,43 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
           <LayoutGrid size={16} />
         </button>
       ) : null}
+      {!isTouch && (
+        <button
+          type="button"
+          aria-pressed={isFullscreen}
+          aria-label={isFullscreen ? "退出全屏" : "全屏"}
+          title={
+            isFullscreen
+              ? "退出全屏。 面板触发弹出时：鼠标左键点击触发位置，或按Space键快速打开全屏"
+              : "全屏。 面板触发弹出时：鼠标左键点击触发位置，或按Space键快速打开全屏"
+          }
+          className={`p-1.5 rounded text-xs bg-white/30 border border-gray-300 text-gray-700 hover:bg-gray-100`}
+          onClick={() => toggleFullscreen()}
+        >
+          {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+        </button>
+      )}
+      {!isTouch && (
+        <button
+          type="button"
+          aria-pressed={pinned}
+          aria-label={pinned ? "取消固定" : "固定"}
+          title={pinned ? "取消固定" : "固定"}
+          className={`p-1.5 rounded text-xs  ${
+            pinned
+              ? "bg-amber-100 border-amber-300 text-amber-700"
+              : "bg-white/30 border-gray-300 text-gray-700 hover:bg-gray-100"
+          }`}
+          onClick={() => {
+            setPinned(!pinned);
+          }}
+        >
+          {pinned ? <Pin size={16} /> : <Pin size={16} />}
+        </button>
+      )}
       <button
         type="button"
-        aria-pressed={isFullscreen}
-        aria-label={isFullscreen ? "退出全屏" : "全屏"}
-        title={
-          isFullscreen
-            ? "退出全屏。 面板触发弹出时：鼠标左键点击触发位置，或按Space键快速打开全屏"
-            : "全屏。 面板触发弹出时：鼠标左键点击触发位置，或按Space键快速打开全屏"
-        }
-        className={`p-1.5 rounded text-xs bg-white/30 border border-gray-300 text-gray-700 hover:bg-gray-100`}
-        onClick={() => toggleFullscreen()}
-      >
-        {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-      </button>
-      <button
-        type="button"
-        aria-pressed={pinned}
-        aria-label={pinned ? "取消固定" : "固定"}
-        title={pinned ? "取消固定" : "固定"}
-        className={`p-1.5 rounded text-xs  ${
-          pinned
-            ? "bg-amber-100 border-amber-300 text-amber-700"
-            : "bg-white/30 border-gray-300 text-gray-700 hover:bg-gray-100"
-        }`}
-        onClick={() => {
-          setPinned(!pinned);
-        }}
-      >
-        {pinned ? <Pin size={16} /> : <Pin size={16} />}
-      </button>
-      <button
-        type="button"
-        className="p-1.5 rounded text-xs  bg-white/30 text-gray-700 hover:bg-gray-100"
+        className="ml-1 p-1.5 rounded text-base border bg-white/30 text-gray-700 hover:bg-gray-100"
         onClick={close}
         aria-label="关闭"
         title="关闭。 Esc键,或点击面板之外空白区域快速关闭"
@@ -334,7 +389,84 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
     </div>
   );
 
-  const nonFullscreenPanel = (
+  const nonFullscreenPanel = isTouch ? (
+    // 触摸屏：固定全屏大小的面板
+    <div className={`fixed inset-0 z-[2000000] ${className}`}>
+      <div
+        ref={containerRef}
+        className="h-full w-full flex flex-col bg-white/50 backdrop-blur-md border-t border-gray-200"
+        role="dialog"
+        aria-modal="true"
+        aria-label="信息面板"
+      >
+        <div className="select-none flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-white/70">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-bold text-gray-700">
+              {locationInfo?.name}
+            </span>
+          </div>
+
+          {Buttons}
+        </div>
+
+        {/* Tabs */}
+        <div className="flex items-center flex-wrap gap-1 px-3 py-1">
+          {visibleContents.map((c) => (
+            <button
+              type="button"
+              key={c.id}
+              data-tab-id={c.id}
+              title={c.label}
+              className={`px-2 pt-1 pb-2 text-xs font-bold rounded-t border-b-0 border ${
+                activeId === c.id
+                  ? "bg-white border-gray-300 text-gray-900"
+                  : "bg-gray-100 border-gray-200 text-gray-600"
+              }`}
+              onClick={() => setActiveId(c.id)}
+            >
+              {c.isLoading ? "..." : c.label}
+              {c.hint ? (
+                <span
+                  className="inline-flex items-center ml-1 align-middle"
+                  title={c.hint}
+                >
+                  <Info size={12} className="text-gray-400" />
+                </span>
+              ) : null}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        <div ref={contentRef} className="flex-1 overflow-auto pt-2 pb-3">
+          <div
+            className="flex justify-center px-3"
+            onClick={(e) => {
+              const target = e.target as HTMLElement | null;
+              const insideTile = target?.closest("[data-tab-id]");
+              if (!insideTile) {
+                close();
+              }
+            }}
+          >
+            {visibleContents.map((c) => (
+              <div
+                key={c.id}
+                className=""
+                style={{
+                  display: activeId === c.id ? "block" : "none",
+                }}
+                data-tab-id={c.id}
+              >
+                {c.render}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
+    // 非触摸屏：可拖拽调整大小的面板
     <Rnd
       size={{ width, height }}
       position={{ x: left, y: top }}
@@ -413,6 +545,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
               type="button"
               key={c.id}
               data-tab-id={c.id}
+              title={c.label}
               className={`px-2 pt-1 pb-2 text-xs font-bold rounded-t border-b-0 border ${
                 activeId === c.id
                   ? "bg-white border-gray-300 text-gray-900"
@@ -456,70 +589,20 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
     </Rnd>
   );
 
-  const fullscreenOverlay = (
-    <div
-      className={`fixed inset-0 z-[2000000] pointer-events-auto ${className}`}
-    >
-      <div
-        ref={containerRef}
-        className="h-full w-full flex flex-col bg-white/50 backdrop-blur-md border-t border-gray-200"
-        role="dialog"
-        aria-modal="true"
-        aria-label="信息面板全屏"
-      >
-        <div className="select-none flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-white/70">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-bold text-gray-700">
-              {locationInfo?.name}
-            </span>
-          </div>
-          {Buttons}
-        </div>
-        <div
-          className="flex-1 overflow-auto px-3 pt-2 pb-3"
-          onClick={(e) => {
-            const target = e.target as HTMLElement | null;
-            const insideTile = target?.closest("[data-tab-id]");
-            if (!insideTile) {
-              close();
-            }
-          }}
-        >
-          <div className="flex items-start justify-center gap-5">
-            {sortBy(visibleContents, "order").map((c) => (
-              <div
-                key={c.id}
-                style={{
-                  display: showOverview
-                    ? "block"
-                    : activeId === c.id
-                      ? "block"
-                      : "none",
-                }}
-                data-tab-id={c.id}
-                className=""
-              >
-                <div className="px-2 py-1 text-sm font-semibold text-gray-700">
-                  {c.label}
-                  {c.hint ? (
-                    <span
-                      className="inline-flex items-center ml-1 align-middle"
-                      title={c.hint}
-                    >
-                      <Info size={12} className="text-gray-400" />
-                    </span>
-                  ) : null}
-                </div>
-                {c.render}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const panel = isFullscreen ? fullscreenOverlay : nonFullscreenPanel;
+  const panel =
+    isTouch || !isFullscreen ? (
+      nonFullscreenPanel
+    ) : (
+      <FloatingInfoPanelFullscreen
+        contents={visibleContents}
+        activeId={activeId}
+        showOverview={showOverview}
+        locationInfo={locationInfo}
+        close={close}
+        Buttons={Buttons}
+        className={className}
+      />
+    );
 
   return createPortal(panel, document.body);
 };

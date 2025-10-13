@@ -103,7 +103,7 @@ export const AIStreamingDisplay: React.FC<AIStreamingDisplayProps> = ({
   }
 
   return (
-    <div className="h-full flex flex-col ">
+    <div className="h-full flex flex-col">
       {/* 流式内容显示区域 - 占满剩余空间 */}
       <div className="flex-1 overflow-y-auto">
         {completion && (
