@@ -51,7 +51,7 @@ export const MapHelpButton: React.FC<MapHelpButtonProps> = ({
       <button
         type="button"
         onClick={handleOpen}
-        className={`fixed top-28 right-3 z-[1000] p-2 bg-white/90 hover:bg-white rounded-full shadow-lg border border-gray-200 transition-all duration-200 hover:scale-110 ${className}`}
+        className={`fixed top-28 right-3 z-[10] p-2 bg-white/90 hover:bg-white rounded-full shadow-lg border border-gray-200 transition-all duration-200 hover:scale-110 ${className}`}
         title="查看帮助"
         aria-label="查看帮助"
       >
