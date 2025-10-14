@@ -10,6 +10,17 @@ let sidePopup: mapboxgl.Popup | null = null;
 let currentWikipediaUrl: string | null = null;
 let timeoutId: NodeJS.Timeout | null = null;
 
+// 检测是否为触摸屏设备
+const isTouchDevice = () => {
+  if (typeof window === "undefined") return false;
+  return (
+    "ontouchstart" in window ||
+    navigator.maxTouchPoints > 0 ||
+    // @ts-expect-error - legacy IE property
+    navigator.msMaxTouchPoints > 0
+  );
+};
+
 export const showPopup = ({
   lngLat,
   map,
@@ -39,33 +50,39 @@ export const showPopup = ({
         ? locationInfo.geometry.coordinates
         : lngLat;
     locationInfo.coordinates = coordinates;
-    // 创建主弹出框
-    mainPopup = new mapboxgl.Popup({
-      closeButton: false,
-      closeOnClick: false,
-      anchor: "right",
-      offset: { bottom: [0, -30], right: [-50, 0] },
-    })
-      .setLngLat(coordinates)
-      .setHTML(popupContent)
-      .addTo(map);
 
-    // 创建侧边弹出框
-    if (locationInfo.wikipedia && locationInfo.dataSource !== "上海图书馆") {
-      currentWikipediaUrl = locationInfo.wikipedia;
-      sidePopup = new mapboxgl.Popup({
+    const isTouch = isTouchDevice();
+
+    // 触屏设备下不显示 popup
+    if (!isTouch) {
+      // 创建主弹出框
+      mainPopup = new mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
         anchor: "right",
-        offset: [-340, 0],
+        offset: { bottom: [0, -30], right: [-50, 0] },
       })
         .setLngLat(coordinates)
-        .setHTML(
-          `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-width:240px; max-width:300px; background:#ffffff; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.18); padding:12px 14px; font-size:12px; color:#6b7280;">加载中...</div>`,
-        )
+        .setHTML(popupContent)
         .addTo(map);
 
-      setSideContentAsync(locationInfo.wikipedia);
+      // 创建侧边弹出框
+      if (locationInfo.wikipedia && locationInfo.dataSource !== "上海图书馆") {
+        currentWikipediaUrl = locationInfo.wikipedia;
+        sidePopup = new mapboxgl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          anchor: "right",
+          offset: [-340, 0],
+        })
+          .setLngLat(coordinates)
+          .setHTML(
+            `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-width:240px; max-width:300px; background:#ffffff; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.18); padding:12px 14px; font-size:12px; color:#6b7280;">加载中...</div>`,
+          )
+          .addTo(map);
+
+        setSideContentAsync(locationInfo.wikipedia);
+      }
     }
 
     const rect = (sidePopup || mainPopup)

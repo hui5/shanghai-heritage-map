@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: touch interactions are intentional */
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: keyboard events handled elsewhere */
-import { ChevronDown, Info, Sparkles, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Info, Sparkles, X } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
@@ -14,6 +14,7 @@ import "swiper/css/navigation";
 import "swiper/css/effect-coverflow";
 
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
+import { BasicInfoPreview } from "./_BasicInfo";
 import type { PanelContent, PanelTabId } from "./FloatingInfoPanel";
 import { usePanelStore } from "./panelStore";
 
@@ -39,6 +40,10 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
   const scrollDirection = useRef<"up" | "down" | null>(null);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  // 基本信息展开状态
+  const [infoExpanded, setInfoExpanded] = useState(true);
+  const autoCloseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   // 从 store 获取状态
   const close = usePanelStore((s) => s.close);
   const aiActive = usePanelStore((s) => s.aiActive);
@@ -63,6 +68,29 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
       swiperRef.current.slideTo(activeIndex);
     }
   }, [activeIndex]);
+
+  // 自动展开和合上基本信息
+  useEffect(() => {
+    // 进入时自动展开
+    setInfoExpanded(true);
+
+    // 清除之前的定时器
+    if (autoCloseTimeoutRef.current) {
+      clearTimeout(autoCloseTimeoutRef.current);
+    }
+
+    // 3秒后自动合上
+    autoCloseTimeoutRef.current = setTimeout(() => {
+      setInfoExpanded(false);
+    }, 3000);
+
+    // 清理函数
+    return () => {
+      if (autoCloseTimeoutRef.current) {
+        clearTimeout(autoCloseTimeoutRef.current);
+      }
+    };
+  }, []); // 只在组件挂载时执行一次
 
   // 监听内容滚动，自动隐藏/显示标签栏（优化版，防止闪动）
   const handleContentScroll = useCallback(
@@ -128,6 +156,9 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);
       }
+      if (autoCloseTimeoutRef.current) {
+        clearTimeout(autoCloseTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -141,41 +172,76 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
         aria-label="信息面板"
       >
         {/* 头部 - 触摸屏优化 */}
-        <div className="flex-shrink-0 flex items-center justify-between px-4 py-2 border-b border-gray-200/50 bg-white/80 backdrop-blur-sm shadow-sm">
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <span className="text-lg font-bold text-gray-900 truncate">
-              {locationInfo?.name}
-            </span>
+        <div className="flex-shrink-0 border-b border-gray-200/50 bg-white/80 backdrop-blur-sm shadow-sm">
+          <div className="flex items-center justify-between px-4 py-2">
+            <button
+              type="button"
+              onClick={() => {
+                setInfoExpanded(!infoExpanded);
+                // 手动点击时清除自动关闭定时器
+                if (autoCloseTimeoutRef.current) {
+                  clearTimeout(autoCloseTimeoutRef.current);
+                  autoCloseTimeoutRef.current = null;
+                }
+              }}
+              className="flex items-center gap-2 flex-1 min-w-0 text-left active:opacity-70 transition-opacity"
+            >
+              <span className="text-lg font-bold text-gray-900 truncate">
+                {locationInfo?.name}
+              </span>
+              {infoExpanded ? (
+                <ChevronUp size={20} className="text-gray-500 flex-shrink-0" />
+              ) : (
+                <ChevronDown
+                  size={20}
+                  className="text-gray-500 flex-shrink-0"
+                />
+              )}
+            </button>
+
+            {/* 触摸屏优化按钮组 */}
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {/* AI 按钮 */}
+              <button
+                type="button"
+                aria-pressed={aiActive}
+                aria-label={aiActive ? "关闭 AI 分析" : "AI 分析"}
+                title={aiActive ? "关闭 AI 分析" : "AI 分析"}
+                className={`p-2.5 rounded-xl text-sm border-2 transition-all duration-200 active:scale-95 ${
+                  aiActive
+                    ? "bg-gradient-to-r from-purple-500 to-pink-500 border-purple-400 text-white shadow-lg"
+                    : "bg-white/70 border-gray-300 text-gray-700 active:bg-gray-100"
+                }`}
+                onClick={handleAiToggle}
+              >
+                <Sparkles
+                  size={20}
+                  className={aiActive ? "animate-pulse" : ""}
+                />
+              </button>
+
+              {/* 关闭按钮 */}
+              <button
+                type="button"
+                className="p-2.5 rounded-xl text-base border-2 border-gray-300 bg-white/70 text-gray-700 active:bg-gray-100 transition-all duration-200 active:scale-95"
+                onClick={close}
+                aria-label="关闭"
+                title="关闭面板"
+              >
+                <X size={20} />
+              </button>
+            </div>
           </div>
 
-          {/* 触摸屏优化按钮组 */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {/* AI 按钮 */}
-            <button
-              type="button"
-              aria-pressed={aiActive}
-              aria-label={aiActive ? "关闭 AI 分析" : "AI 分析"}
-              title={aiActive ? "关闭 AI 分析" : "AI 分析"}
-              className={`p-2.5 rounded-xl text-sm border-2 transition-all duration-200 active:scale-95 ${
-                aiActive
-                  ? "bg-gradient-to-r from-purple-500 to-pink-500 border-purple-400 text-white shadow-lg"
-                  : "bg-white/70 border-gray-300 text-gray-700 active:bg-gray-100"
-              }`}
-              onClick={handleAiToggle}
-            >
-              <Sparkles size={20} className={aiActive ? "animate-pulse" : ""} />
-            </button>
-
-            {/* 关闭按钮 */}
-            <button
-              type="button"
-              className="p-2.5 rounded-xl text-base border-2 border-gray-300 bg-white/70 text-gray-700 active:bg-gray-100 transition-all duration-200 active:scale-95"
-              onClick={close}
-              aria-label="关闭"
-              title="关闭面板"
-            >
-              <X size={20} />
-            </button>
+          {/* 可展开的基本信息区域 */}
+          <div
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+              infoExpanded ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="px-4 pb-3 pt-1 max-h-[600px] overflow-y-auto">
+              {locationInfo && <BasicInfoPreview locationInfo={locationInfo} />}
+            </div>
           </div>
         </div>
 
