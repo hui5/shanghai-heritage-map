@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { ChevronDown, ChevronRight, Settings } from "lucide-react";
+import { ChevronDown, ChevronRight, Settings, Type } from "lucide-react";
 import type { UtilsMap } from "map-gl-utils";
 import { useEffect, useRef, useState } from "react";
 import { useSnapshot } from "valtio";
@@ -15,9 +15,55 @@ import {
 
 export function MapConsole({ mapInstance }: { mapInstance: UtilsMap }) {
   const [isExpanded, setIsExpanded] = useState(() => false);
+  const [fontSize, setFontSize] = useState<number>(1.0);
 
   const snapshotH = useSnapshot(stateH);
   const snapshotB = useSnapshot(stateB);
+
+  // 保存每个图层的原始字体大小
+  const originalTextSizesRef = useRef<Map<string, any>>(new Map());
+
+  // 应用字体大小到地图标注
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    const map = mapInstance;
+    const style = map.getStyle();
+
+    if (style?.layers) {
+      style.layers.forEach((layer: any) => {
+        if (layer.type === "symbol" && layer.layout?.["text-field"]) {
+          const layerId = layer.id;
+
+          // 第一次保存原始大小
+          if (!originalTextSizesRef.current.has(layerId)) {
+            const originalSize = map.getLayoutProperty(layerId, "text-size");
+            if (originalSize) {
+              originalTextSizesRef.current.set(layerId, originalSize);
+            }
+          }
+
+          // 获取原始大小并应用缩放
+          const originalSize = originalTextSizesRef.current.get(layerId);
+          if (originalSize) {
+            if (typeof originalSize === "number") {
+              map.setLayoutProperty(
+                layerId,
+                "text-size",
+                originalSize * fontSize,
+              );
+            } else if (Array.isArray(originalSize)) {
+              const scaledExpression = scaleTextSizeExpression(
+                originalSize,
+                fontSize,
+              );
+              map.setLayoutProperty(layerId, "text-size", scaledExpression);
+            }
+          }
+        }
+      });
+    }
+  }, [fontSize, mapInstance]);
 
   const panelRef = useRef<HTMLDivElement | null>(null);
 
@@ -57,6 +103,44 @@ export function MapConsole({ mapInstance }: { mapInstance: UtilsMap }) {
       </div>
 
       <div className="p-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
+        {/* 全局显示设置 */}
+        <div className="mb-4 border rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="p-4 space-y-4">
+            <div className="flex items-center space-x-2 mb-3">
+              <Settings className="w-4 h-4 text-indigo-600" />
+              <h4 className="font-semibold text-gray-800">设置</h4>
+            </div>
+
+            {/* 字体大小控制 */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Type className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700">
+                    地图字体大小
+                  </span>
+                </div>
+                <span className="text-xs font-medium text-indigo-600">
+                  {Math.round(fontSize * 100)}%
+                </span>
+              </div>
+
+              <input
+                type="range"
+                min="1.0"
+                max="1.25"
+                step="0.05"
+                value={fontSize}
+                onChange={(e) => setFontSize(Number(e.target.value))}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                style={{
+                  background: `linear-gradient(to right, rgb(79 70 229) 0%, rgb(79 70 229) ${((fontSize - 1.0) / 0.25) * 100}%, rgb(229 231 235) ${((fontSize - 1.0) / 0.25) * 100}%, rgb(229 231 235) 100%)`,
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
         <LayerSection
           title="上海文保单位"
           icon="🏛️"
@@ -273,4 +357,25 @@ function LayerSection({
       )}
     </div>
   );
+}
+
+// 辅助函数：缩放文本大小表达式
+function scaleTextSizeExpression(expression: any, scale: number): any {
+  if (typeof expression === "number") {
+    return expression * scale;
+  }
+
+  if (Array.isArray(expression)) {
+    return expression.map((item) => {
+      if (typeof item === "number") {
+        return item * scale;
+      }
+      if (Array.isArray(item)) {
+        return scaleTextSizeExpression(item, scale);
+      }
+      return item;
+    });
+  }
+
+  return expression;
 }
