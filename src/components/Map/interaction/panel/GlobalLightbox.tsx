@@ -59,7 +59,7 @@ export function GlobalLightbox() {
         border-top: 1px solid rgba(255, 255, 255, 0.2);
         padding: 12px 16px;
         z-index: 2147483647;
-        max-height: 180px;
+        max-height: 30vh;
         overflow-y: auto;
         pointer-events: auto;
       ">
