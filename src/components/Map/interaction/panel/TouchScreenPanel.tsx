@@ -69,6 +69,60 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
     }
   }, [activeIndex]);
 
+  // Tab 滚动相关状态
+  const tabsContainerRef = useRef<HTMLDivElement | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  // 检查滚动状态
+  const checkScrollState = useCallback(() => {
+    if (!tabsContainerRef.current) return;
+
+    const container = tabsContainerRef.current;
+    setCanScrollLeft(container.scrollLeft > 0);
+    setCanScrollRight(
+      container.scrollLeft < container.scrollWidth - container.clientWidth,
+    );
+  }, []);
+
+  // 滚动到指定 tab
+  const scrollToTab = useCallback((targetIndex: number) => {
+    if (!tabsContainerRef.current) return;
+
+    const container = tabsContainerRef.current;
+    const tabElements = container.querySelectorAll("[data-tab-id]");
+    const targetTab = tabElements[targetIndex] as HTMLElement;
+
+    if (targetTab) {
+      const containerRect = container.getBoundingClientRect();
+      const tabRect = targetTab.getBoundingClientRect();
+
+      // 计算目标位置（居中显示）
+      const scrollLeft =
+        targetTab.offsetLeft - (containerRect.width - tabRect.width) / 2;
+
+      container.scrollTo({
+        left: Math.max(0, scrollLeft),
+        behavior: "smooth",
+      });
+    }
+  }, []);
+
+  // 当内容或激活 tab 改变时，滚动到当前 tab
+  useEffect(() => {
+    if (activeIndex !== -1) {
+      // 延迟执行，确保 DOM 更新完成
+      setTimeout(() => scrollToTab(activeIndex), 100);
+    }
+  }, [activeIndex, scrollToTab]);
+
+  // 当内容数量改变时，滚动到最后一个 tab（如果没有激活的 tab）
+  useEffect(() => {
+    if (activeIndex === -1 && contents.length > 0) {
+      setTimeout(() => scrollToTab(contents.length - 1), 100);
+    }
+  }, [contents.length, activeIndex, scrollToTab]);
+
   // 自动展开和合上基本信息
   useEffect(() => {
     // 进入时自动展开
@@ -91,6 +145,13 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
       }
     };
   }, []); // 只在组件挂载时执行一次
+
+  // 初始检查滚动状态
+  useEffect(() => {
+    // 延迟检查，确保 DOM 渲染完成
+    const timer = setTimeout(checkScrollState, 100);
+    return () => clearTimeout(timer);
+  }, [checkScrollState]);
 
   // 监听内容滚动，自动隐藏/显示标签栏（优化版，防止闪动）
   const handleContentScroll = useCallback(
@@ -253,8 +314,22 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
               : "max-h-0 opacity-0 -translate-y-4 overflow-hidden"
           }`}
         >
-          <div className="px-4 py-1">
-            <div className="flex items-center gap-2.5 overflow-x-auto scrollbar-hide pb-1">
+          <div className="px-4 py-1 relative">
+            {/* 左侧滚动指示器 */}
+            {canScrollLeft && (
+              <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white/70 to-transparent z-10 pointer-events-none" />
+            )}
+
+            {/* 右侧滚动指示器 */}
+            {canScrollRight && (
+              <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white/70 to-transparent z-10 pointer-events-none" />
+            )}
+
+            <div
+              ref={tabsContainerRef}
+              className="flex items-center gap-2.5 overflow-x-auto scrollbar-hide pb-1"
+              onScroll={checkScrollState}
+            >
               {contents.map((c) => (
                 <button
                   type="button"
