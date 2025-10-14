@@ -1,5 +1,13 @@
 import _ from "lodash";
-import { ChevronDown, ChevronRight, Settings, Type } from "lucide-react";
+import {
+  Box,
+  ChevronDown,
+  ChevronRight,
+  Mountain,
+  Palette,
+  Settings,
+  Type,
+} from "lucide-react";
 import type { UtilsMap } from "map-gl-utils";
 import { useEffect, useRef, useState } from "react";
 import { useSnapshot } from "valtio";
@@ -13,9 +21,14 @@ import {
   toggleSubtypeVisible,
 } from "./historical/data";
 
+type Theme = "faded" | "monochrome";
+
 export function MapConsole({ mapInstance }: { mapInstance: UtilsMap }) {
   const [isExpanded, setIsExpanded] = useState(() => false);
   const [fontSize, setFontSize] = useState<number>(1.0);
+  const [theme, setTheme] = useState<Theme>("faded");
+  const [show3dObjects, setShow3dObjects] = useState<boolean>(true);
+  const [pitch, setPitch] = useState<number>(0);
 
   const snapshotH = useSnapshot(stateH);
   const snapshotB = useSnapshot(stateB);
@@ -65,6 +78,26 @@ export function MapConsole({ mapInstance }: { mapInstance: UtilsMap }) {
     }
   }, [fontSize, mapInstance]);
 
+  // 应用主题设置
+  useEffect(() => {
+    if (!mapInstance) return;
+    mapInstance.setConfigProperty("basemap", "theme", theme);
+  }, [theme, mapInstance]);
+
+  // 应用 3D 建筑显示设置
+  useEffect(() => {
+    if (!mapInstance) return;
+    mapInstance.setConfigProperty("basemap", "show3dObjects", show3dObjects);
+  }, [show3dObjects, mapInstance]);
+
+  // 应用俯仰角设置
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    const map = mapInstance;
+    map.easeTo({ pitch, duration: 500 });
+  }, [pitch, mapInstance]);
+
   const panelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -97,7 +130,7 @@ export function MapConsole({ mapInstance }: { mapInstance: UtilsMap }) {
             title={"收起控制台"}
           >
             <Settings className="w-5 h-5 text-primary-500" />
-            <h3 className="font-semibold text-gray-800">地图控制台</h3>
+            <h3 className="font-semibold text-gray-800">控制台</h3>
           </button>
         </div>
       </div>
@@ -108,7 +141,7 @@ export function MapConsole({ mapInstance }: { mapInstance: UtilsMap }) {
           <div className="p-4 space-y-4">
             <div className="flex items-center space-x-2 mb-3">
               <Settings className="w-4 h-4 text-indigo-600" />
-              <h4 className="font-semibold text-gray-800">设置</h4>
+              <h4 className="font-semibold text-gray-800">地图设置</h4>
             </div>
 
             {/* 字体大小控制 */}
@@ -117,7 +150,7 @@ export function MapConsole({ mapInstance }: { mapInstance: UtilsMap }) {
                 <div className="flex items-center space-x-2">
                   <Type className="w-4 h-4 text-gray-600" />
                   <span className="text-sm font-medium text-gray-700">
-                    地图字体大小
+                    字体大小
                   </span>
                 </div>
                 <span className="text-xs font-medium text-indigo-600">
@@ -137,6 +170,79 @@ export function MapConsole({ mapInstance }: { mapInstance: UtilsMap }) {
                   background: `linear-gradient(to right, rgb(79 70 229) 0%, rgb(79 70 229) ${((fontSize - 1.0) / 0.25) * 100}%, rgb(229 231 235) ${((fontSize - 1.0) / 0.25) * 100}%, rgb(229 231 235) 100%)`,
                 }}
               />
+            </div>
+
+            {/* 3D 物体显示 */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Box className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700">
+                    显示 3D 建筑
+                  </span>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={show3dObjects}
+                    onChange={(e) => setShow3dObjects(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+              </div>
+            </div>
+
+            {/* 俯仰角设置 */}
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Mountain className="w-4 h-4 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">
+                  视角倾斜角度
+                </span>
+              </div>
+
+              <div className="grid grid-cols-4 gap-2">
+                {[0, 15, 30, 45].map((pitchOption) => (
+                  <button
+                    key={pitchOption}
+                    type="button"
+                    onClick={() => setPitch(pitchOption)}
+                    className={`px-3 py-2 text-sm rounded transition ${
+                      pitch === pitchOption
+                        ? "bg-indigo-600 text-white font-medium shadow"
+                        : "bg-white text-gray-700 border hover:border-indigo-400"
+                    }`}
+                  >
+                    {pitchOption}°
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 主题设置 */}
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Palette className="w-4 h-4 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">主题</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                {(["faded", "monochrome"] as Theme[]).map((themeOption) => (
+                  <button
+                    key={themeOption}
+                    type="button"
+                    onClick={() => setTheme(themeOption)}
+                    className={`px-3 py-2 text-sm rounded transition ${
+                      theme === themeOption
+                        ? "bg-indigo-600 text-white font-medium shadow"
+                        : "bg-white text-gray-700 border hover:border-indigo-400"
+                    }`}
+                  >
+                    {themeOption === "faded" ? "淡色" : "单色"}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
