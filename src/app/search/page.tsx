@@ -1,10 +1,10 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { usePanelStore } from "@/components/Map/interaction/panel/panelStore";
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const name = searchParams?.get("n");
   const hasInitialized = useRef(false);
@@ -32,4 +32,12 @@ export default function SearchPage() {
 
   // MapContainer在MapLayout中，这个页面不需要渲染任何可见内容
   return null;
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={null}>
+      <SearchPageContent />
+    </Suspense>
+  );
 }
