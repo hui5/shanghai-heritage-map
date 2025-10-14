@@ -140,10 +140,10 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
     (index: number) => {
       // 传递完整的图片组，而不是当前显示的10个
       const allImages = data?.images ?? [];
-      openLightbox(allImages, index);
+      openLightbox(allImages, index, category);
       setPinned(true);
     },
-    [data?.images, setPinned],
+    [data?.images, setPinned, category],
   );
 
   // 处理收藏按钮点击

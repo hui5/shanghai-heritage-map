@@ -11,8 +11,9 @@ interface LightboxState {
   index: number;
 }
 
-let globalOpenLightbox: ((images: Image[], index: number) => void) | null =
-  null;
+let globalOpenLightbox:
+  | ((images: Image[], index: number, category: string) => void)
+  | null = null;
 
 // 全局状态：lightbox 是否打开
 let isLightboxOpen = false;
@@ -21,9 +22,13 @@ let isLightboxOpen = false;
 export const isGlobalLightboxOpen = () => isLightboxOpen;
 
 // 全局方法：打开 Lightbox
-export const openLightbox = (images: Image[], index: number = 0) => {
+export const openLightbox = (
+  images: Image[],
+  index: number = 0,
+  category: string = "",
+) => {
   if (globalOpenLightbox) {
-    globalOpenLightbox(images, index);
+    globalOpenLightbox(images, index, category);
   }
 };
 
@@ -42,7 +47,7 @@ export function GlobalLightbox() {
   });
 
   // 创建底部信息栏 HTML
-  const createInfoBar = useCallback((image: Image) => {
+  const createInfoBar = useCallback((image: Image, category: string) => {
     return `
       <div class="pswp__info-bar" style="
         position: fixed;
@@ -98,7 +103,7 @@ export function GlobalLightbox() {
               <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
               </svg>
-              来源
+              ${category}
             </a>`
               : ""
           }
@@ -109,7 +114,7 @@ export function GlobalLightbox() {
 
   // 初始化 PhotoSwipe 实例
   const initializePhotoSwipe = useCallback(
-    (pswp: PhotoSwipe, images: Image[]) => {
+    (pswp: PhotoSwipe, images: Image[], category: string) => {
       // 添加键盘事件监听器（使用 capture: true 确保最高优先级）
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape" || e.code === "Escape") {
@@ -139,7 +144,7 @@ export function GlobalLightbox() {
           onInit: (el) => {
             // 初始化信息栏（只显示一张图片）
             const currentImage = images[0];
-            el.innerHTML = createInfoBar(currentImage);
+            el.innerHTML = createInfoBar(currentImage, category);
 
             // 阻止信息栏的所有点击事件冒泡
             const infoBar = el.querySelector(".pswp__info-bar");
@@ -188,7 +193,7 @@ export function GlobalLightbox() {
 
   // 打开 PhotoSwipe
   const openPhotoSwipe = useCallback(
-    (images: Image[], index: number) => {
+    (images: Image[], index: number, category: string) => {
       // 如果已经打开，先关闭
       if (pswpRef.current) {
         pswpRef.current.close();
@@ -238,7 +243,7 @@ export function GlobalLightbox() {
           arrowKeys: false,
         });
 
-        initializePhotoSwipe(pswp, [currentImage]);
+        initializePhotoSwipe(pswp, [currentImage], category);
 
         // 如果有高清图，在后台加载并无缝替换
         if (hasHighRes) {
@@ -298,7 +303,7 @@ export function GlobalLightbox() {
           arrowKeys: false,
         });
 
-        initializePhotoSwipe(pswp, [currentImage]);
+        initializePhotoSwipe(pswp, [currentImage], category);
       };
     },
     [initializePhotoSwipe],
