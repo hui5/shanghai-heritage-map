@@ -7,6 +7,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      height: {
+        screen: "100dvh", // 移动端友好的视口高度
+      },
+      minHeight: {
+        screen: "100dvh",
+      },
+      maxHeight: {
+        screen: "100dvh",
+      },
       colors: {
         primary: {
           50: "#f0f9ff",

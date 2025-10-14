@@ -43,9 +43,16 @@ body {
   transform-origin: 0 0; */
 
   font-family: var(--latin), var(--cjk), sans-serif;
-  height: 100vh;
+  height: 100vh; /* 降级支持：旧版浏览器 */
   width: 100vw;
   position: relative;
+}
+
+/* 支持 dvh 的浏览器使用动态视口高度（移动端友好） */
+@supports (height: 100dvh) {
+  .map-container {
+    height: 100dvh;
+  }
 }
 
 /* 聚类标记样式 */
