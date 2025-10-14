@@ -406,7 +406,7 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
             {contents.map((c, index) => (
               <SwiperSlide key={c.id} className="h-full">
                 <div
-                  className="h-full overflow-auto px-4 pt-16 pb-6 smooth-scroll"
+                  className="h-full flex justify-center overflow-auto px-4 pt-16 pb-6 smooth-scroll"
                   data-tab-id={c.id}
                   onScroll={handleContentScroll}
                 >
@@ -422,7 +422,7 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
                     </div>
                   )}
 
-                  <div className="max-w-4xl mx-auto">{c.render}</div>
+                  <div className="mx-auto">{c.render}</div>
                 </div>
               </SwiperSlide>
             ))}
