@@ -94,6 +94,51 @@
     },
 
     {
+      "id": "crow_map",
+      "name": "克-科上海地图",
+      "icon": "🏛️",
+      "enabled": true,
+      "subtypes": [
+        {
+          "id": "crow_landmarks",
+          "name": "克-科上海地图地标",
+          "dataFile": "table_Crow_P.geojson",
+          "geometryType": "Point",
+          "enabled": true,
+          "minzoom": 11,
+          "style": {
+            "color": "#191970",
+            "symbol": {
+              "type": "icon",
+              "iconImage": "landmark",
+              "iconSizeStops": [[11, 0.8], [20, 1]],
+              "iconSizeBase": 1.2,
+              "iconAnchor": "center",
+              "iconOffset": [-1, 0],
+              "iconAllowOverlap": true,
+              "iconOpacity": 1
+            }
+          },
+          "labels": {
+            "enabled": true,
+            "minZoom": 11,
+            "field": "NAME_CN",
+            "style": {
+              "fontSizeStops": [[11, 13], [13, 13], [20, 15]],
+              "fontSizeBase": 1.4,
+              "color": "#252525",
+              "haloColor": "#ffffff",
+              "haloWidth": 1,
+              "textAnchor": "left",
+              "offset": [0.7, 0],
+              "opacity": 1
+            }
+          }
+        }
+      ]
+    },
+
+    {
       "id": "celebrity_residences",
       "name": "名人故居",
       "icon": "🏠",
