@@ -4,14 +4,13 @@ import { ChevronDown, ChevronUp, Info, Sparkles, X } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
-import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // 导入 Swiper 样式
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import "swiper/css/effect-coverflow";
 
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
 import { BasicInfoPreview } from "./_BasicInfo";
@@ -377,15 +376,7 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
             </div>
           </div>
           <Swiper
-            modules={[Pagination, Navigation, EffectCoverflow]}
-            effect="coverflow"
-            coverflowEffect={{
-              rotate: 0,
-              stretch: 0,
-              depth: 100,
-              modifier: 1.5,
-              slideShadows: false,
-            }}
+            modules={[Pagination, Navigation]}
             spaceBetween={0}
             slidesPerView={1}
             speed={400}
