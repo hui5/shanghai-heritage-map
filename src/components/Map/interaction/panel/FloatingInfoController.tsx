@@ -385,7 +385,7 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
       window.history.pushState(
         {},
         "",
-        `/search/${encodeURIComponent(locationInfo.name)}`,
+        `/search?n=${encodeURIComponent(locationInfo.name)}`,
       );
     }
 

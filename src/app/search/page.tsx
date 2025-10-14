@@ -1,12 +1,12 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { usePanelStore } from "@/components/Map/interaction/panel/panelStore";
 
 export default function SearchPage() {
-  const params = useParams();
-  const name = params?.name ? decodeURIComponent(params.name as string) : null;
+  const searchParams = useSearchParams();
+  const name = searchParams?.get("n");
   const hasInitialized = useRef(false);
 
   useEffect(() => {
