@@ -168,8 +168,8 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
       const threshold = 10;
 
       // 检测是否接近底部或顶部（避免边界闪动）
-      const isNearBottom = scrollHeight - currentScrollY - clientHeight < 50;
-      const isNearTop = currentScrollY < 50;
+      const _isNearBottom = scrollHeight - currentScrollY - clientHeight < 50;
+      const _isNearTop = currentScrollY < 50;
 
       // 清除之前的定时器
       if (scrollTimeout.current) {
@@ -179,22 +179,31 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
       // 使用防抖，避免频繁触发
       scrollTimeout.current = setTimeout(() => {
         // 如果在顶部，始终显示标签栏
-        if (isNearTop) {
-          setShowTabs(true);
-          scrollDirection.current = null;
-          return;
-        }
+        // if (isNearTop) {
+        //   setShowTabs(true);
+        //   scrollDirection.current = null;
+        //   return;
+        // }
 
-        // 如果在底部，保持当前状态，不要切换
-        if (isNearBottom) {
-          return;
-        }
+        // // 如果在底部，保持当前状态，不要切换
+        // if (isNearBottom) {
+        //   return;
+        // }
 
-        // 向下滚动且滚动距离足够
+        // 向下滚动且滚动距离足够（内容向上移动）
         if (scrollDiff > threshold && currentScrollY > 50) {
           if (scrollDirection.current !== "down") {
             scrollDirection.current = "down";
             setShowTabs(false);
+          }
+          // 自动关闭基本信息展示
+          if (infoExpanded) {
+            setInfoExpanded(false);
+            // 清除自动关闭定时器
+            if (autoCloseTimeoutRef.current) {
+              clearTimeout(autoCloseTimeoutRef.current);
+              autoCloseTimeoutRef.current = null;
+            }
           }
         }
         // 向上滚动且滚动距离足够
@@ -204,11 +213,11 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
             setShowTabs(true);
           }
         }
-      }, 50); // 50ms 防抖
 
-      lastScrollY.current = currentScrollY;
+        lastScrollY.current = currentScrollY;
+      }, 50); // 50ms 防抖
     },
-    [],
+    [infoExpanded],
   );
 
   // 组件卸载时清理定时器
@@ -306,68 +315,67 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
           </div>
         </div>
 
-        {/* 标签栏 - 带滑动动画，触摸优化 */}
-        <div
-          className={`flex-shrink-0 transition-all duration-300 ease-in-out border-b border-gray-200/50 bg-white/70 backdrop-blur-sm ${
-            showTabs
-              ? "max-h-24 opacity-100 translate-y-0"
-              : "max-h-0 opacity-0 -translate-y-4 overflow-hidden"
-          }`}
-        >
-          <div className="px-4 py-1 relative">
-            {/* 左侧滚动指示器 */}
-            {canScrollLeft && (
-              <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white/70 to-transparent z-10 pointer-events-none" />
-            )}
-
-            {/* 右侧滚动指示器 */}
-            {canScrollRight && (
-              <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white/70 to-transparent z-10 pointer-events-none" />
-            )}
-
-            <div
-              ref={tabsContainerRef}
-              className="flex items-center gap-2.5 overflow-x-auto scrollbar-hide pb-1"
-              onScroll={checkScrollState}
-            >
-              {contents.map((c) => (
-                <button
-                  type="button"
-                  key={c.id}
-                  data-tab-id={c.id}
-                  title={c.label}
-                  className={`flex-shrink-0 px-3 py-2 text-sm font-semibold rounded-full transition-all duration-200 min-w-[80px] ${
-                    activeId === c.id
-                      ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105"
-                      : "bg-white/90 text-gray-700 border border-gray-300 active:scale-95 active:bg-gray-100"
-                  }`}
-                  onClick={() => setActiveId(c.id)}
-                >
-                  {c.isLoading ? (
-                    <span className="inline-block w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <span className="flex items-center justify-center gap-1.5">
-                      {c.label}
-                      {c.hint && (
-                        <Info
-                          size={16}
-                          className={
-                            activeId === c.id
-                              ? "text-white/80"
-                              : "text-gray-400"
-                          }
-                        />
-                      )}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* 内容区域 - Swiper */}
         <div className="flex-1 overflow-hidden relative">
+          {/* 标签栏 - 绝对定位浮动在内容上方，触摸优化 */}
+          <div
+            className={`absolute top-0 left-0 right-0 z-30 transition-all duration-300 ease-in-out border-b border-gray-200/50 bg-white/70 backdrop-blur-sm shadow-sm ${
+              showTabs
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-full pointer-events-none"
+            }`}
+          >
+            <div className="px-4 py-1 relative">
+              {/* 左侧滚动指示器 */}
+              {canScrollLeft && (
+                <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white/70 to-transparent z-10 pointer-events-none" />
+              )}
+
+              {/* 右侧滚动指示器 */}
+              {canScrollRight && (
+                <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white/70 to-transparent z-10 pointer-events-none" />
+              )}
+
+              <div
+                ref={tabsContainerRef}
+                className="flex items-center gap-2.5 overflow-x-auto scrollbar-hide pb-1"
+                onScroll={checkScrollState}
+              >
+                {contents.map((c) => (
+                  <button
+                    type="button"
+                    key={c.id}
+                    data-tab-id={c.id}
+                    title={c.label}
+                    className={`flex-shrink-0 px-3 py-2 text-sm font-semibold rounded-full transition-all duration-200 min-w-[80px] ${
+                      activeId === c.id
+                        ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105"
+                        : "bg-white/90 text-gray-700 border border-gray-300 active:scale-95 active:bg-gray-100"
+                    }`}
+                    onClick={() => setActiveId(c.id)}
+                  >
+                    {c.isLoading ? (
+                      <span className="inline-block w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <span className="flex items-center justify-center gap-1.5">
+                        {c.label}
+                        {c.hint && (
+                          <Info
+                            size={16}
+                            className={
+                              activeId === c.id
+                                ? "text-white/80"
+                                : "text-gray-400"
+                            }
+                          />
+                        )}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
           <Swiper
             modules={[Pagination, Navigation, EffectCoverflow]}
             effect="coverflow"
@@ -396,7 +404,7 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
             {contents.map((c, index) => (
               <SwiperSlide key={c.id} className="h-full">
                 <div
-                  className="h-full overflow-auto px-4 pt-3 pb-6 smooth-scroll"
+                  className="h-full overflow-auto px-4 pt-16 pb-6 smooth-scroll"
                   data-tab-id={c.id}
                   onScroll={handleContentScroll}
                 >
@@ -406,9 +414,9 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
                       className="sticky top-0 z-10 flex justify-center mb-2"
                       onClick={() => setShowTabs(true)}
                     >
-                      <div className="bg-gray-800/80 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur-sm shadow-lg">
+                      {/* <div className="bg-gray-800/80 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur-sm shadow-lg">
                         点击显示标签栏 ↑
-                      </div>
+                      </div> */}
                     </div>
                   )}
 
@@ -422,7 +430,7 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
           {!showTabs && (
             <button
               type="button"
-              className="absolute top-0 left-0 right-0 h-14 z-20 flex flex-col justify-start items-center pt-3 bg-gradient-to-b from-gray-900/10 to-transparent active:from-gray-900/15 transition-colors"
+              className="absolute top-0 left-0 right-0 h-14 z-40 flex flex-col justify-start items-center pt-3 bg-gradient-to-b from-gray-900/10 to-transparent active:from-gray-900/15 transition-colors"
               onClick={() => setShowTabs(true)}
               aria-label="显示标签栏"
             >
