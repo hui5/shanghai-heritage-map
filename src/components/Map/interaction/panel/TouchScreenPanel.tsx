@@ -398,6 +398,8 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
               if (newId && newId !== activeId) {
                 setActiveId(newId);
               }
+              // swipe 切换时自动显示 tab 栏
+              setShowTabs(true);
             }}
             className="h-full w-full"
           >
