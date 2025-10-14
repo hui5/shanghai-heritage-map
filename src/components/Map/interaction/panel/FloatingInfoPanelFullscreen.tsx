@@ -65,7 +65,7 @@ export const FloatingInfoPanelFullscreen: React.FC<
             }}
           >
             <div
-              className={`flex items-start ${visibleContents.length > 3 ? "justify-start" : "justify-center"} gap-5 px-6`}
+              className={`flex items-start ${visibleContents.length > 4 ? "justify-start" : "justify-center"} gap-5 px-6`}
             >
               {visibleContents.map((c) => (
                 <div key={c.id} data-tab-id={c.id} className="">

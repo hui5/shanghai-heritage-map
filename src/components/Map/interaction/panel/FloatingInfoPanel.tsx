@@ -1,5 +1,5 @@
-/** biome-ignore-all lint/a11y/noStaticElementInteractions: <explanation> */
-/** biome-ignore-all lint/a11y/useKeyWithClickEvents: <explanation> */
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: mouse interactions are intentional */
+/** biome-ignore-all lint/a11y/useKeyWithClickEvents: keyboard events handled elsewhere */
 import { findLast, last, sortBy } from "lodash";
 import {
   Info,
@@ -26,6 +26,7 @@ import { FloatingInfoPanelFullscreen } from "./FloatingInfoPanelFullscreen";
 import { isGlobalLightboxOpen } from "./GlobalLightbox";
 import { PANEL } from "./panelConfig";
 import { usePanelStore } from "./panelStore";
+import { TouchScreenPanel } from "./TouchScreenPanel";
 
 // 检测是否为触摸屏设备
 const isTouchDevice = () => {
@@ -395,81 +396,14 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
   );
 
   const nonFullscreenPanel = isTouch ? (
-    // 触摸屏：固定全屏大小的面板
-    <div className={`fixed inset-0 z-[2000] ${className}`}>
-      <div
-        ref={containerRef}
-        className="h-full w-full flex flex-col bg-white/50 backdrop-blur-md border-t border-gray-200"
-        role="dialog"
-        aria-modal="true"
-        aria-label="信息面板"
-      >
-        <div className="select-none flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-white/70">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-bold text-gray-700">
-              {locationInfo?.name}
-            </span>
-          </div>
-
-          {Buttons}
-        </div>
-
-        {/* Tabs */}
-        <div className="flex items-center flex-wrap gap-1 px-3 py-1">
-          {visibleContents.map((c) => (
-            <button
-              type="button"
-              key={c.id}
-              data-tab-id={c.id}
-              title={c.label}
-              className={`px-2 pt-1 pb-2 text-xs font-bold rounded-t border-b-0 border ${
-                activeId === c.id
-                  ? "bg-white border-gray-300 text-gray-900"
-                  : "bg-gray-100 border-gray-200 text-gray-600"
-              }`}
-              onClick={() => setActiveId(c.id)}
-            >
-              {c.isLoading ? "..." : c.label}
-              {c.hint ? (
-                <span
-                  className="inline-flex items-center ml-1 align-middle"
-                  title={c.hint}
-                >
-                  <Info size={12} className="text-gray-400" />
-                </span>
-              ) : null}
-            </button>
-          ))}
-        </div>
-
-        {/* Content */}
-        <div ref={contentRef} className="flex-1 overflow-auto pt-2 pb-3">
-          <div
-            className="flex justify-center px-3"
-            onClick={(e) => {
-              const target = e.target as HTMLElement | null;
-              const insideTile = target?.closest("[data-tab-id]");
-              if (!insideTile) {
-                close();
-              }
-            }}
-          >
-            {visibleContents.map((c) => (
-              <div
-                key={c.id}
-                className=""
-                style={{
-                  display: activeId === c.id ? "block" : "none",
-                }}
-                data-tab-id={c.id}
-              >
-                {c.render}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    // 触摸屏：使用优化的 TouchScreenPanel 组件
+    <TouchScreenPanel
+      contents={visibleContents}
+      activeId={activeId}
+      setActiveId={setActiveId}
+      locationInfo={locationInfo}
+      className={className}
+    />
   ) : (
     // 非触摸屏：可拖拽调整大小的面板
     <Rnd
@@ -529,7 +463,6 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
         onMouseEnter={cancelAll}
         onMouseLeave={scheduleHide}
       >
-        {/** biome-ignore lint/a11y/noStaticElementInteractions: <explanation> */}
         <div
           className="cursor-move select-none flex items-center justify-between px-3 py-1.5  "
           onMouseDown={handleMouseDownHeader}
