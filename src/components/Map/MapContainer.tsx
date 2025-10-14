@@ -2,7 +2,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Github } from "lucide-react";
 import U, { type UtilsMap } from "map-gl-utils";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LoadingOverlay } from "@/components/Loading/LoadingOverlay";
 import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
 import { HistoricalLayers } from "@/components/Map/historical/Layers";
@@ -18,75 +18,10 @@ import { localStorageUtil } from "@/utils/localStorage";
 import { getParamsFromUrl } from "../../helper/mapbox/getParamsFromUrl";
 import { addEventListeners } from "./interaction/addInteraction";
 
-const defaultPitch = 0;
-
 export default function MapContainer() {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<UtilsMap | null>(null);
   const [styleReady, setStyleReady] = useState<boolean>(false);
-  const [mapMode, setMapMode] = useState<"2d" | "3d" | "middle">("3d");
-  const [currentPitch, setCurrentPitch] = useState<number>(defaultPitch);
-  const [lastPitch, setLastPitch] = useState<number>(0);
-
-  // 统一的地图模式切换回调
-  const handleMapModeToggle = useCallback(
-    (mode: "2d" | "3d" | "middle") => {
-      if (!mapInstance) return;
-
-      setMapMode(mode);
-
-      // //确定地图样式;
-      // let mapStyle: string;
-      // switch (mode) {
-      //   case "3d":
-      //     mapStyle = "mapbox://styles/hui5/cmf7zygw7000r01pihwfgcesz";
-      //     break;
-      //   case "satellite":
-      //     mapStyle = "mapbox://styles/mapbox/standard-satellite";
-      //     break;
-      //   default: // '2d'
-      //     // mapStyle = "mapbox://styles/mapbox/light-v11";
-      //     mapStyle = "mapbox://styles/hui5/cmf7zygw7000r01pihwfgcesz";
-      //     break;
-      // }
-
-      // mapInstance.setStyle(mapStyle);
-
-      // 设置视角
-      switch (mode) {
-        case "2d":
-          setCurrentPitch(0);
-          mapInstance.setConfigProperty("basemap", "show3dObjects", false);
-          mapInstance.setConfigProperty("basemap", "theme", "monochrome");
-          mapInstance.easeTo({
-            pitch: 0,
-            bearing: 0,
-            duration: 1000,
-          });
-          break;
-        case "middle":
-          setCurrentPitch(0);
-          mapInstance.setConfigProperty("basemap", "show3dObjects", true);
-          mapInstance.setConfigProperty("basemap", "theme", "faded");
-          mapInstance.easeTo({
-            pitch: 0,
-            bearing: 0,
-            duration: 1000,
-          });
-          break;
-        case "3d":
-          mapInstance.setConfigProperty("basemap", "show3dObjects", true);
-          mapInstance.setConfigProperty("basemap", "theme", "faded");
-          mapInstance.easeTo({
-            pitch: currentPitch,
-            bearing: 0,
-            duration: 1000,
-          });
-          break;
-      }
-    },
-    [mapInstance, currentPitch],
-  );
 
   // 热加载恢复机制：检测到地图实例存在但状态未准备时，强制重新检查
   useEffect(() => {
@@ -105,40 +40,6 @@ export default function MapContainer() {
       return () => clearTimeout(timer);
     }
   }, [mapInstance, styleReady]);
-
-  // 3D角度切换回调
-  const _handle3DAngleToggle = useCallback(() => {
-    if (!mapInstance) return;
-
-    if (mapMode === "middle") {
-      handleMapModeToggle("3d");
-    }
-
-    // 在30度和60度之间循环
-
-    let newPitch: number;
-
-    if (lastPitch === 0 && currentPitch === defaultPitch) {
-      //   newPitch = 30;
-      // } else if (lastPitch === 15 && currentPitch === 30) {
-      //   newPitch = 60;
-      // } else if (lastPitch === 30 && currentPitch === 60) {
-      newPitch = 0;
-    } else {
-      newPitch = defaultPitch;
-    }
-    setLastPitch(currentPitch);
-    setCurrentPitch(newPitch);
-
-    mapInstance.easeTo({
-      pitch: newPitch,
-      duration: 500,
-    });
-
-    if (newPitch === 0) {
-      handleMapModeToggle("middle");
-    }
-  }, [mapInstance, currentPitch, handleMapModeToggle, lastPitch, mapMode]);
 
   useGlobalClick({
     mapInstance,
@@ -206,14 +107,6 @@ export default function MapContainer() {
         style: "mapbox://styles/hui5/cmf7zygw7000r01pihwfgcesz",
 
         // style: "mapbox://styles/mapbox/standard",
-
-        pitch: defaultPitch,
-
-        config: {
-          basemap: {
-            // theme: "monochrome",
-          },
-        },
 
         language: "zh-Hans", // 简体中文
         center: center,
