@@ -5,7 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { LoadingOverlay } from "@/components/Loading/LoadingOverlay";
 import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
 import { MapConsole } from "@/components/Map/console/MapConsole";
-import { useMapSettings } from "@/components/Map/console/settings";
+import {
+  saveMapPositionDebounced,
+  useMapPosition,
+} from "@/components/Map/console/mapPosition";
 import { HistoricalLayers } from "@/components/Map/historical/Layers";
 import FavoriteButton from "@/components/Map/interaction/panel/FavoriteButton";
 import FavoriteController from "@/components/Map/interaction/panel/FavoriteController";
@@ -65,9 +68,8 @@ export default function MapContainer() {
 
     try {
       const paramsPosition = getParamsFromUrl();
-      // 使用统一的设置存储系统加载保存的地图位置
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      const savedPosition = useMapSettings.getState().settings.mapPosition;
+      // 使用独立的位置存储系统加载保存的地图位置
+      const savedPosition = useMapPosition.getState().getPosition();
       const defaultCenter: [number, number] = [121.4737, 31.2304]; // 上海市中心 [lng, lat]
       const defaultZoom = 11;
 
@@ -156,14 +158,14 @@ export default function MapContainer() {
       newMap.on("styledata", handleStyleData);
       newMap.on("load", handleMapLoad);
 
-      // 统一的位置保存函数
+      // 优化的位置保存函数（使用防抖避免频繁更新）
       const saveCurrentPosition = () => {
         const center = newMap.getCenter();
         const zoom = newMap.getZoom();
 
-        // 使用统一的设置存储系统保存位置 (注意：存储为 [lat, lng] 格式以保持一致)
+        // 使用独立的位置存储系统，带防抖优化
         const positionToSave: [number, number] = [center.lat, center.lng];
-        useMapSettings.getState().saveMapPosition(positionToSave, zoom);
+        saveMapPositionDebounced(positionToSave, zoom);
       };
 
       const autoHideRoadLables = () => {
