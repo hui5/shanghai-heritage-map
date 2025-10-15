@@ -7,7 +7,7 @@
       "clusterMaxZoom": 15,
       "clusterMinZoom": 10,
       "clusterRadius": 150,
-      "clusterMinPoints": 10,
+      "clusterMinPoints": 20,
       "labelMinZoom": 13
     },
     "performance": {
