@@ -295,15 +295,15 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
 
   // 处理 AI 按钮点击
   const handleAiToggle = useCallback(() => {
+    toggleAiActive();
     if (!aiActive) {
       // 打开 AI：定位到 AI tab
       setActiveId("ai");
-      toggleAiActive();
-    } else {
-      // 关闭 AI
-      toggleAiActive();
+      if (isFullscreen && showOverview) {
+        toggleOverview();
+      }
     }
-  }, [aiActive, toggleAiActive]);
+  }, [aiActive, toggleAiActive, toggleOverview, showOverview, isFullscreen]);
 
   const Buttons = (
     <div className="flex items-center gap-1">
