@@ -3,6 +3,7 @@ import {
   Lightbulb,
   Mountain,
   Palette,
+  RotateCcw,
   Save,
   Settings,
   Type,
@@ -26,6 +27,7 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
   const setShow3dObjects = useMapSettings((s) => s.setShow3dObjects);
   const setPitch = useMapSettings((s) => s.setPitch);
   const setLightPreset = useMapSettings((s) => s.setLightPreset);
+  const resetAllSettings = useMapSettings((s) => s.resetAllSettings);
 
   const { fontSize, theme, show3dObjects, pitch, lightPreset } = mapSettings;
 
@@ -287,9 +289,20 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
             <Settings className="w-4 h-4 text-indigo-600" />
             <h4 className="font-semibold text-gray-800">地图设置</h4>
           </div>
-          <div className="flex items-center space-x-1 text-xs text-indigo-600">
-            <Save className="w-3 h-3" />
-            <span>自动保存</span>
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 text-xs text-indigo-600">
+              <Save className="w-3 h-3" />
+              <span>自动保存</span>
+            </div>
+            <button
+              type="button"
+              onClick={resetAllSettings}
+              className="flex items-center space-x-1 text-xs text-gray-600 hover:text-indigo-600 transition-colors px-2 py-1 rounded"
+              title="重置所有地图设置到默认值"
+            >
+              <RotateCcw className="w-3 h-3" />
+              <span>重置</span>
+            </button>
           </div>
         </div>
 
@@ -337,7 +350,7 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
                 onChange={(e) => setShow3dObjects(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+              <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
             </label>
           </div>
         </div>
@@ -351,13 +364,13 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
             </span>
           </div>
 
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-1">
             {[0, 15, 30, 45].map((pitchOption) => (
               <button
                 key={pitchOption}
                 type="button"
                 onClick={() => setPitch(pitchOption)}
-                className={`px-3 py-2 text-sm rounded transition ${
+                className={`px-2 py-1 text-xs rounded transition ${
                   pitch === pitchOption
                     ? "bg-indigo-600 text-white font-medium shadow"
                     : "bg-white text-gray-700 border hover:border-indigo-400"
@@ -376,13 +389,13 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
             <span className="text-sm font-medium text-gray-700">主题</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1">
             {(["faded", "monochrome"] as Theme[]).map((themeOption) => (
               <button
                 key={themeOption}
                 type="button"
                 onClick={() => setTheme(themeOption)}
-                className={`px-3 py-2 text-sm rounded transition ${
+                className={`px-2 py-1 text-xs rounded transition ${
                   theme === themeOption
                     ? "bg-indigo-600 text-white font-medium shadow"
                     : "bg-white text-gray-700 border hover:border-indigo-400"
@@ -401,14 +414,14 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
             <span className="text-sm font-medium text-gray-700">光照预设</span>
           </div>
 
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-1">
             {(["day", "dawn", "dusk", "night"] as LightPreset[]).map(
               (preset) => (
                 <button
                   key={preset}
                   type="button"
                   onClick={() => setLightPreset(preset)}
-                  className={`px-3 py-2 text-sm rounded transition ${
+                  className={`px-2 py-1 text-xs rounded transition ${
                     lightPreset === preset
                       ? "bg-indigo-600 text-white font-medium shadow"
                       : "bg-white text-gray-700 border hover:border-indigo-400"

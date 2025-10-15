@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { LoadingOverlay } from "@/components/Loading/LoadingOverlay";
 import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
 import { MapConsole } from "@/components/Map/console/MapConsole";
+import { useMapSettings } from "@/components/Map/console/settings";
 import { HistoricalLayers } from "@/components/Map/historical/Layers";
 import FavoriteButton from "@/components/Map/interaction/panel/FavoriteButton";
 import FavoriteController from "@/components/Map/interaction/panel/FavoriteController";
@@ -12,7 +13,6 @@ import FloatingInfoController from "@/components/Map/interaction/panel/FloatingI
 import { useGlobalClick } from "@/components/Map/interaction/useGlobalClick";
 import MapContextMenu from "@/components/Map/MapContextMenu";
 import { WikimapLayer } from "@/components/Map/WikimapLayer";
-import { localStorageUtil } from "@/utils/localStorage";
 import { getParamsFromUrl } from "../../helper/mapbox/getParamsFromUrl";
 import { addEventListeners } from "./interaction/addInteraction";
 
@@ -59,29 +59,31 @@ export default function MapContainer() {
   // });
 
   // 地图初始化
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!mapContainer.current) return;
 
     try {
       const paramsPosition = getParamsFromUrl();
-      // 加载保存的地图位置
-      const savedPosition = localStorageUtil.loadMapPosition();
+      // 使用统一的设置存储系统加载保存的地图位置
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      const savedPosition = useMapSettings.getState().settings.mapPosition;
       const defaultCenter: [number, number] = [121.4737, 31.2304]; // 上海市中心 [lng, lat]
       const defaultZoom = 11;
 
-      // 修复坐标转换：localStorage中存储的是 [lat, lng]，Mapbox需要 [lng, lat]
+      // 修复坐标转换：设置中存储的是 [lat, lng]，Mapbox需要 [lng, lat]
       const center = paramsPosition.center
         ? ([paramsPosition.center[1], paramsPosition.center[0]] as [
             number,
             number,
           ])
-        : savedPosition.center
+        : savedPosition?.center
           ? ([savedPosition.center[1], savedPosition.center[0]] as [
               number,
               number,
             ])
           : defaultCenter;
-      const zoom = paramsPosition.zoom || savedPosition.zoom || defaultZoom;
+      const zoom = paramsPosition.zoom || savedPosition?.zoom || defaultZoom;
 
       // Mapbox Access Token - 请配置您自己的访问令牌
       // 注意：这是一个测试令牌，在生产环境中请使用您自己的令牌
@@ -159,9 +161,9 @@ export default function MapContainer() {
         const center = newMap.getCenter();
         const zoom = newMap.getZoom();
 
-        // 保存到localStorage (注意：存储为 [lat, lng] 格式以保持一致)
+        // 使用统一的设置存储系统保存位置 (注意：存储为 [lat, lng] 格式以保持一致)
         const positionToSave: [number, number] = [center.lat, center.lng];
-        localStorageUtil.saveMapPosition(positionToSave, zoom);
+        useMapSettings.getState().saveMapPosition(positionToSave, zoom);
       };
 
       const autoHideRoadLables = () => {
@@ -220,7 +222,7 @@ export default function MapContainer() {
     } catch (error) {
       console.error("❌ 地图初始化失败:", error);
     }
-  }, []);
+  }, []); // 地图初始化只需要执行一次，不需要mapSettings作为依赖
 
   return (
     <div className="relative h-full w-full">

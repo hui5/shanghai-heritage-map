@@ -10,6 +10,12 @@ export interface MapSettings {
   show3dObjects: boolean;
   pitch: number;
   lightPreset: LightPreset;
+  // 地图位置和缩放设置
+  mapPosition: {
+    center: [number, number]; // [lat, lng] 格式
+    zoom: number;
+    timestamp: number;
+  } | null;
 }
 
 interface MapSettingsState {
@@ -19,6 +25,10 @@ interface MapSettingsState {
   setShow3dObjects: (show: boolean) => void;
   setPitch: (pitch: number) => void;
   setLightPreset: (lightPreset: LightPreset) => void;
+  // 地图位置管理方法
+  saveMapPosition: (center: [number, number], zoom: number) => void;
+  // 重置所有设置到默认值
+  resetAllSettings: () => void;
 }
 
 export const useMapSettings = create<MapSettingsState>()(
@@ -26,10 +36,11 @@ export const useMapSettings = create<MapSettingsState>()(
     (set) => ({
       settings: {
         fontSize: 1.0,
-        theme: "faded",
+        theme: "faded" as Theme,
         show3dObjects: true,
         pitch: 0,
-        lightPreset: "day",
+        lightPreset: "day" as LightPreset,
+        mapPosition: null,
       },
       setFontSize: (fontSize) =>
         set((state) => ({
@@ -50,6 +61,29 @@ export const useMapSettings = create<MapSettingsState>()(
       setLightPreset: (lightPreset) =>
         set((state) => ({
           settings: { ...state.settings, lightPreset },
+        })),
+      // 地图位置管理方法
+      saveMapPosition: (center, zoom) =>
+        set((state) => ({
+          settings: {
+            ...state.settings,
+            mapPosition: {
+              center,
+              zoom,
+              timestamp: Date.now(),
+            },
+          },
+        })),
+      resetAllSettings: () =>
+        set(() => ({
+          settings: {
+            fontSize: 1.0,
+            theme: "faded" as Theme,
+            show3dObjects: true,
+            pitch: 0,
+            lightPreset: "day" as LightPreset,
+            mapPosition: null,
+          },
         })),
     }),
     {
