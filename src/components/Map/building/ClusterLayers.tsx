@@ -30,7 +30,7 @@ export const BuildingClusterLayers = ({
       generateId: true,
     });
 
-    // mapInstance.addLayer(layerConfigs.clusters);
+    mapInstance.addLayer(layerConfigs.clusters);
     mapInstance.addLayer(layerConfigs.clusterCount);
     mapInstance.addLayer(layerConfigs.unclusteredPoint);
     mapInstance.addLayer(layerConfigs.buildingLabels);
