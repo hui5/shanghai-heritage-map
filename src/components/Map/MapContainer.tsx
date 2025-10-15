@@ -1,18 +1,16 @@
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Github } from "lucide-react";
 import U, { type UtilsMap } from "map-gl-utils";
 import { useEffect, useRef, useState } from "react";
 import { LoadingOverlay } from "@/components/Loading/LoadingOverlay";
 import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
+import { MapConsole } from "@/components/Map/console/MapConsole";
 import { HistoricalLayers } from "@/components/Map/historical/Layers";
 import FavoriteButton from "@/components/Map/interaction/panel/FavoriteButton";
 import FavoriteController from "@/components/Map/interaction/panel/FavoriteController";
 import FloatingInfoController from "@/components/Map/interaction/panel/FloatingInfoController";
 import { useGlobalClick } from "@/components/Map/interaction/useGlobalClick";
-import { MapConsole } from "@/components/Map/MapConsole";
 import MapContextMenu from "@/components/Map/MapContextMenu";
-import { MapHelpButton } from "@/components/Map/MapHelpButton";
 import { WikimapLayer } from "@/components/Map/WikimapLayer";
 import { localStorageUtil } from "@/utils/localStorage";
 import { getParamsFromUrl } from "../../helper/mapbox/getParamsFromUrl";
@@ -118,8 +116,15 @@ export default function MapContainer() {
         localIdeographFontFamily:
           "'Noto Sans CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif",
         attributionControl: false,
-        logoPosition: "bottom-right",
+        // logoPosition: "bottom-right",
       });
+
+      // newMap.addControl(
+      //   new mapboxgl.AttributionControl({
+      //     compact: true,
+      //   }),
+      //   "bottom-right",
+      // );
 
       U.init(newMap as any, mapboxgl);
 
@@ -177,13 +182,13 @@ export default function MapContainer() {
 
       addEventListeners(newMap);
 
-      newMap.addControl(new mapboxgl.ScaleControl(), "bottom-left");
+      // newMap.addControl(new mapboxgl.ScaleControl(), "bottom-left");
 
       // 添加导航控件（包含3D角度调整）- 放在右下角避免与设置面板冲突
       newMap.addControl(
         new mapboxgl.NavigationControl({
           showCompass: true,
-          showZoom: true,
+          showZoom: false,
           visualizePitch: true,
         }),
         "bottom-right",
@@ -222,18 +227,6 @@ export default function MapContainer() {
       <div ref={mapContainer} className="h-full w-full" />
 
       <LoadingOverlay styleReady={styleReady} />
-
-      {/* GitHub 链接 */}
-      <a
-        href="https://github.com/hui5/shanghai-heritage-map.git"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="在 GitHub 查看项目"
-        className="absolute right-1 bottom-2 z-10 inline-flex items-center gap-1 rounded-md bg-white/70 pl-2 pr-1 pt-1 text-xs font-medium text-gray-800  backdrop-blur hover:bg-white"
-      >
-        <Github className="h-4 w-4" />
-        <span>GitHub</span>
-      </a>
 
       {/* 确保样式和图层都准备就绪后才渲染自定义组件 */}
       {mapInstance && styleReady && (
@@ -280,9 +273,6 @@ export default function MapContainer() {
           <div className="absolute top-16 right-3 z-10">
             <FavoriteButton />
           </div>
-
-          {/* 帮助按钮 */}
-          <MapHelpButton />
         </>
       )}
     </div>
