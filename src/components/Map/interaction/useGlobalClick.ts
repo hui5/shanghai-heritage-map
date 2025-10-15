@@ -60,15 +60,6 @@ export const useGlobalClick = ({
         return;
       }
 
-      const panelStore = usePanelStore.getState();
-      if (panelStore.isOpen && !panelStore.isFullscreen) {
-        usePanelStore.setState({
-          isFullscreen: true,
-          showOverview: true,
-        });
-        return false;
-      }
-
       // 使用新的公共方法查询可交互图层的要素
       const interactiveFeatures = queryInteractiveFeatures(e.point);
 
@@ -101,14 +92,16 @@ export const useGlobalClick = ({
         } else if (includes(getInteractionLayerIds(), layerId)) {
           locationInfo = getHistoricalLocationInfo(feature);
         } else {
-          console.warn("图层ID不再交互范围内:", layerId);
+          console.warn("图层ID不在交互范围内:", layerId);
           return false;
         }
 
         locationInfo.coordinates = coordinates;
 
+        const panelStore = usePanelStore.getState();
+
         // 如果panel没有打开，打开panel全屏并传递locationInfo
-        if (!panelStore.isOpen) {
+        if (!panelStore.isOpen || (panelStore.isOpen && !panelStore.isPinned)) {
           usePanelStore.setState({
             isOpen: true,
             isFullscreen: true,

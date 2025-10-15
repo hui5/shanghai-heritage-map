@@ -1,15 +1,7 @@
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: mouse interactions are intentional */
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: keyboard events handled elsewhere */
 import { findLast, last, sortBy } from "lodash";
-import {
-  Info,
-  LayoutGrid,
-  Maximize2,
-  Minimize2,
-  Pin,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { Info, Maximize2, Minimize2, Pin, Sparkles, X } from "lucide-react";
 import type React from "react";
 import {
   useCallback,
@@ -329,26 +321,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
       >
         <Sparkles size={16} className={aiActive ? "animate-pulse" : ""} />
       </button>
-      {isFullscreen && !isTouch ? (
-        <button
-          type="button"
-          aria-pressed={showOverview}
-          aria-label={showOverview ? "关闭概览" : "概览"}
-          title={
-            showOverview
-              ? "关闭概览。 Space、ArrowLeft、ArrowRight键快速切换"
-              : "概览。 Space、ArrowLeft、ArrowRight键快速切换"
-          }
-          className={`p-1.5 rounded text-xs ${
-            showOverview
-              ? "bg-blue-100 border-blue-300 text-blue-700"
-              : "bg-white/30 border-gray-300 text-gray-700 hover:bg-gray-100"
-          } border`}
-          onClick={toggleOverview}
-        >
-          <LayoutGrid size={16} />
-        </button>
-      ) : null}
+
       {!isTouch && (
         <button
           type="button"
@@ -365,7 +338,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
           {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
         </button>
       )}
-      {!isTouch && (
+      {!isTouch && !isFullscreen && (
         <button
           type="button"
           aria-pressed={pinned}
@@ -539,6 +512,8 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
         close={close}
         Buttons={Buttons}
         className={className}
+        onTabSelect={setActiveId}
+        onOverviewToggle={toggleOverview}
       />
     );
 

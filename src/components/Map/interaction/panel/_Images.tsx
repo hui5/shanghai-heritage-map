@@ -204,7 +204,7 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
               return (
                 <div
                   key={`${image.thumbnail}-${index}`}
-                  className="block rounded-lg hover:shadow-lg transition-all duration-200 group"
+                  className="block rounded-lg hover:shadow-lg transition-all duration-200 group relative"
                 >
                   <button
                     type="button"
@@ -223,34 +223,34 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
                           e.currentTarget.alt = "图片缺失";
                         }}
                       />
-                      {/* 收藏按钮 */}
-                      {showFavoriteButton && locationInfo && category && (
-                        <button
-                          type="button"
-                          onClick={(e) => handleFavoriteClick(image, e)}
-                          className="absolute top-5 right-5 p-2 bg-white/90 hover:bg-white rounded-lg shadow-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
-                          title={favorited ? "取消收藏" : "收藏"}
-                        >
-                          <svg
-                            className={`w-5 h-5 transition-colors ${
-                              favorited ? "text-blue-600" : "text-gray-500"
-                            }`}
-                            fill={favorited ? "currentColor" : "none"}
-                            stroke="currentColor"
-                            strokeWidth={2}
-                            viewBox="0 0 24 24"
-                            aria-hidden="true"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
-                            />
-                          </svg>
-                        </button>
-                      )}
                     </div>
                   </button>
+                  {/* 收藏按钮 - 独立于主按钮 */}
+                  {showFavoriteButton && locationInfo && category && (
+                    <button
+                      type="button"
+                      onClick={(e) => handleFavoriteClick(image, e)}
+                      className="absolute top-5 right-5 p-2 bg-white/90 hover:bg-white rounded-lg shadow-lg transition-all duration-200 opacity-0 group-hover:opacity-100 z-10"
+                      title={favorited ? "取消收藏" : "收藏"}
+                    >
+                      <svg
+                        className={`w-5 h-5 transition-colors ${
+                          favorited ? "text-blue-600" : "text-gray-500"
+                        }`}
+                        fill={favorited ? "currentColor" : "none"}
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                        />
+                      </svg>
+                    </button>
+                  )}
                   {/* 图片标题 */}
                   <div className="px-4 pb-4 ">
                     {image.title && (

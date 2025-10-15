@@ -160,19 +160,15 @@ export class LocationHighlighter {
     try {
       // 优化：使用更可靠的地图状态检测
       if (!this.map.isStyleLoaded()) {
-        console.warn("Map style not loaded yet, waiting for idle state...");
-
         // 使用 'idle' 事件，它在地图完成渲染且所有数据加载完毕时触发
         const onIdle = () => {
           this.map.off("idle", onIdle);
-          console.log("Map is idle, proceeding with highlight...");
           this.tryHighlight(coordinates, name, customDuration);
         };
 
         // 同时监听 style.load 作为备选
         const onStyleLoad = () => {
           this.map.off("style.load", onStyleLoad);
-          console.log("Map style loaded, proceeding with highlight...");
           this.tryHighlight(coordinates, name, customDuration);
         };
 
@@ -183,13 +179,11 @@ export class LocationHighlighter {
         setTimeout(() => {
           this.map.off("idle", onIdle);
           this.map.off("style.load", onStyleLoad);
-          console.log("Timeout reached, trying to highlight anyway...");
           this.tryHighlight(coordinates, name, customDuration);
         }, 1000); // 减少到1秒
         return;
       }
 
-      console.log("Map style is loaded, proceeding with highlight...");
       this.tryHighlight(coordinates, name, customDuration);
     } catch (error) {
       console.warn("Error showing location highlight:", error);
@@ -205,18 +199,12 @@ export class LocationHighlighter {
     customDuration?: number,
   ) {
     try {
-      console.log("Trying to highlight at:", coordinates);
-
       // 优化：确保源和图层存在，如果不存在则重新初始化
       let source = this.map.getSource(this.sourceId) as mapboxgl.GeoJSONSource;
       if (!source) {
-        console.log("Source not found, reinitializing...");
         this.initialize();
         source = this.map.getSource(this.sourceId) as mapboxgl.GeoJSONSource;
         if (!source) {
-          console.warn(
-            "Failed to create highlight source after initialization",
-          );
           return;
         }
       }
@@ -251,8 +239,6 @@ export class LocationHighlighter {
           this.clear();
         }, duration);
       }
-
-      console.log("Highlight setup complete");
     } catch (error) {
       console.warn("Error in tryHighlight:", error);
     }
