@@ -71,7 +71,7 @@
               "iconAnchor": "center",
               "iconOffset": [-1, 0],
               "iconAllowOverlap": true,
-              "iconOpacity": 1
+              "iconOpacity": 0.8
             }
           },
           "labels": {
@@ -81,7 +81,7 @@
             "style": {
               "fontSizeStops": [[11, 13], [13, 13], [20, 15]],
               "fontSizeBase": 1.4,
-              "color": "#252525",
+              "color": "#2F4F4F",
               "haloColor": "#ffffff",
               "haloWidth": 1,
               "textAnchor": "left",
@@ -105,28 +105,28 @@
           "dataFile": "table_Crow_P.geojson",
           "geometryType": "Point",
           "enabled": true,
-          "minzoom": 11,
+          "minzoom": 13,
           "style": {
             "color": "#191970",
             "symbol": {
               "type": "icon",
               "iconImage": "landmark",
-              "iconSizeStops": [[11, 0.8], [20, 1]],
+              "iconSizeStops": [[13, 0.8], [20, 1]],
               "iconSizeBase": 1.2,
               "iconAnchor": "center",
               "iconOffset": [-1, 0],
               "iconAllowOverlap": true,
-              "iconOpacity": 1
+              "iconOpacity": 0.8
             }
           },
           "labels": {
             "enabled": true,
-            "minZoom": 11,
+            "minZoom": 13,
             "field": "NAME_CN",
             "style": {
-              "fontSizeStops": [[11, 13], [13, 13], [20, 15]],
+              "fontSizeStops": [[13, 13], [20, 15]],
               "fontSizeBase": 1.4,
-              "color": "#252525",
+              "color": "#2F4F4F",
               "haloColor": "#ffffff",
               "haloWidth": 1,
               "textAnchor": "left",
