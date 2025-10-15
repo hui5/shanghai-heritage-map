@@ -34,38 +34,42 @@ export function MapConsole({ mapInstance }: MapConsoleProps) {
 
   return (
     <>
-      {isExpanded ? (
-        <div
-          ref={panelRef}
-          className="fixed top-2 right-2 bg-white rounded-lg shadow-xl border w-80 max-h-[80vh] z-[100]"
-        >
-          <ConsoleHeader
-            onClose={() => setIsExpanded(false)}
-            onHelpOpen={() => {
-              setIsHelpOpen(true);
-              setIsExpanded(false);
-            }}
-          />
+      {/* 设置面板 - 保持挂载状态，只控制显示/隐藏 */}
+      <div
+        ref={panelRef}
+        className={`fixed top-2 right-2 bg-white rounded-lg shadow-xl border w-80 max-h-[80vh] z-[100] transition-all duration-300 ${
+          isExpanded
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none"
+        }`}
+      >
+        <ConsoleHeader
+          onClose={() => setIsExpanded(false)}
+          onHelpOpen={() => {
+            setIsHelpOpen(true);
+            setIsExpanded(false);
+          }}
+        />
 
-          <div className="p-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
-            {/* 地图设置 */}
-            <MapSettingsComponent mapInstance={mapInstance} />
+        <div className="p-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
+          {/* 地图设置 */}
+          <MapSettingsComponent mapInstance={mapInstance} />
 
-            {/* 图层管理 */}
-            <LayerManagement mapInstance={mapInstance} />
-          </div>
+          {/* 图层管理 */}
+          <LayerManagement mapInstance={mapInstance} />
         </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setIsExpanded(true)}
-          className="fixed top-3 right-3 bg-white border rounded-full shadow-xl p-2 hover:shadow-2xl transition z-[10] hover:scale-110"
-          title="打开控制台"
-          aria-label="打开控制台"
-        >
-          <Settings className="w-5 h-5 text-gray-700" />
-        </button>
-      )}
+      </div>
+
+      {/* 设置按钮 */}
+      <button
+        type="button"
+        onClick={() => setIsExpanded(true)}
+        className="fixed top-3 right-3 bg-white border rounded-full shadow-xl p-2 hover:shadow-2xl transition z-[10] hover:scale-110"
+        title="打开控制台"
+        aria-label="打开控制台"
+      >
+        <Settings className="w-5 h-5 text-gray-700" />
+      </button>
 
       {/* 帮助弹窗 */}
       <HelpModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />

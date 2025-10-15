@@ -58,18 +58,25 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
           // 获取原始大小并应用缩放
           const originalSize = originalTextSizesRef.current.get(layerId);
           if (originalSize) {
-            if (typeof originalSize === "number") {
-              map.setLayoutProperty(
-                layerId,
-                "text-size",
-                originalSize * fontSize,
+            try {
+              if (typeof originalSize === "number") {
+                map.setLayoutProperty(
+                  layerId,
+                  "text-size",
+                  originalSize * fontSize,
+                );
+              } else if (Array.isArray(originalSize)) {
+                const scaledExpression = scaleTextSizeExpression(
+                  originalSize,
+                  fontSize,
+                );
+                map.setLayoutProperty(layerId, "text-size", scaledExpression);
+              }
+            } catch (error) {
+              console.warn(
+                `Failed to set font size for layer ${layerId}:`,
+                error,
               );
-            } else if (Array.isArray(originalSize)) {
-              const scaledExpression = scaleTextSizeExpression(
-                originalSize,
-                fontSize,
-              );
-              map.setLayoutProperty(layerId, "text-size", scaledExpression);
             }
           }
         }
