@@ -8,7 +8,7 @@ interface ConsoleHeaderProps {
 export function ConsoleHeader({ onClose, onHelpOpen }: ConsoleHeaderProps) {
   return (
     <div className="border-b bg-gray-50 rounded-t-lg">
-      <div className="flex items-center justify-between p-3">
+      <div className="flex items-center justify-between p-2">
         {/* 左侧按钮组 */}
         <div className="flex items-center space-x-3">
           {/* GitHub 按钮 */}
