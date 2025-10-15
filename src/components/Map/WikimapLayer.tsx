@@ -33,9 +33,9 @@ const WIKIMAP_FETCH_DISTANCE_THRESHOLD_FACTOR = 0.4; // fraction of current radi
 
 export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
   const iconImageId = "wikimap_marker";
-  const lastMouseLngLatRef = useRef<mapboxgl.LngLatLike | null>(null);
+  const _lastMouseLngLatRef = useRef<mapboxgl.LngLatLike | null>(null);
   const isFetchingRef = useRef<boolean>(false);
-  const initializedRef = useRef<boolean>(false);
+  const _initializedRef = useRef<boolean>(false);
   const isOverFeatureRef = useRef<boolean>(false);
   const isPopupHoveredRef = useRef<boolean>(false);
   const persistentPopupsRef = useRef<Map<number, mapboxgl.Popup>>(new Map());
@@ -51,15 +51,20 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
     const addIconIfMissing = async () => {
       if (!mapInstance) return;
 
-      if (!mapInstance.hasImage(iconImageId)) {
-        try {
-          const response = await fetch("/icons/wikimap-marker.png");
-          const blob = await response.blob();
-          const bitmap = await createImageBitmap(blob);
-          mapInstance.addImage(iconImageId, bitmap, { pixelRatio: 2 });
-        } catch (e) {
-          console.warn("Failed to load marker icon", e);
+      try {
+        // 检查图标是否已存在，如果存在则跳过
+        if (mapInstance.hasImage(iconImageId)) {
+          return;
         }
+
+        const response = await fetch("/icons/wikimap-marker.png");
+        const blob = await response.blob();
+        const bitmap = await createImageBitmap(blob);
+        if (!mapInstance.hasImage(iconImageId)) {
+          mapInstance.addImage(iconImageId, bitmap, { pixelRatio: 2 });
+        }
+      } catch (e) {
+        console.warn("Failed to load marker icon", e);
       }
     };
 
