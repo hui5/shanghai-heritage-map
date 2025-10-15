@@ -203,11 +203,11 @@ export const FavoriteController: React.FC<FavoriteControllerProps> = ({
             <div className="space-y-8">
               {Object.entries(groupedFavorites).map(([category, images]) => (
                 <div key={category} className="space-y-3">
-                  <h3 className="text-lg w-[140px] font-semibold text-gray-800 flex items-center gap-2 sticky top-0 bg-white/35 backdrop-blur-sm py-2 z-10">
+                  <h3 className="text-lg w-[135px] font-semibold text-gray-800 flex items-center gap-2 sticky top-0 bg-white/35 backdrop-blur-sm  z-10 rounded-full">
                     <span className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full text-sm">
                       {category}
                     </span>
-                    <span className="text-sm font-normal text-gray-500">
+                    <span className="text-sm  font-bold text-gray-600">
                       {images.length} 张
                     </span>
                   </h3>
