@@ -118,7 +118,7 @@ export const FavoriteController: React.FC<FavoriteControllerProps> = ({
       />
 
       {/* 收藏面板 */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[999] w-[90vw] max-w-4xl max-h-[95vh] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden flex flex-col">
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[999] w-[90vw] max-w-4xl max-h-[95dvh] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden flex flex-col">
         {/* 头部 */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/50 bg-gradient-to-r from-pink-50/80 to-purple-50/80">
           <div className="flex items-center gap-3">
