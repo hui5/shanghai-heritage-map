@@ -715,7 +715,7 @@
           "name": "Virtual Shanghai：建筑",
           "dataFile": "virtual_shanghai_buildings.geojson",
           "geometryType": "Point",
-          "enabled": true,
+          "enabled": false,
           "minzoom": 17,
           "coordinateSystem": "wgs84",
           "style": {
@@ -760,7 +760,7 @@
           "name": "OSM 点数据",
           "dataFile": "openstreetmap.geojson",
           "geometryType": "Point",
-          "enabled": true,
+          "enabled": false,
           "coordinateSystem": "wgs84",
           "minzoom": 17,
           "style": {

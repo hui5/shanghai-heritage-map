@@ -81,7 +81,7 @@
           "name": "文物保护点",
           "dataFile": "data.json",
           "geometryType": "Point",
-          "enabled": true,
+          "enabled": false,
           "priority": 5,
           "style": {
             "color": "#807dba",

@@ -57,7 +57,7 @@ https://shanghai-heritage-map.openda.top/
 
         </details>
 
-  4. [Wikidata（1580）](https://query.wikidata.org/)
+  4. [1202](https://query.wikidata.org/)
         <details><summary>查询语句</summary>
 
         ```sql
@@ -71,6 +71,9 @@ https://shanghai-heritage-map.openda.top/
 
         # 筛选条件：该条目必须有“坐标”(P625)属性
         ?item wdt:P625 ?coords.
+
+        # 排除“地铁站/Metro station”（Q928830）及其子类
+        MINUS { ?item wdt:P31/wdt:P279* wd:Q928830. }
 
         # 筛选条件：条目拥有“文物保护等级”(P1435) 属性 （可选）
         # ?item wdt:P1435 ?heritage_status .
