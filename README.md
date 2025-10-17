@@ -27,7 +27,7 @@ https://shanghai-heritage-map.openda.top/
        - 名人故居 (137)
        - 《今日之沪江》上海地标 (37)
        - 克-科上海地图地标 （98）
-  3. [OpenStreetMap（polygon:674, point:717）](https://overpass-turbo.eu/)
+  3. [OpenStreetMap（polygon:674, ~~point:717~~）](https://overpass-turbo.eu/)
         <details><summary>查询语句</summary>
 
         ```sql
@@ -104,7 +104,7 @@ https://shanghai-heritage-map.openda.top/
         </details>
 
   5. [WikiMap](https://wikimap.toolforge.org/?wp=false&cluster=false&zoom=16&lat=031.245900&lon=0121.485733)
-  6. [Virtual Shanghai Buildings（1803）](https://www.virtualshanghai.net/Data/Buildings)
+  6. ~~[Virtual Shanghai Buildings（1803）](https://www.virtualshanghai.net/Data/Buildings)~~
 
 - #### 查询数据
 

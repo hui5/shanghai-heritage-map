@@ -45,7 +45,9 @@ config.categories.forEach((category) => {
       data: { type: "FeatureCollection", features: [] },
       visible: category.enabled && subtype.enabled,
     };
-    state.subtypeDatas.push(subtypeData);
+    if (category.enabled && subtype.enabled) {
+      state.subtypeDatas.push(subtypeData);
+    }
   });
 });
 const files = ["data/data.json", "data/data_1.json"];

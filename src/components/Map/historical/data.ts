@@ -45,7 +45,9 @@ config.categories.forEach((category) => {
       visible: category.enabled && subtype.enabled,
     };
 
-    state.subtypeDatas = [subtypeData, ...state.subtypeDatas];
+    if (category.enabled && subtype.enabled) {
+      state.subtypeDatas.push(subtypeData);
+    }
   });
 });
 

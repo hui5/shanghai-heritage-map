@@ -708,14 +708,14 @@
       "id": "virtual_shanghai",
       "name": "虚拟上海",
       "icon": "📍",
-      "enabled": true,
+      "enabled": false,
       "subtypes": [
         {
           "id": "virtual_shanghai_1",
           "name": "Virtual Shanghai：建筑",
           "dataFile": "virtual_shanghai_buildings.geojson",
           "geometryType": "Point",
-          "enabled": false,
+          "enabled": true,
           "minzoom": 17,
           "coordinateSystem": "wgs84",
           "style": {
