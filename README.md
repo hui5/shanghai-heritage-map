@@ -57,7 +57,7 @@ https://shanghai-heritage-map.openda.top/
 
         </details>
 
-  4. [1202](https://query.wikidata.org/)
+  4. [Wikidata(1202)](https://query.wikidata.org/)
         <details><summary>查询语句</summary>
 
         ```sql
