@@ -760,7 +760,7 @@
           "name": "OSM 点数据",
           "dataFile": "openstreetmap.geojson",
           "geometryType": "Point",
-          "enabled": false,
+          "enabled": true,
           "coordinateSystem": "wgs84",
           "minzoom": 17,
           "style": {

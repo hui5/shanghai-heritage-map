@@ -27,7 +27,7 @@ https://shanghai-heritage-map.openda.top/
        - 名人故居 (137)
        - 《今日之沪江》上海地标 (37)
        - 克-科上海地图地标 （98）
-  3. [OpenStreetMap（polygon:674, ~~point:717~~）](https://overpass-turbo.eu/)
+  3. [OpenStreetMap（polygon:674, point:717）](https://overpass-turbo.eu/)
         <details><summary>查询语句</summary>
 
         ```sql
