@@ -51,6 +51,8 @@ config.categories.forEach((category) => {
   });
 });
 
+state.subtypeDatas.reverse();
+
 _(state.subtypeDatas)
   .groupBy((subtypeData) => subtypeData.subtype.dataFile)
   .forEach((group, dataFile: string) => {
