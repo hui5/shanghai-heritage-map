@@ -1,6 +1,6 @@
 import _, { difference } from "lodash";
 import type { UtilsMap } from "map-gl-utils";
-import { proxy } from "valtio";
+import { proxy, ref } from "valtio";
 import type {
   DataCategory,
   DataSubtype,
@@ -69,8 +69,14 @@ files.forEach(async (url) => {
       });
 
       const newFeatures = convertToGeoJSON(data).features;
-      subtypeData.data.features.push(...newFeatures);
-      subtypeData.visible && state.data.features.push(...newFeatures);
+      subtypeData.data.features = ref([
+        ...subtypeData.data.features,
+        ...newFeatures,
+      ]);
+
+      if (subtypeData.visible) {
+        state.data.features = ref([...state.data.features, ...newFeatures]);
+      }
     });
     state.loading.completed = [...state.loading.completed, url];
   } catch (_e) {
@@ -125,7 +131,7 @@ const updateMapDataDebounced = (mapInstance: UtilsMap) => {
       .flat();
 
     // 同步更新 state.data.features 和地图数据源
-    state.data.features = allFeatures;
+    state.data.features = ref(allFeatures);
     mapInstance.U.setData(sourceId, {
       type: "FeatureCollection",
       features: allFeatures,
