@@ -88,8 +88,15 @@
             "fillColor": "#84CC16",
             "icon-image": "landmark-JP"
           }
-        },
-
+        }
+      ]
+    },
+    {
+      "id": "heritage_buildings",
+      "name": "优秀历史建筑",
+      "icon": "🏰",
+      "enabled": true,
+      "subtypes": [
         {
           "id": "data_1",
           "name": "上海市优秀历史建筑",
