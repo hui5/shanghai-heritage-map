@@ -1,6 +1,6 @@
 import { Settings } from "lucide-react";
 import type { UtilsMap } from "map-gl-utils";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ConsoleHeader } from "./ConsoleHeader";
 import { HelpModal } from "./HelpModal";
 import { LayerManagement } from "./LayerManagement";
@@ -15,22 +15,6 @@ export function MapConsole({ mapInstance }: MapConsoleProps) {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const panelRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (!isExpanded) return;
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        panelRef.current &&
-        !panelRef.current.contains(event.target as Node)
-      ) {
-        setIsExpanded(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isExpanded]);
 
   return (
     <>
