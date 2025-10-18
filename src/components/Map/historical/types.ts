@@ -104,6 +104,21 @@ export interface LabelStyle {
   // 可选：随缩放变化的字体大小配置
   fontSizeStops?: [number, number][]; // [[zoom, size], ...]
   fontSizeBase?: number; // 指数插值基数，默认1（线性）
+  // 可选：文本对齐和其他样式
+  textAlign?: "center" | "left" | "right";
+  repeat?: number; // 文本重复间隔
+  maxAngle?: number; // 最大角度
+  textAnchor?:
+    | "center"
+    | "left"
+    | "right"
+    | "top"
+    | "bottom"
+    | "top-left"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-right";
+  opacity?: number; // 文本透明度
 }
 
 // 标签配置
@@ -113,6 +128,8 @@ export interface Labels {
   maxZoom: number;
   field: string;
   style: LabelStyle;
+  // 可选：路径标签配置
+  pathLabels?: boolean; // 是否为路径标签
 }
 
 // 聚合样式配置（仅建筑使用）
@@ -135,6 +152,9 @@ export interface DataSubtype {
   labels?: Labels;
   slot?: "top" | "middle" | "bottom"; // 图层槽位，控制在同类型图层中的相对位置
   coordinateSystem?: "wgs84" | "gcj02" | "bd09"; // 坐标系类型，默认为 gcj02
+  // 可选：缩放级别配置（向后兼容）
+  minzoom?: number; // 最小缩放级别
+  maxzoom?: number; // 最大缩放级别
 }
 
 // 数据类别配置
