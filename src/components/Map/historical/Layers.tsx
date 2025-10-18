@@ -1,9 +1,9 @@
 import type { UtilsMap } from "map-gl-utils";
 import { useEffect } from "react";
-import { useSnapshot } from "valtio";
+import { subscribe } from "valtio";
 import { generateHistoricalLayerConfig } from "@/components/Map/historical/convertConfig";
 import { addInteraction } from "../interaction/addInteraction";
-import { state } from "./data";
+import { cleanupMapInstance, initializeMapData, state } from "./data";
 
 export const HistoricalLayers = ({
   mapInstance,
@@ -12,7 +12,6 @@ export const HistoricalLayers = ({
   mapInstance: UtilsMap;
   configName: string;
 }) => {
-  const snapshot = useSnapshot(state);
   // 只在数据真正发生变化时创建图层
   useEffect(() => {
     try {
@@ -59,32 +58,28 @@ export const HistoricalLayers = ({
         });
       });
 
+      initializeMapData(mapInstance);
+      const unsubscribe = subscribe(
+        state.loading.completed,
+        (_subtypeDatas) => {
+          initializeMapData(mapInstance);
+        },
+      );
+
       return () => {
         try {
+          unsubscribe();
           interactionIds.forEach((id) => {
             mapInstance.removeInteraction(id);
           });
+          // 清理 mapInstance 相关的缓存
+          cleanupMapInstance(mapInstance);
         } catch {}
       };
     } catch (error) {
       console.error("historical layers error: ", error);
     }
   }, [mapInstance, configName]);
-
-  useEffect(() => {
-    if (!snapshot.loading.completed) return; // 条件守卫
-
-    // 热加载恢复机制：检测到地图实例存在但状态未准备时，强制重新检查  回填数据
-    try {
-      state.subtypeDatas.forEach((subtypeData) => {
-        if (subtypeData.data) {
-          mapInstance.U.setData(subtypeData.sourceId, subtypeData.data as any);
-        }
-      });
-    } catch (error) {
-      console.error("historical layers set data error: ", error);
-    }
-  }, [mapInstance, snapshot.loading.completed]);
 
   return null;
 };

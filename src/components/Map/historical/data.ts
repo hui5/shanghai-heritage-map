@@ -127,6 +127,30 @@ export const toggleSubtypeVisible = ({
     .forEach(toggle);
 };
 
+// 使用 WeakMap 来跟踪每个 mapInstance 的初始化状态，避免开发环境下的重复初始化
+const mapInstanceInitialized = new WeakMap<UtilsMap, Set<string>>();
+
+export const initializeMapData = (mapInstance: UtilsMap) => {
+  // 获取或创建当前 mapInstance 的初始化记录
+  let initializedIds = mapInstanceInitialized.get(mapInstance);
+  if (!initializedIds) {
+    initializedIds = new Set<string>();
+    mapInstanceInitialized.set(mapInstance, initializedIds);
+  }
+
+  state.subtypeDatas.forEach((subtypeData) => {
+    if (subtypeData.data && !initializedIds.has(subtypeData.id)) {
+      mapInstance.U.setData(subtypeData.sourceId, subtypeData.data);
+      initializedIds.add(subtypeData.id);
+    }
+  });
+};
+
+// 清理 mapInstance 相关的缓存，用于组件卸载时
+export const cleanupMapInstance = (mapInstance: UtilsMap) => {
+  mapInstanceInitialized.delete(mapInstance);
+};
+
 export const getInteractionLayerIds = () => {
   const ids: string[] = [];
 

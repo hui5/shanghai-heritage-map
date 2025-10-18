@@ -14,10 +14,6 @@ const sourceId = "openda_building-source";
 const config = buildingConfig as UnifiedConfig;
 
 export const state = proxy({
-  data: {
-    type: "FeatureCollection",
-    features: [],
-  } as GeoJSON.FeatureCollection,
   loading: {
     processing: [] as string[],
     completed: [] as string[],
@@ -73,10 +69,6 @@ files.forEach(async (url) => {
         ...subtypeData.data.features,
         ...newFeatures,
       ]);
-
-      if (subtypeData.visible) {
-        state.data.features = ref([...state.data.features, ...newFeatures]);
-      }
     });
     state.loading.completed = [...state.loading.completed, url];
   } catch (_e) {
@@ -117,7 +109,7 @@ export const toggleSubtypeVisible = ({
 
 // 防抖函数，避免频繁更新地图数据源
 let updateMapDataTimer: NodeJS.Timeout | null = null;
-const updateMapDataDebounced = (mapInstance: UtilsMap) => {
+export const updateMapDataDebounced = (mapInstance: UtilsMap) => {
   if (updateMapDataTimer) {
     clearTimeout(updateMapDataTimer);
   }
@@ -130,8 +122,6 @@ const updateMapDataDebounced = (mapInstance: UtilsMap) => {
       .value()
       .flat();
 
-    // 同步更新 state.data.features 和地图数据源
-    state.data.features = ref(allFeatures);
     mapInstance.U.setData(sourceId, {
       type: "FeatureCollection",
       features: allFeatures,

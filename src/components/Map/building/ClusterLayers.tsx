@@ -1,13 +1,13 @@
 import type { UtilsMap } from "map-gl-utils";
 import { useEffect } from "react";
-import { useSnapshot } from "valtio";
+import { subscribe } from "valtio";
 import {
   getBuildingLayerConfigs,
   getBuildingMapboxDataSourceConfig,
 } from "@/components/Map/building/convertConfig";
 import { useBuildingClusterInteractions } from "@/components/Map/building/useClusterInteractions";
 import { addInteraction } from "../interaction/addInteraction";
-import { state } from "./data";
+import { state, updateMapDataDebounced } from "./data";
 
 const sourceId = "openda_building-source";
 
@@ -16,8 +16,6 @@ export const BuildingClusterLayers = ({
 }: {
   mapInstance: UtilsMap;
 }) => {
-  const snapshot = useSnapshot(state);
-
   useEffect(() => {
     console.log("building cluster layers:   ");
     const dataSourceConfig = getBuildingMapboxDataSourceConfig();
@@ -40,16 +38,18 @@ export const BuildingClusterLayers = ({
       ...addInteraction(mapInstance, layerConfigs.buildingLabels.id),
     ];
 
+    updateMapDataDebounced(mapInstance);
+    const unsubscribe = subscribe(state.subtypeDatas, (_subtypeDatas) => {
+      updateMapDataDebounced(mapInstance);
+    });
+
     return () => {
+      unsubscribe();
       interactionIds.forEach((id) => {
         mapInstance.removeInteraction(id);
       });
     };
   }, [mapInstance]);
-
-  useEffect(() => {
-    mapInstance.U.setData(sourceId, snapshot.data as GeoJSON.FeatureCollection);
-  }, [mapInstance, snapshot.data]);
 
   useBuildingClusterInteractions({
     mapInstance,
