@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { subscribe } from "valtio";
 import { generateHistoricalLayerConfig } from "@/components/Map/historical/convertConfig";
 import { addInteraction } from "../interaction/addInteraction";
-import { cleanupMapInstance, initializeMapDataDebounced, state } from "./data";
+import { initializeMapDataDebounced, state } from "./data";
 
 export const HistoricalLayers = ({
   mapInstance,
@@ -27,7 +27,10 @@ export const HistoricalLayers = ({
 
         mapInstance.addSource(sourceId, {
           type: "geojson",
-          data: { type: "FeatureCollection", features: [] },
+          data: {
+            type: "FeatureCollection",
+            features: subtypeData.data?.features || [],
+          },
           generateId: true,
         });
 
@@ -58,7 +61,6 @@ export const HistoricalLayers = ({
         });
       });
 
-      initializeMapDataDebounced(mapInstance);
       const unsubscribe = subscribe(
         state.loading.completed,
         (_subtypeDatas) => {
@@ -72,8 +74,6 @@ export const HistoricalLayers = ({
           interactionIds.forEach((id) => {
             mapInstance.removeInteraction(id);
           });
-          // 清理 mapInstance 相关的缓存
-          cleanupMapInstance(mapInstance);
         } catch {}
       };
     } catch (error) {

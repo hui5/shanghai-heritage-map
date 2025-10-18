@@ -17,7 +17,7 @@ export interface SubtypeData {
   id: string;
   subtype: DataSubtype;
   category: DataCategory;
-  data: GeoJSON.FeatureCollection | null;
+  data: { type: "FeatureCollection"; features: GeoJSON.Feature[] };
   sourceId: string;
   layers: string[];
   visible: boolean;
@@ -39,7 +39,7 @@ config.categories.forEach((category) => {
       id: subtype.id,
       subtype,
       category,
-      data: null,
+      data: { type: "FeatureCollection", features: ref([]) },
       sourceId: `openda_${dataType}-${subtype.id}-source`,
       layers: [],
       visible: category.enabled && subtype.enabled,
@@ -85,7 +85,7 @@ _(state.subtypeDatas)
             }
             return true;
           });
-          subtypeData.data = ref(data);
+          subtypeData.data.features = ref(data.features);
         });
 
         state.loading.completed = [...state.loading.completed, dataFile];
@@ -127,29 +127,13 @@ export const toggleSubtypeVisible = ({
     .forEach(toggle);
 };
 
-// 使用 WeakMap 来跟踪每个 mapInstance 的初始化状态，避免开发环境下的重复初始化
-const mapInstanceInitialized = new WeakMap<UtilsMap, Set<string>>();
-
 export const initializeMapDataDebounced = debounce((mapInstance: UtilsMap) => {
-  // 获取或创建当前 mapInstance 的初始化记录
-  let initializedIds = mapInstanceInitialized.get(mapInstance);
-  if (!initializedIds) {
-    initializedIds = new Set<string>();
-    mapInstanceInitialized.set(mapInstance, initializedIds);
-  }
-
   state.subtypeDatas.forEach((subtypeData) => {
-    if (subtypeData.data && !initializedIds.has(subtypeData.id)) {
+    if (subtypeData.data) {
       mapInstance.U.setData(subtypeData.sourceId, subtypeData.data);
-      initializedIds.add(subtypeData.id);
     }
   });
 }, 10);
-
-// 清理 mapInstance 相关的缓存，用于组件卸载时
-export const cleanupMapInstance = (mapInstance: UtilsMap) => {
-  mapInstanceInitialized.delete(mapInstance);
-};
 
 export const getInteractionLayerIds = () => {
   const ids: string[] = [];
