@@ -123,7 +123,7 @@ export const FavoriteController: React.FC<FavoriteControllerProps> = ({
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/50 bg-gradient-to-r from-pink-50/80 to-purple-50/80">
           <div className="flex items-center gap-3">
             <svg
-              className="w-6 h-6 text-blue-600"
+              className="w-6 h-6 text-blue-400"
               fill="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
@@ -204,7 +204,7 @@ export const FavoriteController: React.FC<FavoriteControllerProps> = ({
               {Object.entries(groupedFavorites).map(([category, images]) => (
                 <div key={category} className="space-y-3">
                   <h3 className="text-lg w-[135px] font-semibold text-gray-800 flex items-center gap-2 sticky top-0 bg-white/35 backdrop-blur-sm  z-10 rounded-full">
-                    <span className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full text-sm">
+                    <span className="px-3 py-1 bg-gradient-to-r from-pink-200 to-purple-200 text-purple-700 rounded-full text-sm">
                       {category}
                     </span>
                     <span className="text-sm  font-bold text-gray-600">

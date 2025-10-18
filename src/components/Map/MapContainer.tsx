@@ -3,7 +3,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import U, { type UtilsMap } from "map-gl-utils";
 import { useEffect, useRef, useState } from "react";
 import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
-import { MapConsole } from "@/components/Map/console/MapConsole";
+import { MapConsole } from "@/components/Map/console";
 import {
   saveMapPositionDebounced,
   useMapPosition,

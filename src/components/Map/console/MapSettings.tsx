@@ -379,7 +379,7 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
                 onClick={() => setPitch(pitchOption)}
                 className={`px-2 py-1 text-xs rounded transition ${
                   pitch === pitchOption
-                    ? "bg-indigo-600 text-white font-medium shadow"
+                    ? "bg-indigo-300 text-indigo-800 font-medium shadow"
                     : "bg-white text-gray-700 border hover:border-indigo-400"
                 }`}
               >
@@ -404,7 +404,7 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
                 onClick={() => setTheme(themeOption)}
                 className={`px-2 py-1 text-xs rounded transition ${
                   theme === themeOption
-                    ? "bg-indigo-600 text-white font-medium shadow"
+                    ? "bg-indigo-300 text-indigo-800 font-medium shadow"
                     : "bg-white text-gray-700 border hover:border-indigo-400"
                 }`}
               >
@@ -430,7 +430,7 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
                   onClick={() => setLightPreset(preset)}
                   className={`px-2 py-1 text-xs rounded transition ${
                     lightPreset === preset
-                      ? "bg-indigo-600 text-white font-medium shadow"
+                      ? "bg-indigo-300 text-indigo-800 font-medium shadow"
                       : "bg-white text-gray-700 border hover:border-indigo-400"
                   }`}
                 >
