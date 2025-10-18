@@ -73,7 +73,9 @@ function LayerSection({
 }: LayerSectionProps) {
   const [isExpanded, setIsExpanded] = useState(true);
 
-  const isGlobalVisible = !!_.find(subtypeDatas, "visible");
+  const isGlobalVisible = _.every(subtypeDatas, "visible");
+  const isGlobalIndeterminate =
+    _.some(subtypeDatas, "visible") && !isGlobalVisible;
   const categoryDatas = _(subtypeDatas)
     .groupBy(({ category }) => category.id)
     .values()
@@ -102,15 +104,34 @@ function LayerSection({
             <input
               type="checkbox"
               checked={isGlobalVisible}
-              onChange={(e) =>
-                toggle({
-                  visible: e.target.checked,
-                  mapInstance,
-                })
-              }
+              ref={(el) => {
+                if (el) {
+                  el.indeterminate = isGlobalIndeterminate;
+                }
+              }}
+              onChange={(e) => {
+                // 全选/取消全选所有子类型
+                subtypeDatas.forEach((subtypeData) => {
+                  toggle({
+                    visible: e.target.checked,
+                    subtypeId: subtypeData.id,
+                    mapInstance,
+                  });
+                });
+              }}
               className="w-4 h-4 cursor-pointer"
             />
-            <span className="text-sm font-medium text-gray-600">启用</span>
+            <span
+              className={`text-sm font-medium ${
+                isGlobalIndeterminate ? "text-orange-600" : "text-gray-600"
+              }`}
+            >
+              {isGlobalIndeterminate
+                ? "部分选中"
+                : isGlobalVisible
+                  ? "已全选"
+                  : "全选"}
+            </span>
           </label>
         </div>
       </div>
@@ -119,7 +140,9 @@ function LayerSection({
         <div className="p-3">
           <div className="space-y-3">
             {categoryDatas.map((categoryData) => {
-              const isCategoryVisible = !!_.find(categoryData, "visible");
+              const isCategoryVisible = _.every(categoryData, "visible");
+              const isCategoryIndeterminate =
+                _.some(categoryData, "visible") && !isCategoryVisible;
 
               const _categoryCount = _(categoryData)
                 .map(({ data }) => data?.features?.length || 0)
@@ -132,7 +155,11 @@ function LayerSection({
                       <input
                         type="checkbox"
                         checked={isCategoryVisible}
-                        disabled={!isGlobalVisible}
+                        ref={(el) => {
+                          if (el) {
+                            el.indeterminate = isCategoryIndeterminate;
+                          }
+                        }}
                         onChange={() => {
                           toggle({
                             visible: !isCategoryVisible,
@@ -147,7 +174,9 @@ function LayerSection({
                       </span>
                       <span
                         className={`${
-                          isCategoryVisible ? "text-gray-800" : "text-gray-400"
+                          isCategoryIndeterminate
+                            ? "text-orange-600"
+                            : "text-gray-800"
                         } text-sm`}
                       >
                         {categoryData[0].category.name}
@@ -162,74 +191,66 @@ function LayerSection({
                     </span>
                   </div>
 
-                  {(isCategoryVisible || !isGlobalVisible) && (
-                    <div className="ml-6 space-y-1">
-                      {categoryData.map((subtypeData) => {
-                        const { data, visible, subtype, id } = subtypeData;
-                        const subtypeCount = data?.features?.length || 0;
-                        const subtypeVisible = visible;
-                        const effectiveVisible =
-                          isGlobalVisible &&
-                          isCategoryVisible &&
-                          subtypeVisible;
+                  <div className="ml-6 space-y-1">
+                    {categoryData.map((subtypeData) => {
+                      const { data, visible, subtype, id } = subtypeData;
+                      const subtypeCount = data?.features?.length || 0;
+                      const subtypeVisible = visible;
+                      const effectiveVisible = subtypeVisible;
 
-                        return (
-                          <div
-                            key={id}
-                            className="flex items-center justify-between py-1"
-                          >
-                            <label className="flex items-center space-x-2 cursor-pointer text-xs flex-1">
-                              <input
-                                type="checkbox"
-                                checked={subtypeVisible}
-                                disabled={
-                                  !isGlobalVisible || !isCategoryVisible
-                                }
-                                onChange={() => {
-                                  toggle({
-                                    visible: !subtypeVisible,
-                                    subtypeId: id,
-                                    mapInstance,
-                                  });
-                                }}
-                                className="w-3 h-3"
-                              />
-                              <span
-                                className="w-3 h-3 rounded-sm border"
-                                style={{
-                                  backgroundColor: effectiveVisible
-                                    ? subtype.style.fillColor ||
-                                      subtype.style.color
-                                    : "#e5e5e5",
-                                  borderColor: effectiveVisible
-                                    ? subtype.style.color
-                                    : "#ccc",
-                                }}
-                              ></span>
-                              <span
-                                className={`${
-                                  effectiveVisible
-                                    ? "text-gray-700"
-                                    : "text-gray-400"
-                                } text-xs`}
-                              >
-                                {subtype.name}
-                              </span>
-                            </label>
+                      return (
+                        <div
+                          key={id}
+                          className="flex items-center justify-between py-1"
+                        >
+                          <label className="flex items-center space-x-2 cursor-pointer text-xs flex-1">
+                            <input
+                              type="checkbox"
+                              checked={subtypeVisible}
+                              onChange={() => {
+                                toggle({
+                                  visible: !subtypeVisible,
+                                  subtypeId: id,
+                                  mapInstance,
+                                });
+                              }}
+                              className="w-3 h-3"
+                            />
                             <span
-                              className={`text-xs font-medium ${
+                              className="w-3 h-3 rounded-sm border"
+                              style={{
+                                backgroundColor: effectiveVisible
+                                  ? subtype.style.fillColor ||
+                                    subtype.style.color
+                                  : "#e5e5e5",
+                                borderColor: effectiveVisible
+                                  ? subtype.style.color
+                                  : "#ccc",
+                              }}
+                            ></span>
+                            <span
+                              className={`${
                                 effectiveVisible
                                   ? "text-gray-700"
                                   : "text-gray-400"
-                              }`}
+                              } text-xs`}
                             >
-                              {subtypeCount}{" "}
+                              {subtype.name}
                             </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                          </label>
+                          <span
+                            className={`text-xs font-medium ${
+                              effectiveVisible
+                                ? "text-gray-700"
+                                : "text-gray-400"
+                            }`}
+                          >
+                            {subtypeCount}{" "}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               );
             })}
