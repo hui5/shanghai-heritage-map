@@ -778,3 +778,15 @@ body {
     transform: scale(1);
   }
 }
+
+/* Loading Overlay 优化样式 */
+.loading-overlay-progress {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, color;
+}
+
+.loading-overlay-progress-text {
+  min-width: 200px;
+  text-align: center;
+  white-space: nowrap;
+}

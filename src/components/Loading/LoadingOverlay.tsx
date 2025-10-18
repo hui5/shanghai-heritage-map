@@ -34,6 +34,12 @@ export function LoadingOverlay({ styleReady }: LoadingOverlayProps) {
               上海历史建筑地图
             </h3>
             <p className="text-gray-600">正在渲染地图，请稍候...</p>
+            {/* 服务端渲染时也预留进度显示区域，保持布局一致性 */}
+            <div className="h-6 flex items-center justify-center min-w-0">
+              <div className="loading-overlay-progress loading-overlay-progress-text text-sm text-transparent opacity-0">
+                数据文件下载进度：0 {" > "} 0
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -56,16 +62,29 @@ export function LoadingOverlay({ styleReady }: LoadingOverlayProps) {
             上海历史建筑地图
           </h3>
           <p className="text-gray-600">正在渲染地图，请稍候...</p>
-          {isLoading && (
-            <div className="text-sm text-gray-500">
-              数据文件下载进度：{" "}
-              {snapshotH.loading.processing.length +
-                snapshotB.loading.processing.length}{" "}
-              {" > "}
-              {snapshotH.loading.completed.length +
-                snapshotB.loading.completed.length}
+          {/* 固定高度的进度显示区域，避免布局跳动 */}
+          <div className="h-6 flex items-center justify-center min-w-0">
+            <div
+              className={`loading-overlay-progress loading-overlay-progress-text text-sm ${
+                isLoading
+                  ? "text-gray-500 opacity-100"
+                  : "text-transparent opacity-0"
+              }`}
+            >
+              {isLoading ? (
+                <>
+                  数据文件下载进度：{" "}
+                  {snapshotH.loading.processing.length +
+                    snapshotB.loading.processing.length}{" "}
+                  {" > "}
+                  {snapshotH.loading.completed.length +
+                    snapshotB.loading.completed.length}
+                </>
+              ) : (
+                "数据文件下载进度：0 > 0"
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
