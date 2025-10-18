@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { subscribe } from "valtio";
 import { generateHistoricalLayerConfig } from "@/components/Map/historical/convertConfig";
 import { addInteraction } from "../interaction/addInteraction";
-import { initializeMapDataDebounced, state } from "./data";
+import { cleanupMapInstance, initializeMapData, state } from "./data";
 
 export const HistoricalLayers = ({
   mapInstance,
@@ -61,12 +61,9 @@ export const HistoricalLayers = ({
         });
       });
 
-      const unsubscribe = subscribe(
-        state.loading.completed,
-        (_subtypeDatas) => {
-          initializeMapDataDebounced(mapInstance);
-        },
-      );
+      const unsubscribe = subscribe(state.loading, (_subtypeDatas) => {
+        initializeMapData(mapInstance);
+      });
 
       return () => {
         try {
@@ -74,6 +71,7 @@ export const HistoricalLayers = ({
           interactionIds.forEach((id) => {
             mapInstance.removeInteraction(id);
           });
+          cleanupMapInstance(mapInstance);
         } catch {}
       };
     } catch (error) {
