@@ -29,7 +29,7 @@ export const HistoricalLayers = ({
           type: "geojson",
           data: {
             type: "FeatureCollection",
-            features: subtypeData.data?.features || [],
+            features: [],
           },
           generateId: true,
         });
@@ -61,6 +61,7 @@ export const HistoricalLayers = ({
         });
       });
 
+      initializeMapData(mapInstance);
       const unsubscribe = subscribe(state.loading, (_subtypeDatas) => {
         initializeMapData(mapInstance);
       });
