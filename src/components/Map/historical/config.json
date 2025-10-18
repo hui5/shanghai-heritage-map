@@ -3,8 +3,8 @@
   "lastUpdated": "2024-01-01",
   "categories": [
     {
-      "id": "wikidata_locations",
-      "name": "维基数据地点",
+      "id": "wikidata",
+      "name": "维基数据",
       "icon": "📍",
       "enabled": true,
       "subtypes": [
@@ -49,8 +49,8 @@
     },
 
     {
-      "id": "landmarks_1928",
-      "name": "今日之沪江地标",
+      "id": "historical_buildings",
+      "name": "历史建筑",
       "icon": "🏛️",
       "enabled": true,
       "subtypes": [
@@ -89,16 +89,8 @@
               "opacity": 1
             }
           }
-        }
-      ]
-    },
+        },
 
-    {
-      "id": "crow_map",
-      "name": "克-科上海地图",
-      "icon": "🏛️",
-      "enabled": true,
-      "subtypes": [
         {
           "id": "crow_landmarks",
           "name": "克-科上海地图地标",
@@ -134,16 +126,8 @@
               "opacity": 1
             }
           }
-        }
-      ]
-    },
+        },
 
-    {
-      "id": "celebrity_residences",
-      "name": "名人故居",
-      "icon": "🏠",
-      "enabled": true,
-      "subtypes": [
         {
           "id": "famous_residences",
           "name": "名人住所",
@@ -172,16 +156,8 @@
               "textIgnorePlacement": true
             }
           }
-        }
-      ]
-    },
+        },
 
-    {
-      "id": "qianli_map",
-      "name": "千里江山图",
-      "icon": "🗺️",
-      "enabled": true,
-      "subtypes": [
         {
           "id": "historical_locations",
           "name": "《千里江山图》上海地图",
@@ -221,16 +197,8 @@
               "opacity": 1
             }
           }
-        }
-      ]
-    },
+        },
 
-    {
-      "id": "dayi_medical",
-      "name": "大医",
-      "icon": "⚕️",
-      "enabled": true,
-      "subtypes": [
         {
           "id": "historical_medical",
           "name": "《大医》上海地图",
@@ -270,15 +238,8 @@
               "opacity": 1
             }
           }
-        }
-      ]
-    },
-    {
-      "id": "entertainment_venues",
-      "name": "历史娱乐场所",
-      "icon": "🎭",
-      "enabled": true,
-      "subtypes": [
+        },
+
         {
           "id": "historical_theaters_cinemas",
           "name": "历史戏院影院",
@@ -319,16 +280,8 @@
               "opacity": 1
             }
           }
-        }
-      ]
-    },
+        },
 
-    {
-      "id": "historical_buildings--",
-      "name": "历史建筑",
-      "icon": "🏛️",
-      "enabled": true,
-      "subtypes": [
         {
           "id": "historical_architecture",
           "name": "历史建筑",
@@ -373,9 +326,9 @@
     },
 
     {
-      "id": "trolleybuses",
-      "name": "无轨电车",
-      "icon": "🚎",
+      "id": "historical_transportation",
+      "name": "历史交通",
+      "icon": "🛤️",
       "enabled": true,
       "subtypes": [
         {
@@ -444,15 +397,8 @@
               "offset": [0.4, 0]
             }
           }
-        }
-      ]
-    },
-    {
-      "id": "trams",
-      "name": "有轨电车",
-      "icon": "🚋",
-      "enabled": true,
-      "subtypes": [
+        },
+
         {
           "id": "tram_routes",
           "name": "有轨电车线路",
@@ -517,15 +463,8 @@
               "offset": [0.4, 0]
             }
           }
-        }
-      ]
-    },
-    {
-      "id": "buses",
-      "name": "公共汽车",
-      "icon": "🚌",
-      "enabled": true,
-      "subtypes": [
+        },
+
         {
           "id": "bus_routes",
           "name": "公共汽车线路",
@@ -590,15 +529,8 @@
               "offset": [0.4, 0]
             }
           }
-        }
-      ]
-    },
-    {
-      "id": "historical_transportation",
-      "name": "历史交通",
-      "icon": "🛤️",
-      "enabled": true,
-      "subtypes": [
+        },
+
         {
           "id": "historical_roads",
           "name": "历史道路",
@@ -750,8 +682,8 @@
     },
 
     {
-      "id": "openstreetmap_data",
-      "name": "开放街道地图数据",
+      "id": "openstreetmap",
+      "name": "开放街道地图",
       "icon": "🗺️",
       "enabled": true,
       "subtypes": [
@@ -825,9 +757,9 @@
     },
 
     {
-      "id": "parks",
-      "name": "历史公园",
-      "icon": "🌳",
+      "id": "historical_districts",
+      "name": "历史区域",
+      "icon": "🗺️",
       "enabled": true,
       "subtypes": [
         {
@@ -858,16 +790,8 @@
               "offset": [0, 0]
             }
           }
-        }
-      ]
-    },
+        },
 
-    {
-      "id": "heritage_areas",
-      "name": "风貌保护区",
-      "icon": "🏛️",
-      "enabled": true,
-      "subtypes": [
         {
           "id": "heritage_preservation_areas",
           "name": "风貌保护区",
@@ -896,48 +820,8 @@
               "offset": [0, 0]
             }
           }
-        }
-      ]
-    },
-
-    {
-      "id": "districts",
-      "name": "租借区",
-      "icon": "🗺️",
-      "enabled": true,
-      "subtypes": [
-        {
-          "id": "foreign_settlement",
-          "name": "公共租界",
-          "dataFile": "table_li_shi_qu_hua.geojson",
-          "geometryType": "Polygon",
-          "enabled": true,
-          "filter": {
-            "property": "title",
-            "values": ["公共租界"]
-          },
-          "slot": "middle",
-          "style": {
-            "color": "#CC6666",
-            "fillColor": "#FFCCCC",
-            "weight": 5,
-            "opacity": 0.1,
-            "fillOpacity": 0.1
-          },
-          "labels": {
-            "enabled": true,
-            "field": "title",
-            "minZoom": 10,
-            "maxZoom": 18,
-            "style": {
-              "fontSize": 14,
-              "color": "#993333",
-              "haloColor": "#FFFFFF",
-              "haloWidth": 2,
-              "offset": [0, 0]
-            }
-          }
         },
+
         {
           "id": "french_concession",
           "name": "法租界",
@@ -964,6 +848,39 @@
             "style": {
               "fontSize": 14,
               "color": "#999933",
+              "haloColor": "#FFFFFF",
+              "haloWidth": 2,
+              "offset": [0, 0]
+            }
+          }
+        },
+
+        {
+          "id": "foreign_settlement",
+          "name": "公共租界",
+          "dataFile": "table_li_shi_qu_hua.geojson",
+          "geometryType": "Polygon",
+          "enabled": true,
+          "filter": {
+            "property": "title",
+            "values": ["公共租界"]
+          },
+          "slot": "middle",
+          "style": {
+            "color": "#CC6666",
+            "fillColor": "#FFCCCC",
+            "weight": 5,
+            "opacity": 0.1,
+            "fillOpacity": 0.1
+          },
+          "labels": {
+            "enabled": true,
+            "field": "title",
+            "minZoom": 10,
+            "maxZoom": 18,
+            "style": {
+              "fontSize": 14,
+              "color": "#993333",
               "haloColor": "#FFFFFF",
               "haloWidth": 2,
               "offset": [0, 0]

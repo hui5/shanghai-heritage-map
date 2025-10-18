@@ -18,7 +18,7 @@
   },
   "categories": [
     {
-      "id": "heritage_buildings",
+      "id": "heritage_units",
       "name": "文物保护单位",
       "icon": "🏛️",
       "enabled": true,
@@ -88,15 +88,8 @@
             "fillColor": "#84CC16",
             "icon-image": "landmark-JP"
           }
-        }
-      ]
-    },
-    {
-      "id": "historical_buildings",
-      "name": "优秀历史建筑",
-      "icon": "🏰",
-      "enabled": true,
-      "subtypes": [
+        },
+
         {
           "id": "data_1",
           "name": "上海市优秀历史建筑",
