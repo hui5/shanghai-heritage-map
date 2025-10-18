@@ -139,7 +139,10 @@ export const initializeMapData = (mapInstance: UtilsMap) => {
   }
 
   state.subtypeDatas.forEach((subtypeData) => {
-    if (subtypeData.data && !initializedIds.has(subtypeData.id)) {
+    if (
+      subtypeData.data.features.length > 0 &&
+      !initializedIds.has(subtypeData.id)
+    ) {
       mapInstance.U.setData(subtypeData.sourceId, subtypeData.data);
       initializedIds.add(subtypeData.id);
     }
