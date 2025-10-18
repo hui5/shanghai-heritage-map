@@ -105,15 +105,34 @@ export const toggleSubtypeVisible = ({
     )
     .forEach(toggle);
 
-  const allFeatures = _(state.subtypeDatas)
-    .filter("visible")
-    .map(({ data }) => data.features)
-    .value();
+  // 使用防抖来避免频繁更新地图数据源
+  updateMapDataDebounced(mapInstance);
+};
 
-  mapInstance.U.setData(sourceId, {
-    type: "FeatureCollection",
-    features: allFeatures.flat(),
-  });
+// 防抖函数，避免频繁更新地图数据源
+let updateMapDataTimer: NodeJS.Timeout | null = null;
+const updateMapDataDebounced = (mapInstance: UtilsMap) => {
+  if (updateMapDataTimer) {
+    clearTimeout(updateMapDataTimer);
+  }
+
+  updateMapDataTimer = setTimeout(() => {
+    // 重新计算所有可见的特征
+    const allFeatures = _(state.subtypeDatas)
+      .filter("visible")
+      .map(({ data }) => data.features)
+      .value()
+      .flat();
+
+    // 同步更新 state.data.features 和地图数据源
+    state.data.features = allFeatures;
+    mapInstance.U.setData(sourceId, {
+      type: "FeatureCollection",
+      features: allFeatures,
+    });
+
+    updateMapDataTimer = null;
+  }, 10); // 10ms 防抖延迟
 };
 
 /**
