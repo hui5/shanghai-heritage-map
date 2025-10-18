@@ -2,7 +2,6 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import U, { type UtilsMap } from "map-gl-utils";
 import { useEffect, useRef, useState } from "react";
-import { LoadingOverlay } from "@/components/Loading/LoadingOverlay";
 import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
 import { MapConsole } from "@/components/Map/console/MapConsole";
 import {
@@ -19,7 +18,11 @@ import { WikimapLayer } from "@/components/Map/WikimapLayer";
 import { getParamsFromUrl } from "../../helper/mapbox/getParamsFromUrl";
 import { addEventListeners } from "./interaction/addInteraction";
 
-export default function MapContainer() {
+interface MapContainerProps {
+  onStyleReady?: (ready: boolean) => void;
+}
+
+export default function MapContainer({ onStyleReady }: MapContainerProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<UtilsMap | null>(null);
   const [styleReady, setStyleReady] = useState<boolean>(false);
@@ -41,6 +44,11 @@ export default function MapContainer() {
       return () => clearTimeout(timer);
     }
   }, [mapInstance, styleReady]);
+
+  // 通知父组件 styleReady 状态变化
+  useEffect(() => {
+    onStyleReady?.(styleReady);
+  }, [styleReady, onStyleReady]);
 
   useGlobalClick({
     mapInstance,
@@ -229,8 +237,6 @@ export default function MapContainer() {
   return (
     <div className="relative h-full w-full">
       <div ref={mapContainer} className="h-full w-full" />
-
-      <LoadingOverlay styleReady={styleReady} />
 
       {/* 确保样式和图层都准备就绪后才渲染自定义组件 */}
       {mapInstance && styleReady && (
