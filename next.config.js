@@ -19,12 +19,14 @@ const nextConfig = {
   env: {
     BUILD_TIME: new Date().toISOString(),
     NEXT_PUBLIC_APP_VERSION: (() => {
+      // 使用北京时间 (UTC+8)
       const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      const day = String(now.getDate()).padStart(2, "0");
-      const hour = String(now.getHours()).padStart(2, "0");
-      const minute = String(now.getMinutes()).padStart(2, "0");
+      const beijingTime = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+      const year = beijingTime.getUTCFullYear();
+      const month = String(beijingTime.getUTCMonth() + 1).padStart(2, "0");
+      const day = String(beijingTime.getUTCDate()).padStart(2, "0");
+      const hour = String(beijingTime.getUTCHours()).padStart(2, "0");
+      const minute = String(beijingTime.getUTCMinutes()).padStart(2, "0");
       return `${year}.${month}.${day}.${hour}${minute}`;
     })(),
     NEXT_PUBLIC_GIT_COMMIT:
