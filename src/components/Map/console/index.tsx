@@ -16,6 +16,12 @@ export function MapConsole({ mapInstance }: MapConsoleProps) {
 
   const panelRef = useRef<HTMLDivElement | null>(null);
 
+  // 直接从环境变量获取版本信息
+  const versionInfo = {
+    version: process.env.NEXT_PUBLIC_APP_VERSION || "dev",
+    gitCommit: process.env.NEXT_PUBLIC_GIT_COMMIT || "local",
+  };
+
   return (
     <>
       {/* 设置面板 - 保持挂载状态，只控制显示/隐藏 */}
@@ -35,12 +41,23 @@ export function MapConsole({ mapInstance }: MapConsoleProps) {
           }}
         />
 
-        <div className="p-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
-          {/* 地图设置 */}
-          <MapSettingsComponent mapInstance={mapInstance} />
+        <div className="flex flex-col max-h-[60vh]">
+          <div className="p-4 flex-1 overflow-y-auto custom-scrollbar">
+            {/* 地图设置 */}
+            <MapSettingsComponent mapInstance={mapInstance} />
 
-          {/* 图层管理 */}
-          <LayerManagement mapInstance={mapInstance} />
+            {/* 图层管理 */}
+            <LayerManagement mapInstance={mapInstance} />
+          </div>
+
+          {/* 版本信息 - 固定在底部 */}
+          {versionInfo && (
+            <div className="px-4 py-2 border-t bg-gray-50 rounded-b-lg">
+              <div className="text-xs text-gray-500 text-center">
+                v{versionInfo.version} • {versionInfo.gitCommit}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
