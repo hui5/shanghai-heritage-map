@@ -12,6 +12,10 @@ https://shanghai-heritage-map.openda.top/
   1. 上海图书馆开放数据平台
        - [上海年华-上海市优秀历史建筑(1086)](https://data.library.sh.cn/shnh/wkl/webapi/building/toAllBuilding)
        - [上海年华-上海市不可移动文物名录(3452)](https://data.library.sh.cn/shnh/wkl/webapi/hsly/building/toRelicDirectory)
+          - 全国重点文物保护单位 （30）
+          - 上海市文物保护单位 （238）
+          - 区级文物保护单位 （425）
+          - ~~文物保护点~~
   2. [地图书: 上海历史建筑数字地图集](https://www.ditushu.com/book/645/table)
        - 租界区 (2)
        - 风貌保护区 (12)
