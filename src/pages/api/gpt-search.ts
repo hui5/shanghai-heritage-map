@@ -3,10 +3,8 @@ import { Redis } from "@upstash/redis";
 import { streamText } from "ai";
 
 // Initialize Redis
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_KEY,
-});
+const redis = Redis.fromEnv();
+
 // Edge Runtime配置 - 支持Response对象
 export const config = {
   runtime: "edge",
