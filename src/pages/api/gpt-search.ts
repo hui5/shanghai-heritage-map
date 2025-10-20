@@ -3,8 +3,10 @@ import { Redis } from "@upstash/redis";
 import { streamText } from "ai";
 
 // Initialize Redis
-const redis = Redis.fromEnv();
-
+const redis = new Redis({
+  url: "https://bright-mammal-7064.upstash.io",
+  token: "ARuYAAImcDEwODYzZWU1MTQzMzU0NTFjYTYyOGQ3OTliYmIxNDMyY3AxNzA2NA",
+});
 // Edge Runtime配置 - 支持Response对象
 export const config = {
   runtime: "edge",
