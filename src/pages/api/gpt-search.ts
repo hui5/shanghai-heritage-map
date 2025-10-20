@@ -5,7 +5,7 @@ import { streamText } from "ai";
 // Initialize Redis
 const redis = new Redis({
   url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_KEY,
+  token: process.env.KV_REST_API_TOKEN,
 });
 // Edge Runtime配置 - 支持Response对象
 export const config = {
