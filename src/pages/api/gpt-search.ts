@@ -4,8 +4,8 @@ import { streamText } from "ai";
 
 // Initialize Redis
 const redis = new Redis({
-  url: "https://bright-mammal-7064.upstash.io",
-  token: "ARuYAAImcDEwODYzZWU1MTQzMzU0NTFjYTYyOGQ3OTliYmIxNDMyY3AxNzA2NA",
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_KEY,
 });
 // Edge Runtime配置 - 支持Response对象
 export const config = {
