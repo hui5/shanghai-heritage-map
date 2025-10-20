@@ -4,8 +4,8 @@ import { streamText } from "ai";
 
 // Initialize Redis
 const redis = new Redis({
-  url: "https://bright-mammal-7064.upstash.io",
-  token: "ARuYAAImcDEwODYzZWU1MTQzMzU0NTFjYTYyOGQ3OTliYmIxNDMyY3AxNzA2NA",
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_KEY,
 });
 // Edge Runtime配置 - 支持Response对象
 export const config = {
@@ -121,7 +121,7 @@ export default async function handler(req: Request) {
     const { prompt, ...requestData }: { prompt: string } & GPTInfoRequest =
       body;
 
-    console.log("🔍 gpt search: " + requestData.name);
+    console.log(`🔍 gpt search: ${requestData.name}`);
 
     // 生成缓存键
     const cacheKey = await generateCacheKey(requestData);
