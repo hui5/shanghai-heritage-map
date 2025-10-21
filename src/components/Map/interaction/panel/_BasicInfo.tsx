@@ -206,8 +206,6 @@ export const BasicInfoPreview: React.FC<BasicInfoProps> = ({
   // 状态标签
   const statusTags = [];
   statusTags.push(dataSource);
-  if (wikipedia) statusTags.push("📖");
-  if (wikicommons) statusTags.push("🖼️");
 
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-lg overflow-hidden">
