@@ -289,7 +289,7 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
   }, [lightPreset, mapInstance]);
 
   return (
-    <div className="mb-4 border-2 border-indigo-200 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50">
+    <div className="mb-4 border-2 border-indigo-100 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-40">
       <div className="p-4 space-y-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-2">
