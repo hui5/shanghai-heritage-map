@@ -41,7 +41,6 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
 
   // 基本信息展开状态
   const [infoExpanded, setInfoExpanded] = useState(true);
-  const autoCloseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // 从 store 获取状态
   const close = usePanelStore((s) => s.close);
@@ -122,29 +121,6 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
     }
   }, [contents.length, activeIndex, scrollToTab]);
 
-  // 自动展开和合上基本信息
-  useEffect(() => {
-    // 进入时自动展开
-    setInfoExpanded(true);
-
-    // 清除之前的定时器
-    if (autoCloseTimeoutRef.current) {
-      clearTimeout(autoCloseTimeoutRef.current);
-    }
-
-    // 3秒后自动合上
-    autoCloseTimeoutRef.current = setTimeout(() => {
-      setInfoExpanded(false);
-    }, 3000);
-
-    // 清理函数
-    return () => {
-      if (autoCloseTimeoutRef.current) {
-        clearTimeout(autoCloseTimeoutRef.current);
-      }
-    };
-  }, []); // 只在组件挂载时执行一次
-
   // 初始检查滚动状态
   useEffect(() => {
     // 延迟检查，确保 DOM 渲染完成
@@ -194,14 +170,9 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
           if (scrollDirection.current !== "down") {
             scrollDirection.current = "down";
             setShowTabs(false);
-          }
-          // 自动关闭基本信息展示
-          if (infoExpanded) {
-            setInfoExpanded(false);
-            // 清除自动关闭定时器
-            if (autoCloseTimeoutRef.current) {
-              clearTimeout(autoCloseTimeoutRef.current);
-              autoCloseTimeoutRef.current = null;
+            // 向下滚动时自动隐藏基本信息
+            if (infoExpanded) {
+              setInfoExpanded(false);
             }
           }
         }
@@ -210,6 +181,10 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
           if (scrollDirection.current !== "up") {
             scrollDirection.current = "up";
             setShowTabs(true);
+            // 向上滚动时自动显示基本信息
+            // if (!infoExpanded) {
+            //   setInfoExpanded(true);
+            // }
           }
         }
 
@@ -225,9 +200,6 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);
       }
-      if (autoCloseTimeoutRef.current) {
-        clearTimeout(autoCloseTimeoutRef.current);
-      }
     };
   }, []);
 
@@ -242,17 +214,10 @@ export const TouchScreenPanel: React.FC<TouchScreenPanelProps> = ({
       >
         {/* 头部 - 触摸屏优化 */}
         <div className="flex-shrink-0 border-b border-gray-200/50 bg-white/80 backdrop-blur-sm shadow-sm">
-          <div className="flex items-center justify-between px-4 py-2">
+          <div className="flex items-center justify-between px-4 py-2 min-h-[60px]">
             <button
               type="button"
-              onClick={() => {
-                setInfoExpanded(!infoExpanded);
-                // 手动点击时清除自动关闭定时器
-                if (autoCloseTimeoutRef.current) {
-                  clearTimeout(autoCloseTimeoutRef.current);
-                  autoCloseTimeoutRef.current = null;
-                }
-              }}
+              onClick={() => setInfoExpanded(!infoExpanded)}
               className="flex items-center gap-2 flex-1 min-w-0 text-left active:opacity-70 transition-opacity"
             >
               <span className="text-lg font-bold text-gray-900 truncate">
