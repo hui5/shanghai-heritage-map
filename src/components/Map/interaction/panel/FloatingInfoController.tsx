@@ -1,5 +1,5 @@
 import type React from "react";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import useSWR from "swr";
 import { LoadingSpinner } from "@/components/Loading/LoadingOverlay";
 import type { LaozaoItem } from "@/helper/api/laozaoShanghaiPhotosApi";
@@ -44,8 +44,6 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
   const aiActive = usePanelStore((s) => s.aiActive);
   const setAiActive = usePanelStore((s) => s.setAiActive);
 
-  const prevIsOpenRef = useRef<boolean>(isOpen);
-  const prevIsFullscreenRef = useRef<boolean>(isFullscreen);
   // Split endpoints per requirement
   const fetcher = useCallback((url: string, body: any) => {
     return fetch(url, {
@@ -345,37 +343,31 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
 
   // 监听全屏状态变化，处理高亮和URL同步
   useEffect(() => {
-    const wasOpen = prevIsOpenRef.current;
-    const wasFullscreen = prevIsFullscreenRef.current;
+    if (isFullscreen && locationInfo?.name) {
+      const currentPath = window.location.pathname;
 
-    // 检测状态变化
-    const didClose = wasOpen && !isOpen;
-    const didEnterFullscreen = !wasFullscreen && isFullscreen;
-    const didExitFullscreen = wasFullscreen && !isFullscreen;
-
-    // 更新ref（在所有逻辑之前）
-    prevIsOpenRef.current = isOpen;
-    prevIsFullscreenRef.current = isFullscreen;
-
-    // 1. 全屏模式下关闭panel时，在地图上显示高亮
-    if (didClose && wasFullscreen && locationInfo?.coordinates && mapInstance) {
-      highlightLocation(mapInstance, locationInfo.coordinates);
+      // 只有当前在首页时才更新到搜索页面
+      if (currentPath === "/") {
+        window.history.pushState(
+          {},
+          "",
+          `/search?n=${encodeURIComponent(locationInfo.name)}`,
+        );
+      }
     }
 
-    // 2. 进入全屏时，更新URL（不触发路由导航）
-    if (didEnterFullscreen && locationInfo?.name) {
-      window.history.pushState(
-        {},
-        "",
-        `/search?n=${encodeURIComponent(locationInfo.name)}`,
-      );
-    }
+    if (!isFullscreen) {
+      const currentPath = window.location.pathname;
 
-    // 3. 退出全屏时，返回首页URL（不触发路由导航）
-    if (didExitFullscreen) {
-      window.history.pushState({}, "", "/");
+      // 只有当前在搜索页面时才更新到首页
+      if (currentPath === "/search") {
+        window.history.pushState({}, "", "/");
+        if (mapInstance && locationInfo?.coordinates) {
+          highlightLocation(mapInstance, locationInfo.coordinates);
+        }
+      }
     }
-  }, [isOpen, isFullscreen, locationInfo, mapInstance]);
+  }, [isFullscreen, locationInfo, mapInstance]);
 
   return (
     <>
