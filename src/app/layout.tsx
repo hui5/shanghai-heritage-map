@@ -24,7 +24,8 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <MapLayout>{children}</MapLayout>
+        {children}
+        <MapLayout />
         <GlobalLightbox />
         <Analytics scriptSrc="/va/script.js" />
         <SpeedInsights scriptSrc="/vercel-speed-script.js" />
