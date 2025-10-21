@@ -225,9 +225,9 @@ export const BasicInfoPreview: React.FC<BasicInfoProps> = ({
 
       <div className="p-4">
         {/* 标题 */}
-        <h3 className="text-base font-semibold text-gray-900 mb-3 leading-snug">
+        {/* <h3 className="text-base font-semibold text-gray-900 mb-3 leading-snug">
           {name}
-        </h3>
+        </h3> */}
 
         {/* 信息标签区域 */}
         <div className="mb-3">
