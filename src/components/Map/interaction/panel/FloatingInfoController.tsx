@@ -8,7 +8,7 @@ import {
   getShLibraryThumbnailUrl,
 } from "@/helper/api/shLibraryPhotosApi";
 import type { VirtualShanghaiPhotoZh } from "@/helper/api/virtualShanghaiPhotosApi";
-import { createLocationHighlighter } from "@/helper/mapbox/locationHighlight";
+import { highlightLocation } from "@/helper/mapbox/locationHighlight";
 import {
   getVirtualShanghaiBuildingLink,
   getVirtualShanghaiImageUrl_proxy,
@@ -46,9 +46,6 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
 
   const prevIsOpenRef = useRef<boolean>(isOpen);
   const prevIsFullscreenRef = useRef<boolean>(isFullscreen);
-  const highlighterRef = useRef<ReturnType<
-    typeof createLocationHighlighter
-  > | null>(null);
   // Split endpoints per requirement
   const fetcher = useCallback((url: string, body: any) => {
     return fetch(url, {
@@ -344,19 +341,7 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
     }
   }, [locationInfo, contents, forceHide, isFullscreen, setAiActive, aiActive]);
 
-  // 初始化位置高亮管理器
-  useEffect(() => {
-    if (!mapInstance) return;
-
-    highlighterRef.current = createLocationHighlighter(mapInstance, {
-      layerIdPrefix: "panel-close-highlight",
-    });
-
-    return () => {
-      highlighterRef.current?.destroy();
-      highlighterRef.current = null;
-    };
-  }, [mapInstance]);
+  // 清除高亮的方法
 
   // 监听全屏状态变化，处理高亮和URL同步
   useEffect(() => {
@@ -373,11 +358,8 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
     prevIsFullscreenRef.current = isFullscreen;
 
     // 1. 全屏模式下关闭panel时，在地图上显示高亮
-    if (didClose && wasFullscreen && locationInfo?.coordinates) {
-      highlighterRef.current?.highlight(
-        locationInfo.coordinates,
-        locationInfo.name,
-      );
+    if (didClose && wasFullscreen && locationInfo?.coordinates && mapInstance) {
+      highlightLocation(mapInstance, locationInfo.coordinates);
     }
 
     // 2. 进入全屏时，更新URL（不触发路由导航）
@@ -393,7 +375,7 @@ export const FloatingInfoController: React.FC<FloatingInfoControllerProps> = ({
     if (didExitFullscreen) {
       window.history.pushState({}, "", "/");
     }
-  }, [isOpen, isFullscreen, locationInfo]);
+  }, [isOpen, isFullscreen, locationInfo, mapInstance]);
 
   return (
     <>

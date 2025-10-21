@@ -13,23 +13,13 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { Rnd } from "react-rnd";
+import { isTouchDevice } from "@/app/globalStore";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
 import { FloatingInfoPanelFullscreen } from "./FloatingInfoPanelFullscreen";
 import { isGlobalLightboxOpen } from "./GlobalLightbox";
 import { PANEL } from "./panelConfig";
 import { usePanelStore } from "./panelStore";
 import { TouchScreenPanel } from "./TouchScreenPanel";
-
-// 检测是否为触摸屏设备
-const isTouchDevice = () => {
-  if (typeof window === "undefined") return false;
-  return (
-    "ontouchstart" in window ||
-    navigator.maxTouchPoints > 0 ||
-    // @ts-expect-error - legacy IE property
-    navigator.msMaxTouchPoints > 0
-  );
-};
 
 export type PanelTabId =
   | "wikipedia"
@@ -84,7 +74,6 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
   const [isResizing, setIsResizing] = useState<boolean>(false);
   const [activeId, setActiveId] = useState<PanelTabId>("shlibrary");
   const mousePosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [isTouch, setIsTouch] = useState<boolean>(false);
 
   const isOpen = usePanelStore((s) => s.isOpen);
 
@@ -103,11 +92,6 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
   const close = usePanelStore((s) => s.close);
   const scheduleHide = usePanelStore((s) => s.scheduleHide);
   const cancelAll = usePanelStore((s) => s.cancelAll);
-
-  // 检测触摸屏设备
-  useEffect(() => {
-    setIsTouch(isTouchDevice());
-  }, []);
 
   // Default collapsed; when content available and not loading, expand to default unless user resized
   useEffect(() => {
@@ -195,8 +179,10 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
   const visibleContents = useMemo(() => {
     const filtered = contents.filter((c) => c.visible !== false);
     // 非触摸屏全屏模式下按 order 排序，其他情况保持原始顺序
-    return !isTouch && isFullscreen ? sortBy(filtered, "order") : filtered;
-  }, [contents, isFullscreen, isTouch]);
+    return !isTouchDevice && isFullscreen
+      ? sortBy(filtered, "order")
+      : filtered;
+  }, [contents, isFullscreen]);
 
   useEffect(() => {
     const processKey = (key: string) => {
@@ -322,7 +308,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
         <Sparkles size={16} className={aiActive ? "animate-pulse" : ""} />
       </button>
 
-      {!isTouch && (
+      {!isTouchDevice && (
         <button
           type="button"
           aria-pressed={isFullscreen}
@@ -338,7 +324,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
           {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
         </button>
       )}
-      {!isTouch && !isFullscreen && (
+      {!isTouchDevice && !isFullscreen && (
         <button
           type="button"
           aria-pressed={pinned}
@@ -368,7 +354,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
     </div>
   );
 
-  const nonFullscreenPanel = isTouch ? (
+  const nonFullscreenPanel = isTouchDevice ? (
     // 触摸屏：使用优化的 TouchScreenPanel 组件
     <TouchScreenPanel
       contents={visibleContents}
@@ -501,7 +487,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
   );
 
   const panel =
-    isTouch || !isFullscreen ? (
+    isTouchDevice || !isFullscreen ? (
       nonFullscreenPanel
     ) : (
       <FloatingInfoPanelFullscreen

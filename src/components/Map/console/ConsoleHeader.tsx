@@ -1,11 +1,18 @@
 import { Github, HelpCircle, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface ConsoleHeaderProps {
   onClose: () => void;
-  onHelpOpen: () => void;
 }
 
-export function ConsoleHeader({ onClose, onHelpOpen }: ConsoleHeaderProps) {
+export function ConsoleHeader({ onClose }: ConsoleHeaderProps) {
+  const router = useRouter();
+
+  const handleHelpClick = () => {
+    onClose(); // 关闭控制台
+    router.push("/help"); // 跳转到帮助页面
+  };
+
   return (
     <div className="border-b bg-gray-50 rounded-t-lg">
       <div className="flex items-center justify-between p-2">
@@ -26,7 +33,7 @@ export function ConsoleHeader({ onClose, onHelpOpen }: ConsoleHeaderProps) {
           {/* Help 按钮 */}
           <button
             type="button"
-            onClick={onHelpOpen}
+            onClick={handleHelpClick}
             className="group flex items-center justify-center w-10 h-10 rounded-full bg-white/80 hover:bg-white border border-gray-200 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:border-gray-300"
             title="查看帮助"
             aria-label="查看帮助"

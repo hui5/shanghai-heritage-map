@@ -1,7 +1,7 @@
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useFavoriteStore } from "@/app/favorites/favoriteStore";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
-import { useFavoriteStore } from "./favoriteStore";
 import { openLightbox } from "./GlobalLightbox";
 import usePanelStore from "./panelStore";
 

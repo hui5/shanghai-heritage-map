@@ -2,7 +2,6 @@ import { Settings } from "lucide-react";
 import type { UtilsMap } from "map-gl-utils";
 import { useRef, useState } from "react";
 import { ConsoleHeader } from "./ConsoleHeader";
-import { HelpModal } from "./HelpModal";
 import { LayerManagement } from "./LayerManagement";
 import { MapSettingsComponent } from "./MapSettings";
 
@@ -12,7 +11,6 @@ interface MapConsoleProps {
 
 export function MapConsole({ mapInstance }: MapConsoleProps) {
   const [isExpanded, setIsExpanded] = useState(() => false);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const panelRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,13 +31,7 @@ export function MapConsole({ mapInstance }: MapConsoleProps) {
             : "opacity-0 invisible pointer-events-none"
         }`}
       >
-        <ConsoleHeader
-          onClose={() => setIsExpanded(false)}
-          onHelpOpen={() => {
-            setIsHelpOpen(true);
-            setIsExpanded(false);
-          }}
-        />
+        <ConsoleHeader onClose={() => setIsExpanded(false)} />
 
         <div className="flex flex-col max-h-[60vh]">
           <div className="p-4 flex-1 overflow-y-auto custom-scrollbar">
@@ -71,9 +63,6 @@ export function MapConsole({ mapInstance }: MapConsoleProps) {
       >
         <Settings className="w-5 h-5 text-gray-700" />
       </button>
-
-      {/* 帮助弹窗 */}
-      <HelpModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
     </>
   );
 }

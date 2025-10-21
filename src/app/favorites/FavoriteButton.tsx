@@ -1,14 +1,13 @@
+import Link from "next/link";
 import type React from "react";
 import { useFavoriteStore } from "./favoriteStore";
 
 export const FavoriteButton: React.FC = () => {
-  const openPanel = useFavoriteStore((s) => s.openPanel);
   const favorites = useFavoriteStore((s) => s.favorites);
 
   return (
-    <button
-      type="button"
-      onClick={openPanel}
+    <Link
+      href="/favorites"
       className="group relative inline-flex items-center justify-center p-2 bg-white/90 hover:bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200/50 hover:scale-110"
       title="查看收藏的图片"
     >
@@ -30,7 +29,7 @@ export const FavoriteButton: React.FC = () => {
           {favorites.length > 99 ? "99+" : favorites.length}
         </span>
       )}
-    </button>
+    </Link>
   );
 };
 

@@ -2,6 +2,8 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import U, { type UtilsMap } from "map-gl-utils";
 import { useEffect, useRef, useState } from "react";
+import FavoriteButton from "@/app/favorites/FavoriteButton";
+import { setMapInstance as setGlobalMapInstance } from "@/app/globalStore";
 import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
 import { MapConsole } from "@/components/Map/console";
 import {
@@ -9,8 +11,6 @@ import {
   useMapPosition,
 } from "@/components/Map/console/mapPosition";
 import { HistoricalLayers } from "@/components/Map/historical/Layers";
-import FavoriteButton from "@/components/Map/interaction/panel/FavoriteButton";
-import FavoriteController from "@/components/Map/interaction/panel/FavoriteController";
 import FloatingInfoController from "@/components/Map/interaction/panel/FloatingInfoController";
 import { useGlobalClick } from "@/components/Map/interaction/useGlobalClick";
 import MapContextMenu from "@/components/Map/MapContextMenu";
@@ -210,6 +210,8 @@ export default function MapContainer({ onStyleReady }: MapContainerProps) {
 
       // 立即设置地图实例，让图层组件可以开始初始化（不需要等待样式加载）
       setMapInstance(newMap as UtilsMap);
+      // 同时存储到全局状态中
+      setGlobalMapInstance(newMap as UtilsMap);
 
       // 清理函数
       return () => {
@@ -223,6 +225,7 @@ export default function MapContainer({ onStyleReady }: MapContainerProps) {
           newMap.off("zoomend", autoHideRoadLables);
           // 在销毁地图前清除状态引用
           setMapInstance(null);
+          setGlobalMapInstance(null);
           setStyleReady(false);
           newMap.remove();
         } catch (error) {
@@ -275,9 +278,6 @@ export default function MapContainer({ onStyleReady }: MapContainerProps) {
 
           {/* 悬浮信息面板控制器 */}
           <FloatingInfoController mapInstance={mapInstance} />
-
-          {/* 收藏面板控制器 */}
-          <FavoriteController mapInstance={mapInstance} />
 
           {/* 收藏按钮 */}
           <div className="absolute top-16 right-3 z-10">

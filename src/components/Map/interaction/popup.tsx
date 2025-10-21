@@ -1,4 +1,5 @@
 import mapboxgl, { type GeoJSONFeature } from "mapbox-gl";
+import { isTouchDevice } from "@/app/globalStore";
 import { fetchJSON } from "@/helper/fetchJSON";
 import { proxyImage } from "@/helper/proxyImage";
 import { generateBuildingPopupContent } from "./building";
@@ -9,17 +10,6 @@ let mainPopup: mapboxgl.Popup | null = null;
 let sidePopup: mapboxgl.Popup | null = null;
 let currentWikipediaUrl: string | null = null;
 let timeoutId: NodeJS.Timeout | null = null;
-
-// 检测是否为触摸屏设备
-const isTouchDevice = () => {
-  if (typeof window === "undefined") return false;
-  return (
-    "ontouchstart" in window ||
-    navigator.maxTouchPoints > 0 ||
-    // @ts-expect-error - legacy IE property
-    navigator.msMaxTouchPoints > 0
-  );
-};
 
 export const showPopup = ({
   lngLat,
@@ -51,10 +41,8 @@ export const showPopup = ({
         : lngLat;
     locationInfo.coordinates = coordinates;
 
-    const isTouch = isTouchDevice();
-
     // 触屏设备下不显示 popup
-    if (!isTouch) {
+    if (!isTouchDevice) {
       // 创建主弹出框
       mainPopup = new mapboxgl.Popup({
         closeButton: false,
