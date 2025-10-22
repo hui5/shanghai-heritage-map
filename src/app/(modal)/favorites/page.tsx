@@ -3,12 +3,12 @@
 import { Bookmark } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
+import ModalLayout from "@/app/(modal)/ModalLayout";
 import { ImagesPreview } from "@/components/Map/interaction/panel/_Images";
 import { usePanelStore } from "@/components/Map/interaction/panel/panelStore";
-import ModalLayout from "@/components/ModalLayout";
 import type { LocationInfo } from "@/helper/map-data/LocationInfo";
 import { highlightLocation } from "@/helper/mapbox/locationHighlight";
-import { isTouchDevice, useGlobalStore } from "../globalStore";
+import { isTouchDevice, useGlobalStore } from "../../globalStore";
 import { useFavoriteStore } from "./favoriteStore";
 
 export default function FavoritesPage() {

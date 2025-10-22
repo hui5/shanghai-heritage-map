@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import type { Image } from "../../components/Map/interaction/panel/_Images";
-import type { LocationInfo } from "../../helper/map-data/LocationInfo";
+import type { Image } from "../../../components/Map/interaction/panel/_Images";
+import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
 
 export interface FavoriteImage extends Image {
   // 必须包含的额外字段

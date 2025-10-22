@@ -2,7 +2,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import U, { type UtilsMap } from "map-gl-utils";
 import { useEffect, useRef, useState } from "react";
-import FavoriteButton from "@/app/favorites/FavoriteButton";
+import FavoriteButton from "@/app/(modal)/favorites/FavoriteButton";
 import { setMapInstance as setGlobalMapInstance } from "@/app/globalStore";
 import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
 import { MapConsole } from "@/components/Map/console";

@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { remark } from "remark";
 import remarkGfm from "remark-gfm";
 import remarkHtml from "remark-html";
-import ModalLayout from "@/components/ModalLayout";
+import ModalLayout from "@/app/(modal)/ModalLayout";
 
 async function getReadmeContent() {
   const readmePath = join(process.cwd(), "README.md");
