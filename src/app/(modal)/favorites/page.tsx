@@ -161,7 +161,7 @@ export default function FavoritesPage() {
       title="我的收藏"
       icon={favoritesIcon}
       maxWidth="max-w-4xl"
-      headerBg="from-pink-50 to-rose-50"
+      headerBg="from-blue-50 to-indigo-50"
       closeAriaLabel="关闭收藏"
     >
       {renderContent()}
