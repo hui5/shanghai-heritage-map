@@ -24,6 +24,11 @@ export default function ModalLayout({
   const router = useRouter();
   const [isClosing, setIsClosing] = useState(false);
 
+  // 组件挂载时重置关闭状态
+  useEffect(() => {
+    setIsClosing(false);
+  }, []);
+
   const handleClose = useCallback(() => {
     // 立即设置关闭状态，提供即时反馈
     setIsClosing(true);
@@ -31,7 +36,6 @@ export default function ModalLayout({
     // 延迟导航，让动画完成
     setTimeout(() => {
       router.push("/");
-      setIsClosing(false);
     }, 150); // 150ms 动画时长
   }, [router]);
 
