@@ -53,7 +53,24 @@ const nextConfig = {
     ];
   },
 
+  headers: async () => {
+    return [
+      {
+        source:
+          "/:path*.(js|geojson|css|json|svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|eot|ttf|otf|ico|webmanifest)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: `public, max-age=${ONE_MONTH}, immutable`,
+          },
+        ],
+      },
+    ];
+  },
+
   reactCompiler: true,
 };
+
+const ONE_MONTH = 60 * 60 * 24 * 30; // 2592000
 
 module.exports = nextConfig;
