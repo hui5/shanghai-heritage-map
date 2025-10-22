@@ -32,15 +32,15 @@ const nextConfig = {
     NEXT_PUBLIC_GIT_COMMIT:
       process.env.VERCEL_GIT_COMMIT_SHA?.substring(0, 7) || "local",
   },
-  webpack: (config) => {
-    // 确保 JSON 文件能够被正确处理并支持热重载
-    config.module.rules.push({
-      test: /\.json$/,
-      type: "json",
-    });
+  // turbopack: (config) => {
+  //   // 确保 JSON 文件能够被正确处理并支持热重载
+  //   config.module.rules.push({
+  //     test: /\.json$/,
+  //     type: "json",
+  //   });
 
-    return config;
-  },
+  //   return config;
+  // },
   async rewrites() {
     return [
       {
@@ -49,6 +49,8 @@ const nextConfig = {
       },
     ];
   },
+
+  reactCompiler: true,
 };
 
 module.exports = nextConfig;
