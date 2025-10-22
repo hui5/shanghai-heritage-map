@@ -11,6 +11,26 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.svg",
   },
+  openGraph: {
+    title: "上海历史建筑地图",
+    description: "探索上海的历史建筑与文化遗产",
+    type: "website",
+    locale: "zh_CN",
+    siteName: "上海历史建筑地图",
+    images: [
+      {
+        url: "/doc/image.webp",
+        alt: "上海历史建筑地图",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "上海历史建筑地图",
+    description: "探索上海的历史建筑与文化遗产",
+    images: ["/doc/image.webp"],
+    creator: "@hui5_",
+  },
 };
 
 export default function RootLayout({

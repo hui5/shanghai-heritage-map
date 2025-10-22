@@ -15,6 +15,7 @@ import { createPortal } from "react-dom";
 import { Rnd } from "react-rnd";
 import { isTouchDevice } from "@/app/globalStore";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
+import { ShareButton } from "../ShareButton";
 import { FloatingInfoPanelFullscreen } from "./FloatingInfoPanelFullscreen";
 import { isGlobalLightboxOpen } from "./GlobalLightbox";
 import { PANEL } from "./panelConfig";
@@ -342,6 +343,17 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
           {pinned ? <Pin size={16} /> : <Pin size={16} />}
         </button>
       )}
+
+      {/* 分享按钮 */}
+      {locationInfo && (
+        <ShareButton
+          url={`${typeof window !== "undefined" ? window.location.origin : ""}/search?n=${encodeURIComponent(locationInfo.name || "")}`}
+          title={`${locationInfo.name || "历史建筑"} - 上海历史建筑地图`}
+          description={`探索${locationInfo.name || "这座历史建筑"}的历史与文化`}
+          variant="panel"
+        />
+      )}
+
       <button
         type="button"
         className="ml-1 p-1.5 rounded text-base border bg-white/30 text-gray-700 hover:bg-gray-100"
