@@ -1,4 +1,5 @@
 import { includes } from "lodash";
+import type { Map as MapboxMap, MapMouseEvent, Point } from "mapbox-gl";
 import { useCallback, useEffect, useRef } from "react";
 import { canInteract } from "@/components/Map/interaction/interactionConfig";
 import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
@@ -8,7 +9,7 @@ import { getHistoricalLocationInfo } from "./historical";
 import usePanelStore from "./panel/panelStore";
 
 interface GlobalClickProps {
-  mapInstance: mapboxgl.Map | null;
+  mapInstance: MapboxMap | null;
   minZoomLevel?: number; // 触发详细信息查询的最小缩放级别
 }
 
@@ -20,7 +21,7 @@ export const useGlobalClick = ({
 
   // 查询指定图层的要素 - 公共方法
   const queryInteractiveFeatures = useCallback(
-    (point: mapboxgl.Point) => {
+    (point: Point) => {
       const interactiveLayerIds = [
         ...unclusteredLayerIds,
         ...getInteractionLayerIds(),
@@ -42,7 +43,7 @@ export const useGlobalClick = ({
 
   // 全局统一事件处理 - 使用过滤后的图层查询
   const handleGlobalClick = useCallback(
-    (e: mapboxgl.MapMouseEvent) => {
+    (e: MapMouseEvent) => {
       if (!mapInstance) {
         return;
       }

@@ -1,4 +1,11 @@
-import mapboxgl from "mapbox-gl";
+// Mapbox is loaded via CDN in MapLayout.tsx
+declare global {
+  interface Window {
+    mapboxgl: typeof import("mapbox-gl");
+  }
+}
+
+import type { GeoJSONSource, Map, MapMouseEvent } from "mapbox-gl";
 import { useEffect, useRef } from "react";
 import { createInfoTag } from "@/components/Map/interaction/building";
 import { canInteract } from "@/components/Map/interaction/interactionConfig";
@@ -22,7 +29,7 @@ const BUILDING_TYPES = [
 ];
 
 interface BuildingClusterInteractionsProps {
-  mapInstance: mapboxgl.Map | null;
+  mapInstance: Map | null;
 }
 
 export const useBuildingClusterInteractions = ({
@@ -33,7 +40,7 @@ export const useBuildingClusterInteractions = ({
   useEffect(() => {
     if (!mapInstance) return;
 
-    const popup = new mapboxgl.Popup({
+    const popup = new window.mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false,
       anchor: "right",
@@ -43,7 +50,7 @@ export const useBuildingClusterInteractions = ({
     const sourceId = "openda_building-source";
 
     // 集群点击事件 - 放大集群
-    const onClusterClick = (e: mapboxgl.MapMouseEvent) => {
+    const onClusterClick = (e: MapMouseEvent) => {
       // 检查缩放级别（使用全局配置）
       if (
         !canInteract(mapInstance.getZoom(), "minZoomForClusterInteractions")
@@ -58,7 +65,7 @@ export const useBuildingClusterInteractions = ({
       if (!features.length) return;
 
       const clusterId = features[0].properties?.cluster_id;
-      const source = mapInstance.getSource(sourceId) as mapboxgl.GeoJSONSource;
+      const source = mapInstance.getSource(sourceId) as GeoJSONSource;
 
       source.getClusterExpansionZoom(clusterId, (err, zoom) => {
         if (err) return;
@@ -79,7 +86,7 @@ export const useBuildingClusterInteractions = ({
     };
 
     // 集群悬停事件 - 显示个性化集群信息
-    const onClusterHover = (e: mapboxgl.MapMouseEvent) => {
+    const onClusterHover = (e: MapMouseEvent) => {
       // 检查缩放级别（使用全局配置）
       if (
         !canInteract(mapInstance.getZoom(), "minZoomForClusterInteractions")

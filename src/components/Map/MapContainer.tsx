@@ -1,5 +1,10 @@
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
+// Mapbox is loaded via CDN in MapLayout.tsx
+declare global {
+  interface Window {
+    mapboxgl: typeof import("mapbox-gl");
+  }
+}
+
 import U, { type UtilsMap } from "map-gl-utils";
 import { useEffect, useRef, useState } from "react";
 import FavoriteButton from "@/app/(modal)/favorites/FavoriteButton";
@@ -98,21 +103,21 @@ export default function MapContainer({ onStyleReady }: MapContainerProps) {
 
       // Mapbox Access Token - 请配置您自己的访问令牌
       // 注意：这是一个测试令牌，在生产环境中请使用您自己的令牌
-      mapboxgl.accessToken =
+      (window.mapboxgl as any).accessToken =
         process.env.NEXT_PUBLIC_MAPBOX_TOKEN ||
         process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ||
         "pk.eyJ1IjoidGVzdGluZ3VzZXIiLCJhIjoiY2p1czFxZzB0MGIxcTQzcHN5eWE4MnBvMyJ9.IHNcZI_KfRwUAREGvGj2OQ";
 
       // 禁用遥测以减少开发环境中的网络错误日志
       if (process.env.NODE_ENV === "development") {
-        (mapboxgl as any).prewarm = () => {};
-        (mapboxgl as any).clearPrewarmedResources = () => {};
+        (window.mapboxgl as any).prewarm = () => {};
+        (window.mapboxgl as any).clearPrewarmedResources = () => {};
       }
 
       console.log("mapboxgl init");
 
       // 创建地图实例
-      const newMap = new mapboxgl.Map({
+      const newMap = new window.mapboxgl.Map({
         container: mapContainer.current,
         // style: "mapbox://styles/mapbox/light-v11", // 使用浅色主题
         style: "mapbox://styles/hui5/cmf7zygw7000r01pihwfgcesz",
@@ -139,7 +144,7 @@ export default function MapContainer({ onStyleReady }: MapContainerProps) {
       //   "bottom-right",
       // );
 
-      U.init(newMap as any, mapboxgl);
+      U.init(newMap as any, window.mapboxgl);
 
       // 健壮的样式加载检测机制 - 适配 Mapbox Standard 样式
       const handleStyleLoad = () => {
@@ -199,7 +204,7 @@ export default function MapContainer({ onStyleReady }: MapContainerProps) {
 
       // 添加导航控件（包含3D角度调整）- 放在右下角避免与设置面板冲突
       newMap.addControl(
-        new mapboxgl.NavigationControl({
+        new window.mapboxgl.NavigationControl({
           showCompass: true,
           showZoom: false,
           visualizePitch: true,

@@ -1,3 +1,4 @@
+import type { Map as MapboxMap } from "mapbox-gl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type {
   UnifiedCollection,
@@ -7,7 +8,7 @@ import type { SearchResult } from "@/components/Map/search/MapSearch";
 import { createMultiLocationHighlighter } from "@/helper/mapbox/multiLocationHighlight";
 
 interface UseMapSearchProps {
-  mapInstance: mapboxgl.Map | null;
+  mapInstance: MapboxMap | null;
   buildingData: Record<string, UnifiedCollection>; // 改为统一格式
   historicalData: Record<string, UnifiedCollection>;
   historicalConfig: UnifiedConfig; // 添加历史数据配置

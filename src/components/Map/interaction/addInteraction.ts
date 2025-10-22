@@ -1,9 +1,10 @@
+import type { Map as MapboxMap } from "mapbox-gl";
 import { canInteract } from "./interactionConfig";
 import { closePopup, showPopup } from "./popup";
 
 let isMapInteracting = false;
 
-export const addEventListeners = (mapInstance: mapboxgl.Map) => {
+export const addEventListeners = (mapInstance: MapboxMap) => {
   // 监听地图交互状态
   ["dragstart", "zoomstart", "rotatestart", "pitchstart"].forEach((event) => {
     mapInstance.on(event, () => {
@@ -21,7 +22,7 @@ export const addEventListeners = (mapInstance: mapboxgl.Map) => {
   });
 };
 
-export const addInteraction = (mapInstance: mapboxgl.Map, layerId: string) => {
+export const addInteraction = (mapInstance: MapboxMap, layerId: string) => {
   const mouseenterId = `mouseenter-${layerId}`;
   const mouseleaveId = `mouseleave-${layerId}`;
   const clickId = `click-${layerId}`;

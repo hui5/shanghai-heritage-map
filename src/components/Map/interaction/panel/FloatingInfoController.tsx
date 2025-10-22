@@ -1,3 +1,4 @@
+import type { Map as MapboxMap } from "mapbox-gl";
 import type React from "react";
 import { useCallback, useEffect, useMemo } from "react";
 import useSWR from "swr";
@@ -28,7 +29,7 @@ const Loading = ({ name }: { name: string }) => (
   </div>
 );
 export interface FloatingInfoControllerProps {
-  mapInstance: mapboxgl.Map | null;
+  mapInstance: MapboxMap | null;
   behavior?: Partial<PanelBehaviorConfig>;
 }
 

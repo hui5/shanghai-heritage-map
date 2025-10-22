@@ -1,7 +1,8 @@
+import type { Map as MapboxMap, MapMouseEvent } from "mapbox-gl";
 import { useCallback, useEffect, useState } from "react";
 
 interface MapContextMenuProps {
-  mapInstance: mapboxgl.Map | null;
+  mapInstance: MapboxMap | null;
   containerRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -23,7 +24,7 @@ export default function MapContextMenu({
   useEffect(() => {
     if (!mapInstance) return;
 
-    const onContextMenu = (e: mapboxgl.MapMouseEvent) => {
+    const onContextMenu = (e: MapMouseEvent) => {
       try {
         setVisible(false);
         setLngLat({ lng: e.lngLat.lng, lat: e.lngLat.lat });

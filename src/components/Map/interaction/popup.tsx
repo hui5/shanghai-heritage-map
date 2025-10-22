@@ -1,4 +1,11 @@
-import mapboxgl, { type GeoJSONFeature } from "mapbox-gl";
+// Mapbox is loaded via CDN in MapLayout.tsx
+declare global {
+  interface Window {
+    mapboxgl: typeof import("mapbox-gl");
+  }
+}
+
+import type { GeoJSONFeature, Map as MapboxMap, Popup } from "mapbox-gl";
 import { isTouchDevice } from "@/app/globalStore";
 import { fetchJSON } from "@/helper/fetchJSON";
 import { proxyImage } from "@/helper/proxyImage";
@@ -6,8 +13,8 @@ import { generateBuildingPopupContent } from "./building";
 import { generateHistoricalPopupContent } from "./historical";
 import usePanelStore from "./panel/panelStore";
 
-let mainPopup: mapboxgl.Popup | null = null;
-let sidePopup: mapboxgl.Popup | null = null;
+let mainPopup: Popup | null = null;
+let sidePopup: Popup | null = null;
 let currentWikipediaUrl: string | null = null;
 let timeoutId: NodeJS.Timeout | null = null;
 
@@ -19,7 +26,7 @@ export const showPopup = ({
 }: {
   lngLat: [number, number];
   feature: GeoJSONFeature;
-  map: mapboxgl.Map;
+  map: MapboxMap;
   delay: number;
 }) => {
   closePopup();
@@ -44,7 +51,7 @@ export const showPopup = ({
     // 触屏设备下不显示 popup
     if (!isTouchDevice) {
       // 创建主弹出框
-      mainPopup = new mapboxgl.Popup({
+      mainPopup = new window.mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
         anchor: "right",
@@ -57,7 +64,7 @@ export const showPopup = ({
       // 创建侧边弹出框
       if (locationInfo.wikipedia && locationInfo.dataSource !== "上海图书馆") {
         currentWikipediaUrl = locationInfo.wikipedia;
-        sidePopup = new mapboxgl.Popup({
+        sidePopup = new window.mapboxgl.Popup({
           closeButton: false,
           closeOnClick: false,
           anchor: "right",

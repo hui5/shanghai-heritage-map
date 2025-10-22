@@ -1,10 +1,25 @@
-import mapboxgl from "mapbox-gl";
+// Mapbox is loaded via CDN in MapLayout.tsx
+declare global {
+  interface Window {
+    mapboxgl: typeof import("mapbox-gl");
+  }
+}
+
+import type {
+  GeoJSONSource,
+  LngLatLike,
+  MapboxGeoJSONFeature,
+  Map as MapboxMap,
+  MapMouseEvent,
+  PointLike,
+  Popup,
+} from "mapbox-gl";
 import type React from "react";
 import { useEffect, useRef } from "react";
 import { normalizeWikimapResponse, wikimapCache } from "@/helper/wikimapCache";
 
 interface WikimapLayerProps {
-  mapInstance: mapboxgl.Map | null;
+  mapInstance: MapboxMap | null;
 }
 
 const SOURCE_ID = "openda_wikimap-source";
@@ -33,12 +48,14 @@ const WIKIMAP_FETCH_DISTANCE_THRESHOLD_FACTOR = 0.4; // fraction of current radi
 
 export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
   const iconImageId = "wikimap_marker";
-  const _lastMouseLngLatRef = useRef<mapboxgl.LngLatLike | null>(null);
+  const _lastMouseLngLatRef = useRef<LngLatLike | null>(null);
   const isFetchingRef = useRef<boolean>(false);
   const _initializedRef = useRef<boolean>(false);
   const isOverFeatureRef = useRef<boolean>(false);
   const isPopupHoveredRef = useRef<boolean>(false);
-  const persistentPopupsRef = useRef<Map<number, mapboxgl.Popup>>(new Map());
+  const persistentPopupsRef = useRef<Map<number, Popup>>(
+    new Map<number, Popup>(),
+  );
   const suppressedPageIdsRef = useRef<Set<number>>(new Set());
   const autoModeRef = useRef<boolean>(false);
   const recomputeTimerRef = useRef<number | null>(null);
@@ -88,9 +105,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
       if (!mapInstance.getSource(SOURCE_ID)) {
         mapInstance.addSource(SOURCE_ID, { type: "geojson", data: fc });
       } else {
-        (mapInstance.getSource(SOURCE_ID) as mapboxgl.GeoJSONSource).setData(
-          fc,
-        );
+        (mapInstance.getSource(SOURCE_ID) as GeoJSONSource).setData(fc);
       }
     } catch {}
 
@@ -119,7 +134,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
   useEffect(() => {
     if (!mapInstance) return;
 
-    const tooltip = new mapboxgl.Popup({
+    const tooltip = new window.mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false,
       closeOnMove: false,
@@ -154,7 +169,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
       el.addEventListener("mouseleave", onPopupMouseLeave);
     };
 
-    const onEnter = (e: mapboxgl.MapMouseEvent) => {
+    const onEnter = (e: MapMouseEvent) => {
       if (mapInstance.getZoom() < MIN_ZOOM) return;
       // Disable hover tooltip when auto persistent mode is active
       if (mapInstance.getZoom() > WIKIMAP_PERSISTENT_POPUP_ZOOM) return;
@@ -248,9 +263,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
         </div>`;
     };
 
-    const openPersistentPopupForFeature = (
-      feature: mapboxgl.MapboxGeoJSONFeature,
-    ) => {
+    const openPersistentPopupForFeature = (feature: MapboxGeoJSONFeature) => {
       const props = feature.properties || {};
       const pageid: number | undefined = props.pageid
         ? Number(props.pageid)
@@ -263,7 +276,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
       ];
       const title: string = props.title || "Wikimedia File";
       const html = createPersistentPopupHTML(props, title);
-      const popup = new mapboxgl.Popup({
+      const popup = new window.mapboxgl.Popup({
         closeButton: true,
         closeOnClick: false,
         closeOnMove: false,
@@ -318,13 +331,13 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
     };
 
     const selectAutoOpenCandidates = (
-      features: mapboxgl.MapboxGeoJSONFeature[],
+      features: MapboxGeoJSONFeature[],
       _zoom: number,
     ) => {
       // Always use map center as origin for radial ordering
       const originLngLat = mapInstance.getCenter();
       const originPoint = mapInstance.project(
-        mapboxgl.LngLat.convert(originLngLat),
+        window.mapboxgl.LngLat.convert(originLngLat),
       );
 
       // Prepare features with projected points and radial distance from origin
@@ -345,7 +358,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
           return Number(ap.pageid) - Number(bp.pageid);
         });
 
-      const selected: mapboxgl.MapboxGeoJSONFeature[] = [];
+      const selected: MapboxGeoJSONFeature[] = [];
       const rectangles: {
         left: number;
         right: number;
@@ -468,7 +481,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
 
         const canvas = mapInstance.getCanvas();
         const rect = canvas.getBoundingClientRect();
-        const queryBox: [mapboxgl.PointLike, mapboxgl.PointLike] = [
+        const queryBox: [PointLike, PointLike] = [
           [0, 0],
           [rect.width, rect.height],
         ];
@@ -518,7 +531,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
       if (autoModeRef.current) scheduleRecompute(30);
     };
 
-    const onClickFeature = (e: mapboxgl.MapMouseEvent) => {
+    const onClickFeature = (e: MapMouseEvent) => {
       if (!autoModeRef.current) return;
       const features = mapInstance.queryRenderedFeatures(e.point, {
         layers: [LAYER_ID],
@@ -649,9 +662,9 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
 
           // Update source data
           if (mapInstance.getSource(SOURCE_ID)) {
-            (
-              mapInstance.getSource(SOURCE_ID) as mapboxgl.GeoJSONSource
-            ).setData(wikimapCache.toFeatureCollection());
+            (mapInstance.getSource(SOURCE_ID) as GeoJSONSource).setData(
+              wikimapCache.toFeatureCollection(),
+            );
           }
           // Trigger auto-open recompute after data arrives if in auto mode
           try {
@@ -675,7 +688,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
     const maybeFetch = () => {
       if (mapInstance.getZoom() < MIN_ZOOM) return;
       const center = mapInstance.getCenter();
-      const { lng, lat } = mapboxgl.LngLat.convert(center);
+      const { lng, lat } = window.mapboxgl.LngLat.convert(center);
       const radiusM = computeDynamicRadiusMeters();
       const distanceThreshold = Math.max(
         WIKIMAP_MIN_FETCH_THRESHOLD_M,

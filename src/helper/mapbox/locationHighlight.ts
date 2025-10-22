@@ -2,6 +2,7 @@
  * 通用的地图位置高亮工具
  * 用于在地图上临时高亮显示某个位置
  */
+import type { GeoJSONSource, Map as MapboxMap } from "mapbox-gl";
 
 export interface HighlightStyle {
   /** 圆环颜色 */
@@ -36,7 +37,7 @@ const DEFAULT_STYLE: Required<HighlightStyle> = {
  * @returns 返回包含 destroy 方法的对象
  */
 export function highlightLocation(
-  map: mapboxgl.Map,
+  map: MapboxMap,
   location: [number, number],
   options: LocationHighlightOptions = {},
 ) {
@@ -54,7 +55,7 @@ export function highlightLocation(
 
     try {
       // 清除高亮数据
-      const source = map.getSource(sourceId) as mapboxgl.GeoJSONSource;
+      const source = map.getSource(sourceId) as GeoJSONSource;
       if (source) {
         source.setData({
           type: "FeatureCollection",
@@ -155,15 +156,15 @@ export function highlightLocation(
 
   const showHighlight = () => {
     try {
-      const source = map.getSource(sourceId) as mapboxgl.GeoJSONSource;
+      const source = map.getSource(sourceId) as GeoJSONSource;
       if (!source) {
         setupLayers();
-        const newSource = map.getSource(sourceId) as mapboxgl.GeoJSONSource;
+        const newSource = map.getSource(sourceId) as GeoJSONSource;
         if (!newSource) return;
       }
 
       // 显示高亮
-      const sourceToUse = map.getSource(sourceId) as mapboxgl.GeoJSONSource;
+      const sourceToUse = map.getSource(sourceId) as GeoJSONSource;
       sourceToUse.setData({
         type: "FeatureCollection",
         features: [

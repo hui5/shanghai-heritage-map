@@ -2,6 +2,7 @@
  * 多点位置高亮工具
  * 用于搜索等需要同时显示多个位置的场景
  */
+import type { GeoJSONSource, Map as MapboxMap } from "mapbox-gl";
 
 export interface HighlightLocation {
   coordinates: [number, number];
@@ -22,13 +23,13 @@ export interface MultiLocationHighlightOptions {
  * 多点位置高亮管理器
  */
 export class MultiLocationHighlighter {
-  private map: mapboxgl.Map;
+  private map: MapboxMap;
   private layerId: string;
   private sourceId: string;
   private color: string;
   private showLabels: boolean;
 
-  constructor(map: mapboxgl.Map, options: MultiLocationHighlightOptions = {}) {
+  constructor(map: MapboxMap, options: MultiLocationHighlightOptions = {}) {
     this.map = map;
     const prefix = options.layerIdPrefix || "multi-location-highlight";
     this.layerId = prefix;
@@ -179,11 +180,11 @@ export class MultiLocationHighlighter {
       }
 
       // 如果源不存在，尝试重新初始化
-      let source = this.map.getSource(this.sourceId) as mapboxgl.GeoJSONSource;
+      let source = this.map.getSource(this.sourceId) as GeoJSONSource;
       if (!source) {
         console.log("Source not found, reinitializing...");
         this.initialize();
-        source = this.map.getSource(this.sourceId) as mapboxgl.GeoJSONSource;
+        source = this.map.getSource(this.sourceId) as GeoJSONSource;
         if (!source) {
           console.warn("Failed to create highlight source");
           return;
@@ -239,9 +240,7 @@ export class MultiLocationHighlighter {
         return;
       }
 
-      const source = this.map.getSource(
-        this.sourceId,
-      ) as mapboxgl.GeoJSONSource;
+      const source = this.map.getSource(this.sourceId) as GeoJSONSource;
       if (source) {
         source.setData({
           type: "FeatureCollection",
@@ -285,7 +284,7 @@ export class MultiLocationHighlighter {
  * 创建多点位置高亮管理器的工厂函数
  */
 export const createMultiLocationHighlighter = (
-  map: mapboxgl.Map,
+  map: MapboxMap,
   options?: MultiLocationHighlightOptions,
 ) => {
   return new MultiLocationHighlighter(map, options);
