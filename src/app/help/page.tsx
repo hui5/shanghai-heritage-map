@@ -5,9 +5,6 @@ import remarkGfm from "remark-gfm";
 import remarkHtml from "remark-html";
 import ModalLayout from "@/app/ModalLayout";
 
-// 构建时生成静态内容
-export const revalidate = false; // 静态生成，永不重新验证
-
 async function getReadmeContent() {
   const readmePath = join(process.cwd(), "README.md");
   const readmeContent = readFileSync(readmePath, "utf8");

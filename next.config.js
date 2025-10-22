@@ -12,6 +12,9 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
+
+  cacheComponents: true,
+
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
