@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
 
 interface ModalLayoutProps {
   children: React.ReactNode;
@@ -22,9 +23,26 @@ export default function ModalLayout({
 }: ModalLayoutProps) {
   const router = useRouter();
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     router.push("/");
-  };
+  }, [router]);
+
+  // 添加全局键盘事件监听器
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClose();
+      }
+    };
+
+    // 添加事件监听器
+    document.addEventListener("keydown", handleKeyDown);
+
+    // 清理函数
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleClose]);
 
   return (
     <>
@@ -33,11 +51,6 @@ export default function ModalLayout({
         type="button"
         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[2000] border-0 cursor-default"
         onClick={handleClose}
-        onKeyDown={(e) => {
-          if (e.key === "Escape") {
-            handleClose();
-          }
-        }}
         aria-label={closeAriaLabel}
       />
 
