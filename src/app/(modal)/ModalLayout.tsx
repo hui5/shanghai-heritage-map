@@ -33,10 +33,7 @@ export default function ModalLayout({
     // 立即设置关闭状态，提供即时反馈
     setIsClosing(true);
 
-    // 延迟导航，让动画完成
-    setTimeout(() => {
-      router.push("/");
-    }, 150); // 150ms 动画时长
+    router.push("/");
   }, [router]);
 
   // 添加全局键盘事件监听器
