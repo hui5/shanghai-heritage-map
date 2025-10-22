@@ -2,7 +2,7 @@
 
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface ModalLayoutProps {
   children: React.ReactNode;
@@ -22,9 +22,17 @@ export default function ModalLayout({
   closeAriaLabel = "关闭",
 }: ModalLayoutProps) {
   const router = useRouter();
+  const [isClosing, setIsClosing] = useState(false);
 
   const handleClose = useCallback(() => {
-    router.push("/");
+    // 立即设置关闭状态，提供即时反馈
+    setIsClosing(true);
+
+    // 延迟导航，让动画完成
+    setTimeout(() => {
+      router.push("/");
+      setIsClosing(false);
+    }, 150); // 150ms 动画时长
   }, [router]);
 
   // 添加全局键盘事件监听器
@@ -49,14 +57,18 @@ export default function ModalLayout({
       {/* 遮罩层 */}
       <button
         type="button"
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[2000] border-0 cursor-default"
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[2000] border-0 cursor-default transition-opacity duration-150 ${
+          isClosing ? "opacity-0" : "opacity-100"
+        }`}
         onClick={handleClose}
         aria-label={closeAriaLabel}
       />
 
       {/* 弹窗内容 */}
       <div
-        className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[2001] w-[100vw] ${maxWidth} max-h-[90vh] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col`}
+        className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[2001] w-[100vw] ${maxWidth} max-h-[90vh] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col transition-all duration-150 ${
+          isClosing ? "opacity-0 scale-95" : "opacity-100 scale-100"
+        }`}
       >
         {/* 头部 */}
         <div
