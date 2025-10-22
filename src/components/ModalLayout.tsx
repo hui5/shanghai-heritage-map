@@ -23,7 +23,7 @@ export default function ModalLayout({
   const router = useRouter();
 
   const handleClose = () => {
-    router.back();
+    router.push("/");
   };
 
   return (
