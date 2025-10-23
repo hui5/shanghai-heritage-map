@@ -3,7 +3,6 @@
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import LoginModal from "../../components/Auth/LoginModal";
 import UserInfo from "../../components/Auth/UserInfo";
 import { useAuthStore } from "../../helper/store/authStore";
 
@@ -28,7 +27,6 @@ export default function ModalLayout({
 }: ModalLayoutProps) {
   const router = useRouter();
   const [isClosing, setIsClosing] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // 初始化认证状态
   const { initialize } = useAuthStore();
@@ -94,7 +92,7 @@ export default function ModalLayout({
           </div>
           <div className="flex items-center gap-2">
             {headerActions}
-            <UserInfo onLoginClick={() => setIsLoginModalOpen(true)} />
+            <UserInfo />
             <button
               type="button"
               onClick={handleClose}
@@ -110,12 +108,6 @@ export default function ModalLayout({
         {/* 内容区域 */}
         <div className="flex-1 overflow-y-auto p-6">{children}</div>
       </div>
-
-      {/* 登录模态框 */}
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-      />
     </>
   );
 }

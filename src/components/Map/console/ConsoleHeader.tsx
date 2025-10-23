@@ -1,5 +1,6 @@
 import { Github, HelpCircle, X } from "lucide-react";
 import Link from "next/link";
+import UserInfo from "../../Auth/UserInfo";
 
 interface ConsoleHeaderProps {
   onClose: () => void;
@@ -37,6 +38,11 @@ export function ConsoleHeader({ onClose }: ConsoleHeaderProps) {
           >
             <HelpCircle className="h-5 w-5 text-gray-700 group-hover:text-blue-600 transition-colors duration-300" />
           </Link>
+        </div>
+
+        {/* 中间用户信息 */}
+        <div className="flex-1 flex justify-center">
+          <UserInfo />
         </div>
 
         {/* 右侧关闭按钮 */}
