@@ -8,8 +8,8 @@ import { ImagesPreview } from "@/components/Map/interaction/panel/_Images";
 import { usePanelStore } from "@/components/Map/interaction/panel/panelStore";
 import type { LocationInfo } from "@/helper/map-data/LocationInfo";
 import { highlightLocation } from "@/helper/mapbox/locationHighlight";
+import { useFavoriteStore } from "../../../helper/store/favoriteStore";
 import { isTouchDevice, useGlobalStore } from "../../globalStore";
-import { useFavoriteStore } from "./favoriteStore";
 
 export default function FavoritesPage() {
   const router = useRouter();
@@ -158,7 +158,7 @@ export default function FavoritesPage() {
 
   return (
     <ModalLayout
-      title="我的收藏"
+      title={`我的收藏 (${favorites.length})`}
       icon={favoritesIcon}
       maxWidth="max-w-4xl"
       headerBg="from-blue-50 to-indigo-50"

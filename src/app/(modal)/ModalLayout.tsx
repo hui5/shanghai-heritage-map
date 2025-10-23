@@ -3,6 +3,9 @@
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import LoginModal from "../../components/Auth/LoginModal";
+import UserInfo from "../../components/Auth/UserInfo";
+import { useAuthStore } from "../../helper/store/authStore";
 
 interface ModalLayoutProps {
   children: React.ReactNode;
@@ -23,8 +26,16 @@ export default function ModalLayout({
 }: ModalLayoutProps) {
   const router = useRouter();
   const [isClosing, setIsClosing] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  // 组件挂载时重置关闭状态
+  // 初始化认证状态
+  const { initialize } = useAuthStore();
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
+
+  // 组件挂载时重置关闭状态并更新 key
   useEffect(() => {
     setIsClosing(false);
   }, []);
@@ -79,20 +90,29 @@ export default function ModalLayout({
             {icon}
             <h2 className="text-xl font-bold text-gray-800">{title}</h2>
           </div>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-            title="关闭"
-            aria-label="关闭"
-          >
-            <X className="w-5 h-5 text-gray-600" />
-          </button>
+          <div className="flex items-center gap-2">
+            <UserInfo onLoginClick={() => setIsLoginModalOpen(true)} />
+            <button
+              type="button"
+              onClick={handleClose}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              title="关闭"
+              aria-label="关闭"
+            >
+              <X className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
         </div>
 
         {/* 内容区域 */}
         <div className="flex-1 overflow-y-auto p-6">{children}</div>
       </div>
+
+      {/* 登录模态框 */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+      />
     </>
   );
 }

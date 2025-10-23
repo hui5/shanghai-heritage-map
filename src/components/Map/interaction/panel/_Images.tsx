@@ -1,6 +1,6 @@
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useFavoriteStore } from "@/app/(modal)/favorites/favoriteStore";
+import { useFavoriteStore } from "@/helper/store/favoriteStore";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
 import { openLightbox } from "./GlobalLightbox";
 import usePanelStore from "./panelStore";
