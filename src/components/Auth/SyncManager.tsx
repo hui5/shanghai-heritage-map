@@ -10,10 +10,16 @@ export default function SyncManager() {
 
   useEffect(() => {
     if (user) {
-      // 用户登录后，加载云端收藏并同步
+      // 用户登录后，先加载云端收藏（这会处理删除同步），然后同步本地未同步的收藏
       const initializeSync = async () => {
-        await loadCloudFavorites();
-        await syncWithCloud();
+        try {
+          // 先加载云端收藏，这会删除本地多余的收藏
+          await loadCloudFavorites();
+          // 然后同步本地未同步的收藏到云端
+          await syncWithCloud();
+        } catch (error) {
+          console.error("Error during sync initialization:", error);
+        }
       };
 
       initializeSync();

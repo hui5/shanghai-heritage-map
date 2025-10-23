@@ -281,15 +281,27 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
       const cloudFavorites = data.map(convertFromSupabaseFavorite);
       const { favorites: localFavorites } = get();
 
+      // 获取云端收藏的 favoriteId 集合，用于识别哪些本地收藏应该被删除
+      const cloudFavoriteIds = new Set(
+        cloudFavorites.map((fav) => fav.favoriteId),
+      );
+
+      // 过滤本地收藏：只保留云端存在或未同步的收藏
+      // 未同步的收藏可能是用户在其他设备添加但还未上传的
+      const filteredLocalFavorites = localFavorites.filter(
+        (localFav) =>
+          cloudFavoriteIds.has(localFav.favoriteId) || !localFav.isSynced,
+      );
+
       // 合并云端和本地收藏，去重并更新同步状态
-      const mergedFavorites = [...localFavorites];
+      const mergedFavorites = [...filteredLocalFavorites];
 
       cloudFavorites.forEach((cloudFav) => {
         const existingIndex = mergedFavorites.findIndex(
           (localFav) => localFav.favoriteId === cloudFav.favoriteId,
         );
         if (existingIndex !== -1) {
-          // 如果本地已存在，更新同步状态
+          // 如果本地已存在，更新同步状态和云端ID
           mergedFavorites[existingIndex] = {
             ...mergedFavorites[existingIndex],
             isSynced: true,

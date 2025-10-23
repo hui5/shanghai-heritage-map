@@ -14,6 +14,7 @@ interface ModalLayoutProps {
   maxWidth?: string;
   headerBg?: string;
   closeAriaLabel?: string;
+  headerActions?: React.ReactNode;
 }
 
 export default function ModalLayout({
@@ -23,6 +24,7 @@ export default function ModalLayout({
   maxWidth = "max-w-4xl",
   headerBg = "from-blue-50 to-indigo-50",
   closeAriaLabel = "关闭",
+  headerActions,
 }: ModalLayoutProps) {
   const router = useRouter();
   const [isClosing, setIsClosing] = useState(false);
@@ -91,6 +93,7 @@ export default function ModalLayout({
             <h2 className="text-xl font-bold text-gray-800">{title}</h2>
           </div>
           <div className="flex items-center gap-2">
+            {headerActions}
             <UserInfo onLoginClick={() => setIsLoginModalOpen(true)} />
             <button
               type="button"
