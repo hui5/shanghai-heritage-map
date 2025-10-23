@@ -1,14 +1,16 @@
 "use client";
 
-import { Bookmark, Github, LogOut, User } from "lucide-react";
+import { Bookmark, LogOut, User } from "lucide-react";
 import { useState } from "react";
 import { useAuthStore } from "../../helper/store/authStore";
 import { useFavoriteStore } from "../../helper/store/favoriteStore";
+import LoginModal from "./LoginModal";
 
 export default function UserInfo() {
-  const { user, signOut, signInWithGithub, isLoading } = useAuthStore();
+  const { user, signOut, isLoading } = useAuthStore();
   const { favorites } = useFavoriteStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // 计算云端收藏数（已同步的收藏）
   const cloudFavoritesCount = favorites.filter((fav) => fav.isSynced).length;
@@ -18,25 +20,32 @@ export default function UserInfo() {
     setIsDropdownOpen(false);
   };
 
-  const handleGithubLogin = async () => {
-    await signInWithGithub();
+  const handleLoginClick = () => {
+    setIsLoginModalOpen(true);
   };
 
   if (!user) {
     return (
-      <button
-        type="button"
-        onClick={handleGithubLogin}
-        disabled={isLoading}
-        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {isLoading ? (
-          <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
-        ) : (
-          <Github className="w-4 h-4" />
-        )}
-        {isLoading ? "登录中..." : "GitHub 登录"}
-      </button>
+      <>
+        <button
+          type="button"
+          onClick={handleLoginClick}
+          disabled={isLoading}
+          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? (
+            <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
+          ) : (
+            <User className="w-4 h-4" />
+          )}
+          {isLoading ? "登录中..." : "登录"}
+        </button>
+
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+        />
+      </>
     );
   }
 

@@ -11,6 +11,8 @@ interface AuthState {
   // actions
   initialize: () => Promise<void>;
   signInWithGithub: () => Promise<{ error: any }>;
+  signInWithEmailOTP: (email: string) => Promise<{ error: any }>;
+  verifyEmailOTP: (email: string, token: string) => Promise<{ error: any }>;
   signOut: () => Promise<{ error: any }>;
 }
 
@@ -74,6 +76,54 @@ export const useAuthStore = create<AuthState>((set, _get) => ({
       // 如果没有错误，保持 loading 状态
       // 页面会重定向到 GitHub，然后重定向回来
       // loading 状态会在页面重新加载后通过 initialize() 重置
+      return { error };
+    } catch (error) {
+      set({ isLoading: false });
+      return { error };
+    }
+  },
+
+  signInWithEmailOTP: async (email: string) => {
+    try {
+      set({ isLoading: true });
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo:
+            typeof window !== "undefined" ? window.location.href : "",
+        },
+      });
+
+      if (error) {
+        set({ isLoading: false });
+        return { error };
+      }
+
+      // 发送成功，停止 loading
+      set({ isLoading: false });
+      return { error };
+    } catch (error) {
+      set({ isLoading: false });
+      return { error };
+    }
+  },
+
+  verifyEmailOTP: async (email: string, token: string) => {
+    try {
+      set({ isLoading: true });
+      const { error } = await supabase.auth.verifyOtp({
+        email,
+        token,
+        type: "email",
+      });
+
+      if (error) {
+        set({ isLoading: false });
+        return { error };
+      }
+
+      // 验证成功，用户状态会通过 auth state change 自动更新
+      set({ isLoading: false });
       return { error };
     } catch (error) {
       set({ isLoading: false });
