@@ -5,8 +5,13 @@ import { useAuthStore } from "../../helper/store/authStore";
 import { useFavoriteStore } from "../../helper/store/favoriteStore";
 
 export default function SyncManager() {
-  const { user } = useAuthStore();
+  const { user, initialize } = useAuthStore();
   const { loadCloudFavorites, syncWithCloud } = useFavoriteStore();
+
+  // 初始化认证状态
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   useEffect(() => {
     if (user) {

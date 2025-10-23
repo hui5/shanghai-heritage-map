@@ -10,10 +10,8 @@ interface AuthState {
 
   // actions
   initialize: () => Promise<void>;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string) => Promise<{ error: any }>;
+  signInWithGithub: () => Promise<{ error: any }>;
   signOut: () => Promise<{ error: any }>;
-  resetPassword: (email: string) => Promise<{ error: any }>;
 }
 
 export const useAuthStore = create<AuthState>((set, _get) => ({
@@ -57,33 +55,29 @@ export const useAuthStore = create<AuthState>((set, _get) => ({
     }
   },
 
-  signIn: async (email: string, password: string) => {
+  signInWithGithub: async () => {
     try {
       set({ isLoading: true });
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "github",
+        options: {
+          redirectTo: typeof window !== "undefined" ? window.location.href : "",
+        },
       });
-      return { error };
-    } catch (error) {
-      return { error };
-    } finally {
-      set({ isLoading: false });
-    }
-  },
 
-  signUp: async (email: string, password: string) => {
-    try {
-      set({ isLoading: true });
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+      // 如果有错误，立即停止 loading
+      if (error) {
+        set({ isLoading: false });
+        return { error };
+      }
+
+      // 如果没有错误，保持 loading 状态
+      // 页面会重定向到 GitHub，然后重定向回来
+      // loading 状态会在页面重新加载后通过 initialize() 重置
       return { error };
     } catch (error) {
-      return { error };
-    } finally {
       set({ isLoading: false });
+      return { error };
     }
   },
 
@@ -96,15 +90,6 @@ export const useAuthStore = create<AuthState>((set, _get) => ({
       return { error };
     } finally {
       set({ isLoading: false });
-    }
-  },
-
-  resetPassword: async (email: string) => {
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
-      return { error };
-    } catch (error) {
-      return { error };
     }
   },
 }));
