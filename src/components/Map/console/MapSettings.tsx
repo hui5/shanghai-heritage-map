@@ -4,7 +4,6 @@ import {
   Mountain,
   Palette,
   RotateCcw,
-  Save,
   Settings,
   Type,
 } from "lucide-react";
@@ -298,8 +297,7 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
           </div>
           <div className="flex items-center space-x-2">
             <div className="flex items-center space-x-1 text-xs text-indigo-600">
-              <Save className="w-3 h-3" />
-              <span>自动保存</span>
+              <span>当前浏览器</span>
             </div>
             <button
               type="button"
