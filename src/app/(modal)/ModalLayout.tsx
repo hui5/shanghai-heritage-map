@@ -4,7 +4,6 @@ import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import UserInfo from "../../components/Auth/UserInfo";
-import { useAuthStore } from "../../helper/store/authStore";
 
 interface ModalLayoutProps {
   children: React.ReactNode;
@@ -26,13 +25,6 @@ export default function ModalLayout({
 }: ModalLayoutProps) {
   const router = useRouter();
   const [isClosing, setIsClosing] = useState(false);
-
-  // 初始化认证状态
-  const { initialize } = useAuthStore();
-
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
 
   // 组件挂载时重置关闭状态并更新 key
   useEffect(() => {

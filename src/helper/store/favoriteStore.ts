@@ -20,7 +20,6 @@ export interface FavoriteImage extends Image {
 
 interface FavoriteState {
   favorites: FavoriteImage[];
-  isOpen: boolean;
   isSyncing: boolean;
 
   // actions
@@ -30,12 +29,8 @@ interface FavoriteState {
     locationInfo: LocationInfo,
   ) => Promise<void>;
   removeFavorite: (favoriteId: string) => Promise<void>;
-  togglePanel: () => void;
-  openPanel: () => void;
-  closePanel: () => void;
-  clearAll: () => void;
-  syncWithCloud: () => Promise<void>;
-  loadCloudFavorites: () => Promise<void>;
+
+  syncFavorites: () => Promise<void>;
 }
 
 const STORAGE_KEY = "shanghai-heritage-favorites";
@@ -195,78 +190,17 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
     }
   },
 
-  togglePanel: () => set((state) => ({ isOpen: !state.isOpen })),
-  openPanel: () => set({ isOpen: true }),
-  closePanel: () => set({ isOpen: false }),
-
-  clearAll: async () => {
-    const { favorites } = get();
-    const { user } = useAuthStore.getState();
-
-    // 如果用户已登录，删除云端收藏
-    if (user) {
-      favorites.forEach(async (favorite) => {
-        if (favorite.cloudId) {
-          try {
-            await supabase
-              .from("favorites")
-              .delete()
-              .eq("id", favorite.cloudId);
-          } catch (error) {
-            console.error("Error removing favorite from cloud:", error);
-          }
-        }
-      });
-    }
-
-    set({ favorites: [] });
-    saveFavorites([]);
-  },
-
-  syncWithCloud: async () => {
+  // 优化的同步方法：一次性完成云端加载和本地同步
+  syncFavorites: async () => {
     const { user } = useAuthStore.getState();
     if (!user) return;
 
     set({ isSyncing: true });
 
     try {
-      const { favorites } = get();
-      const unsyncedFavorites = favorites.filter((fav) => !fav.isSynced);
+      const { favorites: localFavorites } = get();
 
-      // 上传未同步的收藏
-      for (const favorite of unsyncedFavorites) {
-        const supabaseFavorite = convertToSupabaseFavorite(favorite, user.id);
-        const { data, error } = await supabase
-          .from("favorites")
-          .insert([supabaseFavorite])
-          .select()
-          .single();
-
-        if (error) {
-          console.error("Failed to sync favorite to cloud:", error);
-        } else {
-          // 更新本地收藏的云端信息
-          const updatedFavorites = favorites.map((fav) =>
-            fav.favoriteId === favorite.favoriteId
-              ? { ...fav, cloudId: data.id, isSynced: true }
-              : fav,
-          );
-          set({ favorites: updatedFavorites });
-          saveFavorites(updatedFavorites);
-        }
-      }
-    } catch (error) {
-      console.error("Error syncing with cloud:", error);
-    } finally {
-      set({ isSyncing: false });
-    }
-  },
-
-  loadCloudFavorites: async () => {
-    const { user } = useAuthStore.getState();
-    if (!user) return;
-
-    try {
+      // 1. 从云端加载收藏数据
       const { data, error } = await supabase
         .from("favorites")
         .select("*")
@@ -279,47 +213,82 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
       }
 
       const cloudFavorites = data.map(convertFromSupabaseFavorite);
-      const { favorites: localFavorites } = get();
-
-      // 获取云端收藏的 favoriteId 集合，用于识别哪些本地收藏应该被删除
       const cloudFavoriteIds = new Set(
         cloudFavorites.map((fav) => fav.favoriteId),
       );
 
-      // 过滤本地收藏：只保留云端存在或未同步的收藏
-      // 未同步的收藏可能是用户在其他设备添加但还未上传的
-      const filteredLocalFavorites = localFavorites.filter(
+      // 2. 过滤本地收藏：只保留云端存在或未同步的收藏
+      // 删除云端不存在的已同步收藏（可能在其他设备被删除）
+      const validLocalFavorites = localFavorites.filter(
         (localFav) =>
           cloudFavoriteIds.has(localFav.favoriteId) || !localFav.isSynced,
       );
 
-      // 合并云端和本地收藏，去重并更新同步状态
-      const mergedFavorites = [...filteredLocalFavorites];
+      // 3. 上传本地未同步的收藏到云端
+      const unsyncedFavorites = validLocalFavorites.filter(
+        (fav) => !fav.isSynced,
+      );
+      const updatedLocalFavorites = [...validLocalFavorites];
 
+      for (const favorite of unsyncedFavorites) {
+        const supabaseFavorite = convertToSupabaseFavorite(favorite, user.id);
+        const { data: uploadData, error: uploadError } = await supabase
+          .from("favorites")
+          .insert([supabaseFavorite])
+          .select()
+          .single();
+
+        if (uploadError) {
+          console.error("Failed to sync favorite to cloud:", uploadError);
+        } else {
+          // 更新本地收藏的同步状态
+          const localIndex = updatedLocalFavorites.findIndex(
+            (fav) => fav.favoriteId === favorite.favoriteId,
+          );
+          if (localIndex !== -1) {
+            updatedLocalFavorites[localIndex] = {
+              ...updatedLocalFavorites[localIndex],
+              cloudId: uploadData.id,
+              isSynced: true,
+            };
+          }
+        }
+      }
+
+      // 4. 合并云端和本地收藏
+      const mergedFavorites = [...updatedLocalFavorites];
+
+      // 添加云端独有的收藏（本地不存在的）
       cloudFavorites.forEach((cloudFav) => {
-        const existingIndex = mergedFavorites.findIndex(
+        const existsLocally = mergedFavorites.some(
           (localFav) => localFav.favoriteId === cloudFav.favoriteId,
         );
-        if (existingIndex !== -1) {
-          // 如果本地已存在，更新同步状态和云端ID
-          mergedFavorites[existingIndex] = {
-            ...mergedFavorites[existingIndex],
-            isSynced: true,
-            cloudId: cloudFav.cloudId,
-          };
-        } else {
-          // 如果本地不存在，添加云端收藏
+        if (!existsLocally) {
           mergedFavorites.push(cloudFav);
+        } else {
+          // 更新本地收藏的云端信息（确保 cloudId 和 isSynced 状态正确）
+          const localIndex = mergedFavorites.findIndex(
+            (localFav) => localFav.favoriteId === cloudFav.favoriteId,
+          );
+          if (localIndex !== -1) {
+            mergedFavorites[localIndex] = {
+              ...mergedFavorites[localIndex],
+              isSynced: true,
+              cloudId: cloudFav.cloudId,
+            };
+          }
         }
       });
 
-      // 按时间戳排序
+      // 5. 按时间戳排序
       mergedFavorites.sort((a, b) => b.timestamp - a.timestamp);
 
       set({ favorites: mergedFavorites });
       saveFavorites(mergedFavorites);
     } catch (error) {
-      console.error("Error loading cloud favorites:", error);
+      console.error("Error syncing favorites:", error);
+    } finally {
+      set({ isSyncing: false });
     }
   },
 }));

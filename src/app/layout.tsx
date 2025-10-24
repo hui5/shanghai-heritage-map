@@ -2,7 +2,6 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import type { Metadata } from "next";
 import "../styles/globals.css";
-import SyncManager from "../components/Auth/SyncManager";
 import { GlobalLightbox } from "../components/Map/interaction/panel/GlobalLightbox";
 import MapLayout from "./MapLayout";
 
@@ -48,7 +47,6 @@ export default function RootLayout({
         {children}
         <MapLayout />
         <GlobalLightbox />
-        <SyncManager />
         <Analytics scriptSrc="/va/script.js" />
         <SpeedInsights scriptSrc="/vercel-speed-script.js" />
       </body>

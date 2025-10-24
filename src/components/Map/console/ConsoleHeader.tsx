@@ -30,7 +30,6 @@ export function ConsoleHeader({ onClose }: ConsoleHeaderProps) {
           {/* Help 按钮 */}
           <Link
             href="/help"
-            prefetch={false}
             onClick={handleHelpClick}
             className="group flex items-center justify-center w-10 h-10 rounded-full bg-white/80 hover:bg-white border border-gray-200 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:border-gray-300"
             title="查看帮助"

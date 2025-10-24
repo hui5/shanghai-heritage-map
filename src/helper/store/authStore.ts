@@ -1,5 +1,6 @@
 import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { create } from "zustand";
+import { useFavoriteStore } from "./favoriteStore";
 import { supabase, type User } from "./supabase";
 
 interface AuthState {
@@ -29,21 +30,30 @@ export const useAuthStore = create<AuthState>((set, _get) => ({
         data: { session },
       } = await supabase.auth.getSession();
 
+      const user = session?.user || null;
       set({
-        user: session?.user || null,
+        user,
         session,
         isLoading: false,
         isInitialized: true,
       });
 
+      if (user) {
+        await useFavoriteStore.getState().syncFavorites();
+      }
+
       // 监听认证状态变化
       supabase.auth.onAuthStateChange(
-        (_event: AuthChangeEvent, session: Session | null) => {
+        async (_event: AuthChangeEvent, session: Session | null) => {
+          const user = session?.user || null;
           set({
-            user: session?.user || null,
+            user,
             session,
             isLoading: false,
           });
+          if (user) {
+            await useFavoriteStore.getState().syncFavorites();
+          }
         },
       );
     } catch (err) {
@@ -143,3 +153,8 @@ export const useAuthStore = create<AuthState>((set, _get) => ({
     }
   },
 }));
+
+// 在浏览器环境中自动初始化
+if (typeof window !== "undefined") {
+  useAuthStore.getState().initialize();
+}
