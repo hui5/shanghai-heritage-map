@@ -27,18 +27,14 @@ export const useAuthStore = create<AuthState>((set, _get) => ({
     try {
       // 监听认证状态变化
       supabase.auth.onAuthStateChange(
-        async (_event: AuthChangeEvent, session: Session | null) => {
-          console.log(_event);
+        async (event: AuthChangeEvent, session: Session | null) => {
           const user = session?.user || null;
           set({
             user,
             session,
             isLoading: false,
           });
-          if (
-            user &&
-            (_event === "SIGNED_IN" || _event === "INITIAL_SESSION")
-          ) {
+          if (user && event === "SIGNED_IN") {
             useFavoriteStore.getState().syncFavorites();
           }
         },
