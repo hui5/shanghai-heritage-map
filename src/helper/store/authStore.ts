@@ -35,7 +35,10 @@ export const useAuthStore = create<AuthState>((set, _get) => ({
             session,
             isLoading: false,
           });
-          if (user) {
+          if (
+            user &&
+            (_event === "SIGNED_IN" || _event === "INITIAL_SESSION")
+          ) {
             useFavoriteStore.getState().syncFavorites();
           }
         },
