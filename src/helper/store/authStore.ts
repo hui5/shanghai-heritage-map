@@ -25,26 +25,10 @@ export const useAuthStore = create<AuthState>((set, _get) => ({
 
   initialize: async () => {
     try {
-      // 获取当前会话
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      const user = session?.user || null;
-      set({
-        user,
-        session,
-        isLoading: false,
-        isInitialized: true,
-      });
-
-      if (user) {
-        await useFavoriteStore.getState().syncFavorites();
-      }
-
       // 监听认证状态变化
       supabase.auth.onAuthStateChange(
         async (_event: AuthChangeEvent, session: Session | null) => {
+          console.log(_event);
           const user = session?.user || null;
           set({
             user,
@@ -52,7 +36,7 @@ export const useAuthStore = create<AuthState>((set, _get) => ({
             isLoading: false,
           });
           if (user) {
-            await useFavoriteStore.getState().syncFavorites();
+            useFavoriteStore.getState().syncFavorites();
           }
         },
       );
