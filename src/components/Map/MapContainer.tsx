@@ -17,7 +17,6 @@ import {
 } from "@/components/Map/console/mapPosition";
 import { HistoricalLayers } from "@/components/Map/historical/Layers";
 import FloatingInfoController from "@/components/Map/interaction/panel/FloatingInfoController";
-import { ShareButton } from "@/components/Map/interaction/ShareButton";
 import { useGlobalClick } from "@/components/Map/interaction/useGlobalClick";
 import MapContextMenu from "@/components/Map/MapContextMenu";
 import { WikimapLayer } from "@/components/Map/WikimapLayer";
@@ -288,11 +287,6 @@ export default function MapContainer({ onStyleReady }: MapContainerProps) {
           {/* 收藏按钮 */}
           <div className="absolute top-16 right-3 z-10">
             <FavoriteButton />
-          </div>
-
-          {/* 分享按钮 */}
-          <div className="absolute top-28 right-3 z-10">
-            <ShareButton />
           </div>
         </>
       )}

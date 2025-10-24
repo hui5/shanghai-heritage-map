@@ -1,5 +1,6 @@
 import { Github, HelpCircle, X } from "lucide-react";
 import Link from "next/link";
+import { ShareButton } from "./ShareButton";
 
 interface ConsoleHeaderProps {
   onClose: () => void;
@@ -15,6 +16,9 @@ export function ConsoleHeader({ onClose }: ConsoleHeaderProps) {
       <div className="flex items-center justify-between p-2">
         {/* 左侧按钮组 */}
         <div className="flex items-center space-x-3">
+          {/* 分享按钮 */}
+          <ShareButton variant="panel" />
+
           {/* GitHub 按钮 */}
           <a
             href="https://github.com/hui5/shanghai-heritage-map.git"

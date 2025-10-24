@@ -15,7 +15,7 @@ import { createPortal } from "react-dom";
 import { Rnd } from "react-rnd";
 import { isTouchDevice } from "@/app/globalStore";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
-import { ShareButton } from "../ShareButton";
+import { ShareButton } from "../../console/ShareButton";
 import { FloatingInfoPanelFullscreen } from "./FloatingInfoPanelFullscreen";
 import { isGlobalLightboxOpen } from "./GlobalLightbox";
 import { PANEL } from "./panelConfig";

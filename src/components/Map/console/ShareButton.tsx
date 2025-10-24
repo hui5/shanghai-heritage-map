@@ -62,7 +62,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className={
           variant === "panel"
-            ? "p-1.5 rounded text-xs bg-white/30 border border-gray-300 text-gray-700 hover:bg-gray-100"
+            ? "group flex items-center justify-center w-10 h-10 rounded-full bg-white/80 hover:bg-white border border-gray-200 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:border-gray-300"
             : "group relative inline-flex items-center justify-center p-2 bg-white/90 hover:bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200/50 hover:scale-110"
         }
         title="分享"
@@ -71,7 +71,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
         <Share2
           className={
             variant === "panel"
-              ? "w-4 h-4"
+              ? "h-5 w-5 text-gray-700 group-hover:text-gray-900 transition-colors duration-300"
               : "w-5 h-5 text-gray-500 group-hover:text-gray-700 transition-colors"
           }
         />
