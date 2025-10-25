@@ -20,15 +20,17 @@ interface MapSettingsProps {
 
 export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
   // 使用持久化的地图设置
-  const mapSettings = useMapSettings((s) => s.settings);
-  const setFontSize = useMapSettings((s) => s.setFontSize);
-  const setTheme = useMapSettings((s) => s.setTheme);
-  const setShow3dObjects = useMapSettings((s) => s.setShow3dObjects);
-  const setPitch = useMapSettings((s) => s.setPitch);
-  const setLightPreset = useMapSettings((s) => s.setLightPreset);
-  const resetAllSettings = useMapSettings((s) => s.resetAllSettings);
+  const {
+    settings,
+    setFontSize,
+    setTheme,
+    setShow3dObjects,
+    setPitch,
+    setLightPreset,
+    resetAllSettings,
+  } = useMapSettings();
 
-  const { fontSize, theme, show3dObjects, pitch, lightPreset } = mapSettings;
+  const { fontSize, theme, show3dObjects, pitch, lightPreset } = settings;
 
   // 保存每个图层的原始字体大小和光晕颜色
   const originalTextSizesRef = useRef<Map<string, any>>(new Map());
@@ -126,120 +128,13 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
             layerId,
             "text-halo-color",
           );
-          const originalHaloWidth = map.getPaintProperty(
-            layerId,
-            "text-halo-width",
-          );
-          const originalHaloBlur = map.getPaintProperty(
-            layerId,
-            "text-halo-blur",
-          );
 
           originalHaloColorsRef.current.set(layerId, {
             color: originalColor,
             haloColor: originalHaloColor,
-            haloWidth: originalHaloWidth,
-            haloBlur: originalHaloBlur,
           });
         }
       });
-    }
-
-    // 简化的光照适应逻辑
-    const getAdaptiveColors = (
-      originalColor: any,
-      preset: LightPreset,
-      textSize?: any,
-    ) => {
-      if (!originalColor) return null;
-
-      // 根据文字大小计算光晕宽度
-      const getHaloWidth = (
-        baseWidth: number,
-        textSize: any,
-        preset: LightPreset,
-      ) => {
-        let size = baseWidth;
-
-        // 解析文字大小
-        if (textSize) {
-          if (typeof textSize === "number") {
-            size = textSize;
-          } else if (typeof textSize === "object" && textSize.stops) {
-            // 处理 Mapbox 的 stops 格式，取第一个值作为参考
-            size = textSize.stops[0]?.[1] || baseWidth;
-          }
-        }
-
-        // 根据光照预设和文字大小计算光晕宽度
-        const ratio = preset === "night" ? 0.5 : preset === "dusk" ? 0.5 : 0.5;
-        return Math.max(0.5, size * ratio);
-      };
-
-      switch (preset) {
-        case "dawn":
-          // 黎明：微调颜色适应光线，保持原色特征
-          return {
-            textColor: originalColor, // 使用原始颜色，确保正确恢复
-            haloColor: "rgba(255, 248, 220, 0.8)", // 温暖的淡色光晕
-            haloWidth: getHaloWidth(1.5, textSize, preset),
-            haloBlur: 0.3,
-          };
-        case "dusk":
-          // 傍晚：光晕和文字颜色对调，优化光晕效果
-          return {
-            textColor: "rgba(255, 200, 255, 0.95)", // 更亮的淡紫色文字
-            haloColor: originalColor, // 光晕用原色
-            haloWidth: getHaloWidth(1.8, textSize, preset), // 动态光晕宽度
-            haloBlur: 0.5,
-          };
-        case "night":
-          // 夜晚：光晕和文字颜色对调，更强对比
-          return {
-            textColor: "rgba(255, 255, 255, 0.95)", // 更亮的白色文字
-            haloColor: originalColor, // 光晕用原色
-            haloWidth: getHaloWidth(2.0, textSize, preset), // 动态光晕宽度
-            haloBlur: 0.6,
-          };
-        default:
-          return null; // 白天保持原始
-      }
-    };
-
-    // 如果是白天模式，恢复原始文字颜色和光晕设置
-    if (lightPreset === "day") {
-      if (style?.layers) {
-        style.layers.forEach((layer: any) => {
-          if (layer.type === "symbol" && layer.layout?.["text-field"]) {
-            const layerId = layer.id;
-            const originalSettings = originalHaloColorsRef.current.get(layerId);
-
-            if (originalSettings) {
-              try {
-                // 恢复原始设置
-                const properties = [
-                  { key: "text-color", value: originalSettings.color },
-                  { key: "text-halo-color", value: originalSettings.haloColor },
-                  { key: "text-halo-width", value: originalSettings.haloWidth },
-                  { key: "text-halo-blur", value: originalSettings.haloBlur },
-                ];
-
-                properties.forEach(({ key, value }) => {
-                  if (value !== undefined) {
-                    map.setPaintProperty(layerId, key as any, value);
-                  }
-                });
-              } catch (error) {
-                console.warn(
-                  `Failed to restore settings for layer ${layerId}:`,
-                  error,
-                );
-              }
-            }
-          }
-        });
-      }
-      return;
     }
 
     // 应用智能文字颜色
@@ -250,36 +145,53 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
 
           // 获取原始颜色并生成自适应颜色方案
           const originalSettings = originalHaloColorsRef.current.get(layerId);
+
           if (originalSettings) {
-            // 获取当前文字大小
-            const textSize = map.getLayoutProperty(layerId, "text-size");
-            const colorScheme = getAdaptiveColors(
-              originalSettings.color,
-              lightPreset,
-              textSize,
-            );
+            const { color, haloColor } = originalSettings;
 
-            if (colorScheme) {
-              try {
-                // 应用自适应颜色方案
-                const properties = [
-                  { key: "text-color", value: colorScheme.textColor },
-                  { key: "text-halo-color", value: colorScheme.haloColor },
-                  { key: "text-halo-width", value: colorScheme.haloWidth },
-                  { key: "text-halo-blur", value: colorScheme.haloBlur },
-                ];
-
-                properties.forEach(({ key, value }) => {
-                  if (value !== undefined) {
-                    map.setPaintProperty(layerId, key as any, value);
-                  }
-                });
-              } catch (error) {
-                console.warn(
-                  `Failed to set adaptive colors for layer ${layerId}:`,
-                  error,
-                );
+            try {
+              switch (lightPreset) {
+                case "dawn":
+                  // 黎明：微调颜色适应光线，保持原色特征
+                  map.setPaintProperty(layerId, "text-color", color);
+                  map.setPaintProperty(
+                    layerId,
+                    "text-halo-color",
+                    "rgba(255, 248, 220, 0.8)",
+                  );
+                  break;
+                case "dusk":
+                  // 傍晚：光晕和文字颜色对调，优化光晕效果
+                  map.setPaintProperty(
+                    layerId,
+                    "text-color",
+                    "rgba(255, 200, 255, 0.95)",
+                  );
+                  map.setPaintProperty(layerId, "text-halo-color", color);
+                  break;
+                case "night":
+                  // 夜晚：光晕和文字颜色对调，更强对比
+                  map.setPaintProperty(
+                    layerId,
+                    "text-color",
+                    "rgba(255, 255, 255, 0.95)",
+                  );
+                  map.setPaintProperty(layerId, "text-halo-color", color);
+                  break;
+                default:
+                  map.setPaintProperty(layerId, "text-color", color);
+                  map.setPaintProperty(
+                    layerId,
+                    "text-halo-color",
+                    haloColor || "#ffffff",
+                  );
+                  break;
               }
+            } catch (error) {
+              console.warn(
+                `Failed to set adaptive colors for layer ${layerId}:`,
+                error,
+              );
             }
           }
         }
