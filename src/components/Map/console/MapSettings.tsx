@@ -305,29 +305,29 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
   }, [lightPreset, mapInstance]);
 
   return (
-    <div className="mb-4 border-2 border-indigo-100 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-40">
-      <div className="p-4 space-y-4">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-2">
-            <Settings className="w-4 h-4 text-indigo-600" />
-            <h4 className="font-semibold text-gray-800">地图设置</h4>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="flex items-center space-x-1 text-xs text-indigo-600">
-              <span>当前浏览器</span>
-            </div>
-            <button
-              type="button"
-              onClick={resetAllSettings}
-              className="flex items-center space-x-1 text-xs text-gray-600 hover:text-indigo-600 transition-colors px-2 py-1 rounded"
-              title="重置所有地图设置到默认值"
-            >
-              <RotateCcw className="w-3 h-3" />
-              <span>重置</span>
-            </button>
-          </div>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center space-x-2">
+          <Settings className="w-4 h-4 text-indigo-600" />
+          <h4 className="font-semibold text-gray-800">地图设置</h4>
         </div>
+        <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 text-xs text-indigo-600">
+            {/* <span>当前浏览器</span> */}
+          </div>
+          <button
+            type="button"
+            onClick={resetAllSettings}
+            className="flex items-center space-x-1 text-xs text-gray-600 hover:text-indigo-600 transition-colors px-2 py-1 rounded"
+            title="重置所有地图设置到默认值"
+          >
+            <RotateCcw className="w-3 h-3" />
+            <span>重置</span>
+          </button>
+        </div>
+      </div>
 
+      <div className="border-2 border-indigo-100 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-40 p-4 space-y-4">
         {/* 字体大小控制 */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">

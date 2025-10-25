@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { ChevronDown, ChevronRight, Zap } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import type { UtilsMap } from "map-gl-utils";
 import { useState } from "react";
 import { useSnapshot } from "valtio";
@@ -23,16 +23,6 @@ export function LayerManagement({ mapInstance }: LayerManagementProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between px-3 py-2 ">
-        <div className="flex items-center space-x-2">
-          <span className="text-sm font-bold text-gray-800">数据图层</span>
-        </div>
-        <div className="flex items-center space-x-1 text-xs font-semibold text-amber-700">
-          <Zap className="w-3.5 h-3.5" />
-          <span>本次有效</span>
-        </div>
-      </div>
-
       <LayerSection
         title="上海文保单位"
         icon="🏛️"

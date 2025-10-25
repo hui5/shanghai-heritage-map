@@ -1,6 +1,6 @@
 import { Settings } from "lucide-react";
 import type { UtilsMap } from "map-gl-utils";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ConsoleHeader } from "./ConsoleHeader";
 import { LayerManagement } from "./LayerManagement";
 import { MapSettingsComponent } from "./MapSettings";
@@ -9,8 +9,13 @@ interface MapConsoleProps {
   mapInstance: UtilsMap;
 }
 
+// Tab 类型定义
+type TabType = "dataLayers" | "mapSettings";
+
 export function MapConsole({ mapInstance }: MapConsoleProps) {
   const [isExpanded, setIsExpanded] = useState(() => false);
+  // 默认显示数据图层
+  const [activeTab, setActiveTab] = useState<TabType>("dataLayers");
 
   const panelRef = useRef<HTMLDivElement | null>(null);
 
@@ -19,6 +24,18 @@ export function MapConsole({ mapInstance }: MapConsoleProps) {
     version: process.env.NEXT_PUBLIC_APP_VERSION || "dev",
     gitCommit: process.env.NEXT_PUBLIC_GIT_COMMIT || "local",
   };
+
+  // ESC 键关闭控制台
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isExpanded) {
+        setIsExpanded(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [isExpanded]);
 
   return (
     <>
@@ -33,13 +50,40 @@ export function MapConsole({ mapInstance }: MapConsoleProps) {
       >
         <ConsoleHeader onClose={() => setIsExpanded(false)} />
 
+        {/* Tab 导航 */}
+        <div className="flex border-b">
+          <button
+            type="button"
+            onClick={() => setActiveTab("dataLayers")}
+            className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
+              activeTab === "dataLayers"
+                ? "text-indigo-600 border-b-2 border-indigo-400 bg-indigo-30"
+                : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+            }`}
+          >
+            数据图层
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("mapSettings")}
+            className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
+              activeTab === "mapSettings"
+                ? "text-indigo-600 border-b-2 border-indigo-400 bg-indigo-30"
+                : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+            }`}
+          >
+            地图设置
+          </button>
+        </div>
+
         <div className="flex flex-col max-h-[60vh]">
           <div className="p-4 flex-1 overflow-y-auto custom-scrollbar">
-            {/* 地图设置 */}
-            <MapSettingsComponent mapInstance={mapInstance} />
-
-            {/* 图层管理 */}
-            <LayerManagement mapInstance={mapInstance} />
+            {/* 根据 activeTab 显示对应内容 */}
+            {activeTab === "dataLayers" ? (
+              <LayerManagement mapInstance={mapInstance} />
+            ) : (
+              <MapSettingsComponent mapInstance={mapInstance} />
+            )}
           </div>
 
           {/* 版本信息 - 固定在底部 */}
