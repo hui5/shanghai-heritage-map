@@ -222,10 +222,12 @@ export const fetchWikicommonsImages = async (
       .map((p: any) => {
         const info = p?.imageinfo?.[0];
         if (!info) return null;
+        console.log(info);
         return {
           title: p?.title || "",
           thumbnail: proxyImage(info.thumburl || info.url),
           url: proxyImage(info.url),
+          ref: info.descriptionurl || "",
         };
       })
       .filter(Boolean) as Array<{

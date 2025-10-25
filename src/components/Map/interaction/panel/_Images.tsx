@@ -2,7 +2,7 @@ import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFavoriteStore } from "@/helper/store/favoriteStore";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
-import { openLightbox } from "./GlobalLightbox";
+import { openImageLightbox } from "./ImageLightbox";
 import usePanelStore from "./panelStore";
 
 export interface Image {
@@ -140,7 +140,7 @@ export const ImagesPreview: React.FC<ImagesPreviewProps> = ({
     (index: number) => {
       // 传递完整的图片组，而不是当前显示的10个
       const allImages = data?.images ?? [];
-      openLightbox(allImages, index, category);
+      openImageLightbox(allImages, index, category);
       setPinned(true);
     },
     [data?.images, setPinned, category],

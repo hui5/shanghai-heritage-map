@@ -17,7 +17,7 @@ import { isTouchDevice } from "@/app/globalStore";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
 import { ShareButton } from "../../console/ShareButton";
 import { FloatingInfoPanelFullscreen } from "./FloatingInfoPanelFullscreen";
-import { isGlobalLightboxOpen } from "./GlobalLightbox";
+import { isGlobalLightboxOpen } from "./ImageLightbox";
 import { PANEL } from "./panelConfig";
 import { usePanelStore } from "./panelStore";
 import { TouchScreenPanel } from "./TouchScreenPanel";

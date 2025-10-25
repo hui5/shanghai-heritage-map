@@ -73,6 +73,7 @@ const convertToSupabaseFavorite = (
     thumbnail: favorite.thumbnail,
     title: favorite.title,
     description: favorite.description,
+    ref: favorite.ref,
     category: favorite.category,
     location_name: favorite.locationName,
     location_info: favorite.locationInfo,
@@ -91,6 +92,7 @@ const convertFromSupabaseFavorite = (
     thumbnail: cloudFavorite.thumbnail || "",
     title: cloudFavorite.title || "",
     description: cloudFavorite.description || "",
+    ref: cloudFavorite.ref,
     tags: cloudFavorite.tags,
     category: cloudFavorite.category,
     locationName: cloudFavorite.location_name,
@@ -126,7 +128,10 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
       locationInfo,
       favoriteId,
       timestamp: Date.now(),
-      tags: [...(image.tags || []), locationInfo.name],
+      tags: [
+        ...(image.tags || []),
+        ...(locationInfo.name ? [locationInfo.name] : []),
+      ],
       isSynced: false,
       url: image.url || image.thumbnail || "",
       thumbnail: image.thumbnail || image.url || "",
@@ -190,7 +195,7 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
     }
   },
 
-  // 优化的同步方法：一次性完成云端加载和本地同步
+  // 优化的同步方法：检查数据完整性并更新不完整的数据
   syncFavorites: async () => {
     const { user } = useAuthStore.getState();
     if (!user) return;
@@ -218,13 +223,56 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
       );
 
       // 2. 过滤本地收藏：只保留云端存在或未同步的收藏
-      // 删除云端不存在的已同步收藏（可能在其他设备被删除）
       const validLocalFavorites = localFavorites.filter(
         (localFav) =>
           cloudFavoriteIds.has(localFav.favoriteId) || !localFav.isSynced,
       );
 
-      // 3. 上传本地未同步的收藏到云端
+      // 3. 检查并更新云端数据中缺少 ref 字段的收藏
+      const updatedCloudFavorites = await Promise.all(
+        cloudFavorites.map(async (cloudFav) => {
+          // 只检查 ref 字段是否有值
+          if (!cloudFav.ref) {
+            console.log(
+              `Updating cloud favorite missing ref: ${cloudFav.favoriteId}`,
+            );
+
+            // 尝试从本地数据中找到有 ref 的版本
+            const localVersion = localFavorites.find(
+              (localFav) =>
+                localFav.favoriteId === cloudFav.favoriteId && localFav.ref,
+            );
+
+            if (localVersion) {
+              try {
+                const { data: updateData, error: updateError } = await supabase
+                  .from("favorites")
+                  .update({ ref: localVersion.ref })
+                  .eq("id", cloudFav.cloudId)
+                  .select()
+                  .single();
+
+                if (updateError) {
+                  console.error("Failed to update ref field:", updateError);
+                  return cloudFav;
+                } else {
+                  console.log(
+                    `Successfully updated ref for: ${cloudFav.favoriteId}`,
+                  );
+                  return convertFromSupabaseFavorite(updateData);
+                }
+              } catch (error) {
+                console.error("Error updating ref field:", error);
+                return cloudFav;
+              }
+            }
+          }
+
+          return cloudFav;
+        }),
+      );
+
+      // 4. 上传本地未同步的收藏到云端
       const unsyncedFavorites = validLocalFavorites.filter(
         (fav) => !fav.isSynced,
       );
@@ -255,11 +303,11 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
         }
       }
 
-      // 4. 合并云端和本地收藏
+      // 5. 合并云端和本地收藏
       const mergedFavorites = [...updatedLocalFavorites];
 
       // 添加云端独有的收藏（本地不存在的）
-      cloudFavorites.forEach((cloudFav) => {
+      updatedCloudFavorites.forEach((cloudFav) => {
         const existsLocally = mergedFavorites.some(
           (localFav) => localFav.favoriteId === cloudFav.favoriteId,
         );
@@ -280,7 +328,7 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
         }
       });
 
-      // 5. 按时间戳排序
+      // 6. 按时间戳排序
       mergedFavorites.sort((a, b) => b.timestamp - a.timestamp);
 
       set({ favorites: mergedFavorites });

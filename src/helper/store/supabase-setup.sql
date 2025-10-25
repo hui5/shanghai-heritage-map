@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS favorites (
   thumbnail TEXT,
   title TEXT,
   description TEXT,
+  ref TEXT,
   category TEXT NOT NULL,
   location_name TEXT NOT NULL,
   location_info JSONB,

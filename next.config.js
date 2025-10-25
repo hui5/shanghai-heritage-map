@@ -35,7 +35,7 @@ const nextConfig = {
     NEXT_PUBLIC_GIT_COMMIT:
       process.env.VERCEL_GIT_COMMIT_SHA?.substring(0, 7) || "local",
   },
-  // turbopack: (config) => {
+  // webpack: (config) => {
   //   // 确保 JSON 文件能够被正确处理并支持热重载
   //   config.module.rules.push({
   //     test: /\.json$/,

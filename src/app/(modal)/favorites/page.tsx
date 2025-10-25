@@ -45,8 +45,34 @@ export default function FavoritesPage() {
         return;
       } else {
         router.back();
-        // 如果有坐标，飞到该位置并高亮显示
-        if (locationInfo.coordinates) {
+
+        // 特殊处理 Wikimap 项目
+        if (
+          locationInfo.dataSource === "Wikidata" &&
+          locationInfo.subtypeId === "wikimap" &&
+          locationInfo.coordinates
+        ) {
+          const coordinates = locationInfo.coordinates;
+
+          // 监听飞行结束事件
+          const onMoveEnd = () => {
+            mapInstance.off("moveend", onMoveEnd);
+
+            // 飞行结束后显示高亮
+            highlightLocation(mapInstance, coordinates);
+          };
+
+          highlightLocation(mapInstance, coordinates);
+
+          mapInstance.once("moveend", onMoveEnd);
+
+          mapInstance.flyTo({
+            center: coordinates,
+            zoom: 21,
+            duration: 1000,
+          });
+        } else if (locationInfo.coordinates) {
+          // 普通位置的处理
           const coordinates = locationInfo.coordinates;
           const _name = locationInfo.name;
 

@@ -2,6 +2,14 @@
 declare global {
   interface Window {
     mapboxgl: typeof import("mapbox-gl");
+    toggleWikimapFavorite?: (
+      url: string,
+      thumbnail: string,
+      title: string,
+      pageid: string,
+      buttonId: string,
+      coordinates: [number, number],
+    ) => Promise<void>;
   }
 }
 
@@ -15,8 +23,10 @@ import type {
   Popup,
 } from "mapbox-gl";
 import type React from "react";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { normalizeWikimapResponse, wikimapCache } from "@/helper/wikimapCache";
+import type { LocationInfo } from "../../helper/map-data/LocationInfo";
+import { useFavoriteStore } from "../../helper/store/favoriteStore";
 
 interface WikimapLayerProps {
   mapInstance: MapboxMap | null;
@@ -60,6 +70,199 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
   const autoModeRef = useRef<boolean>(false);
   const recomputeTimerRef = useRef<number | null>(null);
   const recomputeAutoPopupsRef = useRef<() => void>(() => {});
+  const tooltipRef = useRef<Popup | null>(null);
+
+  // Get favorite store functions
+  const addFavorite = useFavoriteStore((s) => s.addFavorite);
+  const removeFavorite = useFavoriteStore((s) => s.removeFavorite);
+  const favorites = useFavoriteStore((s) => s.favorites);
+
+  // 生成收藏按钮HTML的共用函数
+  const createFavoriteButtonHTML = useCallback(
+    (
+      url: string,
+      thumburl: string,
+      title: string,
+      pageid: string,
+      coordinates: [number, number],
+      buttonId: string,
+    ) => {
+      const favoriteId = `Wikimap::${url}`;
+      const isFavorited = useFavoriteStore
+        .getState()
+        .favorites.some((f) => f.favoriteId === favoriteId);
+
+      return `
+      <button
+        id="${buttonId}"
+        data-url="${url}"
+        onclick="
+          console.log('Wikimap favorite button clicked');
+          if (window.toggleWikimapFavorite) {
+            const coordinates = [${coordinates[0]}, ${coordinates[1]}];
+            window.toggleWikimapFavorite('${url}', '${thumburl}', '${title.replace(/'/g, "\\'")}', '${pageid}', '${buttonId}', coordinates);
+          } else {
+            console.error('toggleWikimapFavorite function not found');
+          }
+        "
+        style="
+          background: rgba(255, 255, 255, 0.9);
+          border: none;
+          border-radius: 6px;
+          padding: 4px 6px;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 28px;
+          height: 28px;
+          color: ${isFavorited ? "#3b82f6" : "#6b7280"};
+          pointer-events: auto;
+        "
+        onmouseover="this.style.background='white';"
+        onmouseout="this.style.background='rgba(255, 255, 255, 0.9)';"
+        title="${isFavorited ? "取消收藏" : "收藏到 Wikimap"}"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="${isFavorited ? "currentColor" : "none"}" stroke="${isFavorited ? "none" : "currentColor"}" stroke-width="2">
+          <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+        </svg>
+      </button>`;
+    },
+    [],
+  );
+
+  // Set up global function for wikimap favorites
+  useEffect(() => {
+    // Helper function to check if an item is favorited
+    const isWikimapFavorited = (url: string, category: string) => {
+      const favoriteId = `${category}::${url}`;
+      return useFavoriteStore
+        .getState()
+        .favorites.some((f) => f.favoriteId === favoriteId);
+    };
+
+    if (typeof window !== "undefined") {
+      // New toggle function with visual feedback
+      window.toggleWikimapFavorite = async (
+        url: string,
+        thumbnail: string,
+        title: string,
+        pageid: string,
+        buttonId: string,
+        coordinates: [number, number],
+      ) => {
+        console.log("toggleWikimapFavorite called with:", {
+          url,
+          thumbnail,
+          title,
+          pageid,
+          buttonId,
+        });
+
+        const isCurrentlyFavorited = isWikimapFavorited(url, "Wikimap");
+
+        try {
+          if (isCurrentlyFavorited) {
+            // Remove from favorites
+            const favoriteId = `Wikimap::${url}`;
+            await removeFavorite(favoriteId);
+            console.log("Removed from favorites");
+          } else {
+            // Add to favorites using the actual wikimap image coordinates
+            const locationInfo: LocationInfo = {
+              name: "",
+              coordinates: coordinates,
+              dataSource: "Wikidata" as const,
+              subtypeId: "wikimap",
+              properties: { pageid: pageid, tags: ["wikimap"] },
+            };
+
+            const image = {
+              url: url,
+              thumbnail: thumbnail,
+              title: title,
+              ref: `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(title)}`,
+              tags: ["wikimap"],
+            };
+
+            await addFavorite(image, "Wikimap", locationInfo);
+            console.log("Added to favorites");
+          }
+        } catch (error) {
+          console.error("Failed to toggle wikimap favorite:", error);
+        }
+      };
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        delete window.toggleWikimapFavorite;
+      }
+    };
+  }, [addFavorite, removeFavorite]);
+
+  // Auto-update button states when favorites change
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    const updateButtonState = (button: HTMLButtonElement) => {
+      const url = button.getAttribute("data-url") || "";
+      const isFavorited = favorites.some(
+        (f) => f.favoriteId === `Wikimap::${url}`,
+      );
+      const svg = button.querySelector("svg");
+      if (svg) {
+        if (isFavorited) {
+          // Favorited state - filled and blue
+          svg.setAttribute("fill", "currentColor");
+          svg.setAttribute("stroke", "none");
+          button.style.color = "#3b82f6";
+          button.style.border = "none";
+          button.title = "取消收藏";
+        } else {
+          // Not favorited state - outline and gray
+          svg.setAttribute("fill", "none");
+          svg.setAttribute("stroke", "currentColor");
+          button.style.color = "#6b7280";
+          button.style.border = "none";
+          button.title = "收藏到 Wikimap";
+        }
+      }
+    };
+
+    // Update all existing popup button states
+    persistentPopupsRef.current.forEach((popup) => {
+      try {
+        const popupElement = popup.getElement();
+        if (popupElement) {
+          const button = popupElement.querySelector(
+            'button[id$="-btn"]',
+          ) as HTMLButtonElement;
+          if (button) {
+            updateButtonState(button);
+          }
+        }
+      } catch (error) {
+        console.warn("Error updating popup button state:", error);
+      }
+    });
+
+    // Update tooltip button
+    try {
+      const tooltipElement = tooltipRef.current?.getElement();
+      if (tooltipElement) {
+        const button = tooltipElement.querySelector(
+          'button[id="tooltip-favorite-btn"]',
+        ) as HTMLButtonElement;
+        if (button) {
+          updateButtonState(button);
+        }
+      }
+    } catch (error) {
+      console.warn("Error updating tooltip button state:", error);
+    }
+  }, [mapInstance, favorites]);
 
   // Ensure marker icon is loaded into the style image registry
   useEffect(() => {
@@ -100,6 +303,9 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
   useEffect(() => {
     if (!mapInstance) return;
 
+    // 初始化缓存（从localStorage加载）
+    wikimapCache.initialize();
+
     const fc = wikimapCache.toFeatureCollection();
     try {
       if (!mapInstance.getSource(SOURCE_ID)) {
@@ -134,7 +340,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
   useEffect(() => {
     if (!mapInstance) return;
 
-    const tooltip = new window.mapboxgl.Popup({
+    tooltipRef.current = new window.mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false,
       closeOnMove: false,
@@ -145,7 +351,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
 
     const maybeClose = () => {
       if (!isOverFeatureRef.current && !isPopupHoveredRef.current) {
-        if (tooltip.isOpen()) tooltip.remove();
+        if (tooltipRef.current?.isOpen()) tooltipRef.current?.remove();
         mapInstance.getCanvas().style.cursor = "";
       }
     };
@@ -160,7 +366,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
     };
 
     const attachPopupHoverHandlers = () => {
-      const el = tooltip.getElement?.();
+      const el = tooltipRef.current?.getElement?.();
       if (!el) return;
       // ensure no duplicate handlers
       el.removeEventListener("mouseenter", onPopupMouseEnter);
@@ -200,9 +406,15 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
               ? `<img src="${thumburl}" ${sizeAttrs} style="max-width:100%; height:auto; border-radius:6px; margin-bottom:6px; display:block;" />`
               : ""
           }
-          <a href="${url}" target="_blank" rel="noopener noreferrer" style="color:#0369a1; font-weight:600; text-decoration:none;">${title}</a>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <a href="${url}" target="_blank" rel="noopener noreferrer" style="color:#0369a1; font-weight:600; text-decoration:none; flex: 1;">${title}</a>
+            ${createFavoriteButtonHTML(url, thumburl, title, props.pageid || "", coordinates, "tooltip-favorite-btn")}
+          </div>
         </div>`;
-      tooltip.setLngLat(coordinates).setHTML(html).addTo(mapInstance);
+      tooltipRef.current
+        ?.setLngLat(coordinates)
+        .setHTML(html)
+        .addTo(mapInstance);
       attachPopupHoverHandlers();
       isOverFeatureRef.current = true;
       mapInstance.getCanvas().style.cursor = "pointer";
@@ -225,21 +437,33 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
         console.warn("Error removing tooltip event listeners:", error);
       }
       try {
-        const el = tooltip.getElement?.();
+        const el = tooltipRef.current?.getElement?.();
         if (el) {
           el.removeEventListener("mouseenter", onPopupMouseEnter);
           el.removeEventListener("mouseleave", onPopupMouseLeave);
         }
       } catch {}
-      tooltip.remove();
+      tooltipRef.current?.remove();
     };
-  }, [mapInstance]);
+  }, [mapInstance, createFavoriteButtonHTML]);
 
   // Persistent popup utilities (zoom > 21)
   useEffect(() => {
     if (!mapInstance) return;
 
-    const createPersistentPopupHTML = (props: any, title: string) => {
+    // Helper function to check if an item is favorited
+    const _isWikimapFavorited = (url: string, category: string) => {
+      const favoriteId = `${category}::${url}`;
+      // Get current favorites state directly from store
+      const currentFavorites = useFavoriteStore.getState().favorites;
+      return currentFavorites.some((f) => f.favoriteId === favoriteId);
+    };
+
+    const createPersistentPopupHTML = (
+      props: any,
+      title: string,
+      coordinates: [number, number],
+    ) => {
       const url: string = props.url || "";
       const thumburl: string = props.thumburl || "";
       const tw: number | undefined =
@@ -252,14 +476,21 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
       ]
         .filter(Boolean)
         .join(" ");
+
+      // Generate unique ID for this popup
+      const popupId = `wikimap-popup-${props.pageid || Date.now()}`;
+
       return `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-width: 180px; max-width: 340px;">
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-width: 180px; max-width: 340px; position: relative;">
           ${
             thumburl
               ? `<img src="${thumburl}" ${sizeAttrs} style="max-width:100%; height:auto; border-radius:6px; margin-bottom:6px; display:block;" />`
               : ""
           }
-          <a href="${url}" target="_blank" rel="noopener noreferrer" style="color:#0369a1; font-weight:600; text-decoration:none;">${title}</a>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <a href="${url}" target="_blank" rel="noopener noreferrer" style="color:#0369a1; font-weight:600; text-decoration:none; flex: 1;">${title}</a>
+            ${createFavoriteButtonHTML(url, thumburl, title, props.pageid || "", coordinates, `${popupId}-btn`)}
+          </div>
         </div>`;
     };
 
@@ -275,7 +506,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
         number,
       ];
       const title: string = props.title || "Wikimedia File";
-      const html = createPersistentPopupHTML(props, title);
+      const html = createPersistentPopupHTML(props, title, coordinates);
       const popup = new window.mapboxgl.Popup({
         closeButton: true,
         closeOnClick: false,
@@ -303,6 +534,11 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
           const anchors = content.querySelectorAll("a");
           anchors.forEach((a) => {
             (a as HTMLElement).style.pointerEvents = "auto";
+          });
+          // Enable pointer events for buttons (including our favorite button)
+          const buttons = content.querySelectorAll("button");
+          buttons.forEach((btn) => {
+            (btn as HTMLElement).style.pointerEvents = "auto";
           });
         }
       } catch {}
@@ -577,7 +813,22 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
       persistentPopupsRef.current.clear();
       suppressedPageIdsRef.current.clear();
     };
-  }, [mapInstance]);
+  }, [mapInstance, createFavoriteButtonHTML]);
+
+  // 定期清理缓存
+  useEffect(() => {
+    // 每小时清理一次过期缓存
+    const cleanupInterval = setInterval(
+      () => {
+        wikimapCache.cleanup();
+      },
+      60 * 60 * 1000,
+    ); // 1小时
+
+    return () => {
+      clearInterval(cleanupInterval);
+    };
+  }, []);
 
   // Fetch logic: always around map center; dynamic radius based on viewport/zoom
   useEffect(() => {

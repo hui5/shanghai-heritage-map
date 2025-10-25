@@ -13,6 +13,7 @@ export interface FavoriteImage {
   thumbnail?: string;
   title?: string;
   description?: string;
+  ref?: string;
   category: string;
   location_name: string;
   location_info?: any; // JSON 存储位置信息

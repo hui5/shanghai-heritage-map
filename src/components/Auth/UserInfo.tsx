@@ -52,9 +52,6 @@ export default function UserInfo() {
   // 获取头像和用户名
   const avatarUrl = user.user_metadata?.avatar_url;
 
-  // Debug: 打印用户信息
-  console.log("User metadata:", user.user_metadata);
-
   const displayName =
     user.user_metadata?.user_name || // GitHub username
     user.user_metadata?.full_name || // Full name
