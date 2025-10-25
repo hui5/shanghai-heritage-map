@@ -228,44 +228,61 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
           cloudFavoriteIds.has(localFav.favoriteId) || !localFav.isSynced,
       );
 
-      // 3. 检查并更新云端数据中缺少 ref 字段的收藏
+      // 3. 双向同步：检查并更新 ref 字段
       const updatedCloudFavorites = await Promise.all(
         cloudFavorites.map(async (cloudFav) => {
-          // 只检查 ref 字段是否有值
-          if (!cloudFav.ref) {
+          // 找到对应的本地版本
+          const localVersion = localFavorites.find(
+            (localFav) => localFav.favoriteId === cloudFav.favoriteId,
+          );
+
+          // 检查是否需要更新云端（本地有 ref，云端没有）
+          if (localVersion?.ref && !cloudFav.ref) {
             console.log(
-              `Updating cloud favorite missing ref: ${cloudFav.favoriteId}`,
+              `Updating cloud ref from local: ${cloudFav.favoriteId}`,
             );
 
-            // 尝试从本地数据中找到有 ref 的版本
-            const localVersion = localFavorites.find(
-              (localFav) =>
-                localFav.favoriteId === cloudFav.favoriteId && localFav.ref,
-            );
+            try {
+              const { data: updateData, error: updateError } = await supabase
+                .from("favorites")
+                .update({ ref: localVersion.ref })
+                .eq("id", cloudFav.cloudId)
+                .select()
+                .single();
 
-            if (localVersion) {
-              try {
-                const { data: updateData, error: updateError } = await supabase
-                  .from("favorites")
-                  .update({ ref: localVersion.ref })
-                  .eq("id", cloudFav.cloudId)
-                  .select()
-                  .single();
-
-                if (updateError) {
-                  console.error("Failed to update ref field:", updateError);
-                  return cloudFav;
-                } else {
-                  console.log(
-                    `Successfully updated ref for: ${cloudFav.favoriteId}`,
-                  );
-                  return convertFromSupabaseFavorite(updateData);
-                }
-              } catch (error) {
-                console.error("Error updating ref field:", error);
+              if (updateError) {
+                console.error("Failed to update cloud ref:", updateError);
                 return cloudFav;
+              } else {
+                console.log(
+                  `Successfully updated cloud ref: ${cloudFav.favoriteId}`,
+                );
+                return convertFromSupabaseFavorite(updateData);
               }
+            } catch (error) {
+              console.error("Error updating cloud ref:", error);
+              return cloudFav;
             }
+          }
+
+          // 检查是否需要更新本地（云端有 ref，本地没有）
+          if (cloudFav.ref && localVersion && !localVersion.ref) {
+            console.log(
+              `Updating local ref from cloud: ${cloudFav.favoriteId}`,
+            );
+
+            // 更新本地收藏的 ref 字段
+            const updatedLocalFav = {
+              ...localVersion,
+              ref: cloudFav.ref,
+            };
+
+            // 更新本地存储
+            const updatedLocalFavorites = localFavorites.map((fav) =>
+              fav.favoriteId === cloudFav.favoriteId ? updatedLocalFav : fav,
+            );
+            set({ favorites: updatedLocalFavorites });
+            saveFavorites(updatedLocalFavorites);
           }
 
           return cloudFav;
