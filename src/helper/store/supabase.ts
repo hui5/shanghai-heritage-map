@@ -28,6 +28,7 @@ export interface User {
   email?: string;
   user_metadata?: {
     full_name?: string;
+    user_name?: string; // GitHub username
     avatar_url?: string;
   };
   created_at?: string;
