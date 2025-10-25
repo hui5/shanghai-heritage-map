@@ -35,6 +35,11 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
   // 保存每个图层的原始字体大小和光晕颜色
   const originalTextSizesRef = useRef<Map<string, any>>(new Map());
   const originalHaloColorsRef = useRef<Map<string, any>>(new Map());
+  const originalRoadColorsRef = useRef<{
+    colorMotorways: any;
+    colorTrunks: any;
+    colorRoads: any;
+  } | null>(null);
 
   // 应用字体大小到地图标注
   useEffect(() => {
@@ -105,10 +110,78 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
     map.easeTo({ pitch, duration: 500 });
   }, [pitch, mapInstance]);
 
-  // 应用光照预设
+  // 保存原始道路颜色
+  useEffect(() => {
+    if (!mapInstance || originalRoadColorsRef.current) return;
+
+    // 保存原始道路颜色设置
+    const originalMotorways = mapInstance.getConfigProperty(
+      "basemap",
+      "colorMotorways",
+    );
+    const originalTrunks = mapInstance.getConfigProperty(
+      "basemap",
+      "colorTrunks",
+    );
+    const originalRoads = mapInstance.getConfigProperty(
+      "basemap",
+      "colorRoads",
+    );
+
+    originalRoadColorsRef.current = {
+      colorMotorways: originalMotorways,
+      colorTrunks: originalTrunks,
+      colorRoads: originalRoads,
+    };
+  }, [mapInstance]);
+
+  // 应用光照预设和道路颜色调整
   useEffect(() => {
     if (!mapInstance) return;
+
+    // 设置光照预设
     mapInstance.setConfigProperty("basemap", "lightPreset", lightPreset);
+
+    // 根据光照预设调整道路样式
+    const roadStyleConfig = getRoadStyleForLightPreset(lightPreset);
+    if (roadStyleConfig) {
+      // 应用自定义道路样式
+      mapInstance.setConfigProperty(
+        "basemap",
+        "colorMotorways",
+        roadStyleConfig.motorwayColor,
+      );
+      mapInstance.setConfigProperty(
+        "basemap",
+        "colorTrunks",
+        roadStyleConfig.trunkColor,
+      );
+      mapInstance.setConfigProperty(
+        "basemap",
+        "colorRoads",
+        roadStyleConfig.roadColor,
+      );
+    } else {
+      // 恢复原始道路样式
+      const originalColors = originalRoadColorsRef.current;
+      if (originalColors) {
+        mapInstance.setConfigProperty(
+          "basemap",
+          "colorMotorways",
+          originalColors.colorMotorways,
+        );
+        mapInstance.setConfigProperty(
+          "basemap",
+          "colorTrunks",
+          originalColors.colorTrunks,
+        );
+        mapInstance.setConfigProperty(
+          "basemap",
+          "colorRoads",
+          originalColors.colorRoads,
+        );
+      }
+    }
   }, [lightPreset, mapInstance]);
 
   // 智能文字颜色调整（根据光照预设）
@@ -142,6 +215,10 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
       style.layers.forEach((layer: any) => {
         if (layer.type === "symbol" && layer.layout?.["text-field"]) {
           const layerId = layer.id;
+
+          if (layerId.includes("openda_building-cluster")) {
+            return;
+          }
 
           // 获取原始颜色并生成自适应颜色方案
           const originalSettings = originalHaloColorsRef.current.get(layerId);
@@ -359,6 +436,26 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
       </div>
     </div>
   );
+}
+
+// 辅助函数：根据光照预设获取道路样式配置
+function getRoadStyleForLightPreset(lightPreset: LightPreset) {
+  switch (lightPreset) {
+    case "dusk":
+      return {
+        motorwayColor: "rgba(140, 130, 120, 0.3)",
+        trunkColor: "rgba(135, 125, 115, 0.25)",
+        roadColor: "rgba(130, 120, 110, 0.2)",
+      };
+    case "night":
+      return {
+        motorwayColor: "rgba(90, 90, 90, 0.4)",
+        trunkColor: "rgba(85, 85, 85, 0.3)",
+        roadColor: "rgba(80, 80, 80, 0.3)",
+      };
+    case "day":
+      return null; // 使用原始样式
+  }
 }
 
 // 辅助函数：缩放文本大小表达式
