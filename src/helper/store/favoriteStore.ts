@@ -232,7 +232,7 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
       const updatedCloudFavorites = await Promise.all(
         cloudFavorites.map(async (cloudFav) => {
           // 找到对应的本地版本
-          const localVersion = localFavorites.find(
+          const localVersion = validLocalFavorites.find(
             (localFav) => localFav.favoriteId === cloudFav.favoriteId,
           );
 
@@ -272,17 +272,7 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => ({
             );
 
             // 更新本地收藏的 ref 字段
-            const updatedLocalFav = {
-              ...localVersion,
-              ref: cloudFav.ref,
-            };
-
-            // 更新本地存储
-            const updatedLocalFavorites = localFavorites.map((fav) =>
-              fav.favoriteId === cloudFav.favoriteId ? updatedLocalFav : fav,
-            );
-            set({ favorites: updatedLocalFavorites });
-            saveFavorites(updatedLocalFavorites);
+            localVersion.ref = cloudFav.ref;
           }
 
           return cloudFav;
