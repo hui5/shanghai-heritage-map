@@ -331,7 +331,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
           aria-pressed={pinned}
           aria-label={pinned ? "取消固定" : "固定"}
           title={pinned ? "取消固定" : "固定"}
-          className={`p-1.5 rounded text-xs  ${
+          className={`p-1.5 rounded text-xs border ${
             pinned
               ? "bg-amber-100 border-amber-300 text-amber-700"
               : "bg-white/30 border-gray-300 text-gray-700 hover:bg-gray-100"
@@ -356,7 +356,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
 
       <button
         type="button"
-        className="ml-1 p-1.5 rounded text-base border bg-white/30 text-gray-700 hover:bg-gray-100"
+        className="ml-1 p-1.5 rounded text-base border border-gray-300 bg-white/30 text-gray-700 hover:bg-gray-100"
         onClick={close}
         aria-label="关闭"
         title="关闭。 Esc键,或点击面板之外空白区域快速关闭"

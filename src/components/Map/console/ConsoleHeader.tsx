@@ -17,7 +17,7 @@ export function ConsoleHeader({ onClose }: ConsoleHeaderProps) {
         {/* 左侧按钮组 */}
         <div className="flex items-center space-x-3">
           {/* 分享按钮 */}
-          <ShareButton variant="panel" />
+          <ShareButton />
 
           {/* GitHub 按钮 */}
           <a
