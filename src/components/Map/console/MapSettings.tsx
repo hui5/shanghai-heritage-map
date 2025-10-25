@@ -35,10 +35,11 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
   // 保存每个图层的原始字体大小和光晕颜色
   const originalTextSizesRef = useRef<Map<string, any>>(new Map());
   const originalHaloColorsRef = useRef<Map<string, any>>(new Map());
-  const originalRoadColorsRef = useRef<{
+  const originalBasemapColorsRef = useRef<{
     colorMotorways: any;
     colorTrunks: any;
     colorRoads: any;
+    colorGreenspace: any;
   } | null>(null);
 
   // 应用字体大小到地图标注
@@ -110,11 +111,11 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
     map.easeTo({ pitch, duration: 500 });
   }, [pitch, mapInstance]);
 
-  // 保存原始道路颜色
+  // 保存原始 basemap 颜色
   useEffect(() => {
-    if (!mapInstance || originalRoadColorsRef.current) return;
+    if (!mapInstance || originalBasemapColorsRef.current) return;
 
-    // 保存原始道路颜色设置
+    // 保存原始 basemap 颜色设置
     const originalMotorways = mapInstance.getConfigProperty(
       "basemap",
       "colorMotorways",
@@ -127,11 +128,16 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
       "basemap",
       "colorRoads",
     );
+    const originalGreenspace = mapInstance.getConfigProperty(
+      "basemap",
+      "colorGreenspace",
+    );
 
-    originalRoadColorsRef.current = {
+    originalBasemapColorsRef.current = {
       colorMotorways: originalMotorways,
       colorTrunks: originalTrunks,
       colorRoads: originalRoads,
+      colorGreenspace: originalGreenspace,
     };
   }, [mapInstance]);
 
@@ -142,28 +148,45 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
     // 设置光照预设
     mapInstance.setConfigProperty("basemap", "lightPreset", lightPreset);
 
-    // 根据光照预设调整道路样式
-    const roadStyleConfig = getRoadStyleForLightPreset(lightPreset);
-    if (roadStyleConfig) {
-      // 应用自定义道路样式
+    // 根据光照预设调整 basemap 样式
+    const basemapStyleConfig = getBasemapStyleForLightPreset(lightPreset);
+    if (basemapStyleConfig) {
+      mapInstance.setConfigProperty("basemap", "showPedestrianRoads", false);
+      mapInstance.setConfigProperty(
+        "basemap",
+        "showPointOfInterestLabels",
+        false,
+      );
+      // 应用自定义 basemap 样式
       mapInstance.setConfigProperty(
         "basemap",
         "colorMotorways",
-        roadStyleConfig.motorwayColor,
+        basemapStyleConfig.motorwayColor,
       );
       mapInstance.setConfigProperty(
         "basemap",
         "colorTrunks",
-        roadStyleConfig.trunkColor,
+        basemapStyleConfig.trunkColor,
       );
       mapInstance.setConfigProperty(
         "basemap",
         "colorRoads",
-        roadStyleConfig.roadColor,
+        basemapStyleConfig.roadColor,
+      );
+      mapInstance.setConfigProperty(
+        "basemap",
+        "colorGreenspace",
+        basemapStyleConfig.greenspaceColor,
       );
     } else {
-      // 恢复原始道路样式
-      const originalColors = originalRoadColorsRef.current;
+      mapInstance.setConfigProperty("basemap", "showPedestrianRoads", true);
+      mapInstance.setConfigProperty(
+        "basemap",
+        "showPointOfInterestLabels",
+        true,
+      );
+      // 恢复原始 basemap 样式
+      const originalColors = originalBasemapColorsRef.current;
       if (originalColors) {
         mapInstance.setConfigProperty(
           "basemap",
@@ -179,6 +202,11 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
           "basemap",
           "colorRoads",
           originalColors.colorRoads,
+        );
+        mapInstance.setConfigProperty(
+          "basemap",
+          "colorGreenspace",
+          originalColors.colorGreenspace,
         );
       }
     }
@@ -438,20 +466,22 @@ export function MapSettingsComponent({ mapInstance }: MapSettingsProps) {
   );
 }
 
-// 辅助函数：根据光照预设获取道路样式配置
-function getRoadStyleForLightPreset(lightPreset: LightPreset) {
+// 辅助函数：根据光照预设获取 basemap 样式配置
+function getBasemapStyleForLightPreset(lightPreset: LightPreset) {
   switch (lightPreset) {
     case "dusk":
       return {
         motorwayColor: "rgba(140, 130, 120, 0.3)",
         trunkColor: "rgba(135, 125, 115, 0.25)",
         roadColor: "rgba(130, 120, 110, 0.2)",
+        greenspaceColor: "hsl(60, 8%, 80%)",
       };
     case "night":
       return {
         motorwayColor: "rgba(90, 90, 90, 0.4)",
         trunkColor: "rgba(85, 85, 85, 0.3)",
         roadColor: "rgba(80, 80, 80, 0.3)",
+        greenspaceColor: "hsl(60, 10.00%, 80%)",
       };
     case "day":
       return null; // 使用原始样式
