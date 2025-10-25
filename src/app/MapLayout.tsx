@@ -10,10 +10,10 @@ export default function MapLayout() {
   return (
     <>
       <link
-        href="https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.css"
+        href="https://api.mapbox.com/mapbox-gl-js/v3.16.0/mapbox-gl.css"
         rel="stylesheet"
       />
-      <script src="https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.js"></script>
+      <script src="https://api.mapbox.com/mapbox-gl-js/v3.16.0/mapbox-gl.js"></script>
       <main className="map-container">
         <LoadingOverlay styleReady={styleReady} />
         <MapContainer onStyleReady={setStyleReady} />
