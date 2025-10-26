@@ -10,6 +10,11 @@ declare global {
       buttonId: string,
       coordinates: [number, number],
     ) => Promise<void>;
+    openWikimapLightbox?: (
+      url: string,
+      thumbnail: string,
+      title: string,
+    ) => void;
   }
 }
 
@@ -25,6 +30,7 @@ import type {
 import type React from "react";
 import { useCallback, useEffect, useRef } from "react";
 import { normalizeWikimapResponse, wikimapCache } from "@/helper/wikimapCache";
+import { openImageLightbox } from "../../helper/imageLightbox";
 import type { LocationInfo } from "../../helper/map-data/LocationInfo";
 import { useFavoriteStore } from "../../helper/store/favoriteStore";
 
@@ -132,7 +138,59 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
     [],
   );
 
-  // Set up global function for wikimap favorites
+  // 生成 popup HTML 的共用函数
+  const createPopupHTML = useCallback(
+    (
+      url: string,
+      thumburl: string,
+      title: string,
+      pageid: string,
+      coordinates: [number, number],
+      buttonId: string,
+      thumbwidth?: number,
+      thumbheight?: number,
+    ) => {
+      const tw: number | undefined = thumbwidth || undefined;
+      const th: number | undefined = thumbheight || undefined;
+      const sizeAttrs = [
+        typeof tw === "number" && tw > 0 ? `width="${tw}"` : "",
+        typeof th === "number" && th > 0 ? `height="${th}"` : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+
+      const _popupId = buttonId.includes("-btn")
+        ? buttonId.replace("-btn", "")
+        : `wikimap-popup-${pageid || Date.now()}`;
+
+      return `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-width: 180px; max-width: 340px;">
+          ${
+            thumburl
+              ? `<img 
+                  src="${thumburl}" 
+                  ${sizeAttrs} 
+                  style="max-width:100%; height:auto; border-radius:6px; margin-bottom:6px; display:block; cursor:pointer;"
+                  onclick="
+                    if (window.openWikimapLightbox) {
+                      window.openWikimapLightbox('${url}', '${thumburl}', '${title.replace(/'/g, "\\'")}');
+                    }
+                  "
+                  onmouseover="this.style.opacity='0.9';"
+                  onmouseout="this.style.opacity='1';"
+                />`
+              : ""
+          }
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <span style="color:#0369a1; font-weight:600; flex: 1;">${title}</span>
+            ${createFavoriteButtonHTML(url, thumburl, title, pageid || "", coordinates, buttonId)}
+          </div>
+        </div>`;
+    },
+    [createFavoriteButtonHTML],
+  );
+
+  // Set up global functions for wikimap
   useEffect(() => {
     // Helper function to check if an item is favorited
     const isWikimapFavorited = (url: string, category: string) => {
@@ -143,7 +201,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
     };
 
     if (typeof window !== "undefined") {
-      // New toggle function with visual feedback
+      // Toggle favorite function with visual feedback
       window.toggleWikimapFavorite = async (
         url: string,
         thumbnail: string,
@@ -193,11 +251,27 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
           console.error("Failed to toggle wikimap favorite:", error);
         }
       };
+
+      // Open lightbox function
+      window.openWikimapLightbox = (
+        url: string,
+        thumbnail: string,
+        title: string,
+      ) => {
+        const image = {
+          url: url,
+          thumbnail: thumbnail,
+          title: title,
+          ref: `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(title)}`,
+        };
+        openImageLightbox([image], 0, "Wikimap");
+      };
     }
 
     return () => {
       if (typeof window !== "undefined") {
         delete window.toggleWikimapFavorite;
+        delete window.openWikimapLightbox;
       }
     };
   }, [addFavorite, removeFavorite]);
@@ -393,24 +467,18 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
         (props.thumbwidth as number) || (props.width as number) || undefined;
       const th: number | undefined =
         (props.thumbheight as number) || (props.height as number) || undefined;
-      const sizeAttrs = [
-        typeof tw === "number" && tw > 0 ? `width="${tw}"` : "",
-        typeof th === "number" && th > 0 ? `height="${th}"` : "",
-      ]
-        .filter(Boolean)
-        .join(" ");
-      const html = `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-width: 220px; max-width: 340px;">
-          ${
-            thumburl
-              ? `<img src="${thumburl}" ${sizeAttrs} style="max-width:100%; height:auto; border-radius:6px; margin-bottom:6px; display:block;" />`
-              : ""
-          }
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-            <a href="${url}" target="_blank" rel="noopener noreferrer" style="color:#0369a1; font-weight:600; text-decoration:none; flex: 1;">${title}</a>
-            ${createFavoriteButtonHTML(url, thumburl, title, props.pageid || "", coordinates, "tooltip-favorite-btn")}
-          </div>
-        </div>`;
+
+      const html = createPopupHTML(
+        url,
+        thumburl,
+        title,
+        props.pageid || "",
+        coordinates,
+        "tooltip-favorite-btn",
+        tw,
+        th,
+      );
+
       tooltipRef.current
         ?.setLngLat(coordinates)
         .setHTML(html)
@@ -445,54 +513,11 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
       } catch {}
       tooltipRef.current?.remove();
     };
-  }, [mapInstance, createFavoriteButtonHTML]);
+  }, [mapInstance, createPopupHTML]);
 
   // Persistent popup utilities (zoom > 21)
   useEffect(() => {
     if (!mapInstance) return;
-
-    // Helper function to check if an item is favorited
-    const _isWikimapFavorited = (url: string, category: string) => {
-      const favoriteId = `${category}::${url}`;
-      // Get current favorites state directly from store
-      const currentFavorites = useFavoriteStore.getState().favorites;
-      return currentFavorites.some((f) => f.favoriteId === favoriteId);
-    };
-
-    const createPersistentPopupHTML = (
-      props: any,
-      title: string,
-      coordinates: [number, number],
-    ) => {
-      const url: string = props.url || "";
-      const thumburl: string = props.thumburl || "";
-      const tw: number | undefined =
-        (props.thumbwidth as number) || (props.width as number) || undefined;
-      const th: number | undefined =
-        (props.thumbheight as number) || (props.height as number) || undefined;
-      const sizeAttrs = [
-        typeof tw === "number" && tw > 0 ? `width="${tw}"` : "",
-        typeof th === "number" && th > 0 ? `height="${th}"` : "",
-      ]
-        .filter(Boolean)
-        .join(" ");
-
-      // Generate unique ID for this popup
-      const popupId = `wikimap-popup-${props.pageid || Date.now()}`;
-
-      return `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-width: 180px; max-width: 340px; position: relative;">
-          ${
-            thumburl
-              ? `<img src="${thumburl}" ${sizeAttrs} style="max-width:100%; height:auto; border-radius:6px; margin-bottom:6px; display:block;" />`
-              : ""
-          }
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-            <a href="${url}" target="_blank" rel="noopener noreferrer" style="color:#0369a1; font-weight:600; text-decoration:none; flex: 1;">${title}</a>
-            ${createFavoriteButtonHTML(url, thumburl, title, props.pageid || "", coordinates, `${popupId}-btn`)}
-          </div>
-        </div>`;
-    };
 
     const openPersistentPopupForFeature = (feature: MapboxGeoJSONFeature) => {
       const props = feature.properties || {};
@@ -506,7 +531,23 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
         number,
       ];
       const title: string = props.title || "Wikimedia File";
-      const html = createPersistentPopupHTML(props, title, coordinates);
+      const url: string = props.url || "";
+      const thumburl: string = props.thumburl || "";
+      const tw: number | undefined =
+        (props.thumbwidth as number) || (props.width as number) || undefined;
+      const th: number | undefined =
+        (props.thumbheight as number) || (props.height as number) || undefined;
+      const popupId = `wikimap-popup-${pageid || Date.now()}`;
+      const html = createPopupHTML(
+        url,
+        thumburl,
+        title,
+        pageid?.toString() || "",
+        coordinates,
+        `${popupId}-btn`,
+        tw,
+        th,
+      );
       const popup = new window.mapboxgl.Popup({
         closeButton: true,
         closeOnClick: false,
@@ -539,6 +580,11 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
           const buttons = content.querySelectorAll("button");
           buttons.forEach((btn) => {
             (btn as HTMLElement).style.pointerEvents = "auto";
+          });
+          // Enable pointer events for images (for lightbox click)
+          const images = content.querySelectorAll("img");
+          images.forEach((img) => {
+            (img as HTMLElement).style.pointerEvents = "auto";
           });
         }
       } catch {}
@@ -813,7 +859,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
       persistentPopupsRef.current.clear();
       suppressedPageIdsRef.current.clear();
     };
-  }, [mapInstance, createFavoriteButtonHTML]);
+  }, [mapInstance, createPopupHTML]);
 
   // 定期清理缓存
   useEffect(() => {

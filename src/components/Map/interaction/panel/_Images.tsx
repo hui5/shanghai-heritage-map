@@ -1,8 +1,8 @@
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFavoriteStore } from "@/helper/store/favoriteStore";
+import { openImageLightbox } from "../../../../helper/imageLightbox";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
-import { openImageLightbox } from "./ImageLightbox";
 import usePanelStore from "./panelStore";
 
 export interface Image {

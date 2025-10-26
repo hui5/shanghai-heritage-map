@@ -14,10 +14,10 @@ import {
 import { createPortal } from "react-dom";
 import { Rnd } from "react-rnd";
 import { isTouchDevice } from "@/app/globalStore";
+import { isGlobalLightboxOpen } from "../../../../helper/imageLightbox";
 import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
 import { ShareButton } from "../../console/ShareButton";
 import { FloatingInfoPanelFullscreen } from "./FloatingInfoPanelFullscreen";
-import { isGlobalLightboxOpen } from "./ImageLightbox";
 import { PANEL } from "./panelConfig";
 import { usePanelStore } from "./panelStore";
 import { TouchScreenPanel } from "./TouchScreenPanel";
