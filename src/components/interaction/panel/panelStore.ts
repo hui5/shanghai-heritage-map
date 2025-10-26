@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
 import { PANEL } from "./panelConfig";
+import { useSearchHistoryStore } from "./searchStore";
 
 interface PanelState {
   isOpen: boolean;
@@ -119,12 +120,36 @@ export const usePanelStore = create<PanelState>((set, get) => ({
   },
 
   setPinned: (p) => set({ isPinned: p }),
-  setFullscreen: (v) => set({ isFullscreen: v }),
+  setFullscreen: (v) => {
+    const state = get();
+    set({ isFullscreen: v });
+
+    // 当进入全屏模式且有 locationInfo 时，保存到查询历史
+    if (v && state.locationInfo && state.locationInfo.coordinates) {
+      const searchHistoryStore = useSearchHistoryStore.getState();
+      searchHistoryStore.addSearchHistory({
+        query: state.locationInfo.name,
+        locationInfo: state.locationInfo,
+        coordinates: state.locationInfo.coordinates,
+      });
+    }
+  },
   toggleFullscreen: () => {
-    if (get().isFullscreen) {
+    const state = get();
+    if (state.isFullscreen) {
       set({ isFullscreen: false, showOverview: false, isPinned: true });
     } else {
       set({ isFullscreen: true, showOverview: true, isPinned: true });
+
+      // 当进入全屏模式且有 locationInfo 时，保存到查询历史
+      if (state.locationInfo?.coordinates) {
+        const searchHistoryStore = useSearchHistoryStore.getState();
+        searchHistoryStore.addSearchHistory({
+          query: state.locationInfo.name,
+          locationInfo: state.locationInfo,
+          coordinates: state.locationInfo.coordinates,
+        });
+      }
     }
   },
 

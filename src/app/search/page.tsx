@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef } from "react";
 import { usePanelStore } from "@/components/interaction/panel/panelStore";
+import { useSearchHistoryStore } from "@/components/interaction/panel/searchStore";
 
 function SearchPageContent() {
   const searchParams = useSearchParams();
@@ -19,7 +20,16 @@ function SearchPageContent() {
         subtypeId: "search",
         properties: {},
         dataSource: "Search" as any,
+        coordinates: [121.4737, 31.2304] as [number, number], // 上海中心坐标
       };
+
+      // 保存到查询历史
+      const searchHistoryStore = useSearchHistoryStore.getState();
+      searchHistoryStore.addSearchHistory({
+        query: name,
+        locationInfo: locationInfo as any,
+        coordinates: locationInfo.coordinates,
+      });
 
       usePanelStore.setState({
         isOpen: true,

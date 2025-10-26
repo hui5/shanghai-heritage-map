@@ -103,14 +103,17 @@ export const useGlobalClick = ({
 
         // 如果panel没有打开，打开panel全屏并传递locationInfo
         if (!panelStore.isOpen || (panelStore.isOpen && !panelStore.isPinned)) {
+          // 先设置基本信息
           usePanelStore.setState({
             isOpen: true,
-            isFullscreen: true,
             showOverview: true,
             isPinned: true,
             locationInfo: locationInfo,
             triggerPoint: { x: e.point.x, y: e.point.y },
           });
+
+          // 然后设置全屏状态，这会触发查询历史保存
+          usePanelStore.getState().setFullscreen(true);
         }
 
         // 返回 false 进一步阻止事件传递
