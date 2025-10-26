@@ -95,7 +95,7 @@ export const FloatingInfoPanelFullscreen: React.FC<
             {!showOverview && (
               <>
                 {find(visibleContents, (c) => c.id === activeId)?.label}
-                <LayoutGrid size={14} className="text-gray-400 animate-pulse" />
+                <LayoutGrid size={14} className="text-gray-400" />
               </>
             )}
           </div>
@@ -150,7 +150,7 @@ export const FloatingInfoPanelFullscreen: React.FC<
                       <div className="flex items-center gap-1 text-xs text-gray-500">
                         <Maximize2
                           size={12}
-                          className="animate-pulse hover:scale-125 transition-all duration-200"
+                          className="hover:scale-125 transition-all duration-200"
                         />
                       </div>
                     </div>
