@@ -8,7 +8,7 @@ import { ImagesPreview } from "@/components/interaction/panel/_Images";
 import { usePanelStore } from "@/components/interaction/panel/panelStore";
 import type { LocationInfo } from "@/helper/map-data/LocationInfo";
 import { highlightLocation } from "@/helper/mapbox/locationHighlight";
-import { useFavoriteStore } from "../../../helper/store/favoriteStore";
+import { useFavoriteStore } from "../../../helper/supabase/favoriteStore";
 import { isTouchDevice, useGlobalStore } from "../../globalStore";
 
 export default function FavoritesPage() {

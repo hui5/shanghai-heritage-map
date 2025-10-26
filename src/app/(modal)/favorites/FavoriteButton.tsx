@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type React from "react";
-import { useFavoriteStore } from "../../../helper/store/favoriteStore";
+import { useFavoriteStore } from "../../../helper/supabase/favoriteStore";
 
 export const FavoriteButton: React.FC = () => {
   const favorites = useFavoriteStore((s) => s.favorites);

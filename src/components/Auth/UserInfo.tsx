@@ -2,8 +2,8 @@
 
 import { Bookmark, LogOut, User } from "lucide-react";
 import { useState } from "react";
-import { useAuthStore } from "../../helper/store/authStore";
-import { useFavoriteStore } from "../../helper/store/favoriteStore";
+import { useAuthStore } from "../../helper/supabase/authStore";
+import { useFavoriteStore } from "../../helper/supabase/favoriteStore";
 import LoginModal from "./LoginModal";
 
 export default function UserInfo() {

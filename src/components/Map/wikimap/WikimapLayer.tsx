@@ -33,7 +33,7 @@ import {
 } from "@/components/Map/wikimap/wikimapStore";
 import { openImageLightbox } from "../../../helper/imageLightbox";
 import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
-import { useFavoriteStore } from "../../../helper/store/favoriteStore";
+import { useFavoriteStore } from "../../../helper/supabase/favoriteStore";
 import {
   useWikimapPopup,
   WIKIMAP_PERSISTENT_POPUP_ZOOM,
@@ -46,6 +46,13 @@ interface WikimapLayerProps {
 const SOURCE_ID = "openda_wikimap-source";
 export const LAYER_ID = "openda_wikimap-layer";
 const MIN_ZOOM = 18;
+
+export function isWikimapFavorited(url: string) {
+  const favoriteId = `Wikimap::${url}`;
+  return useFavoriteStore
+    .getState()
+    .favorites.some((f) => f.favoriteId === favoriteId);
+}
 
 export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
   const iconImageId = "wikimap_marker";
@@ -66,6 +73,14 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
   const removeFavorite = useFavoriteStore((s) => s.removeFavorite);
   const favorites = useFavoriteStore((s) => s.favorites);
 
+  const {
+    createPopupHTML,
+    recomputeAutoPopups,
+    clearAllPersistentPopups,
+    openPersistentPopupForFeature,
+    persistentPopupsRef,
+  } = useWikimapPopup(mapInstance);
+
   // Shared visibility update function
   const updateVisibility = useCallback(() => {
     if (!mapInstance) return;
@@ -79,21 +94,6 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
       console.warn("Error updating visibility:", error);
     }
   }, [mapInstance, isEnabled]);
-
-  const isWikimapFavorited = useCallback((url: string) => {
-    const favoriteId = `Wikimap::${url}`;
-    return useFavoriteStore
-      .getState()
-      .favorites.some((f) => f.favoriteId === favoriteId);
-  }, []);
-
-  const {
-    createPopupHTML,
-    recomputeAutoPopups,
-    clearAllPersistentPopups,
-    openPersistentPopupForFeature,
-    persistentPopupsRef,
-  } = useWikimapPopup(mapInstance, isWikimapFavorited);
 
   // Set up global functions for wikimap
   useEffect(() => {
@@ -171,7 +171,7 @@ export const WikimapLayer: React.FC<WikimapLayerProps> = ({ mapInstance }) => {
         delete window.openWikimapLightbox;
       }
     };
-  }, [addFavorite, removeFavorite, isWikimapFavorited]);
+  }, [addFavorite, removeFavorite]);
 
   // Auto-update button states when favorites change
   useEffect(() => {

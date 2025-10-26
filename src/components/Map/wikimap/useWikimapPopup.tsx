@@ -5,7 +5,7 @@ import type {
   Popup,
 } from "mapbox-gl";
 import { useCallback, useEffect, useRef } from "react";
-import { LAYER_ID } from "./WikimapLayer";
+import { isWikimapFavorited, LAYER_ID } from "./WikimapLayer";
 
 // Global tuning parameters for persistent popup behavior
 export const WIKIMAP_PERSISTENT_POPUP_ZOOM = 20; // switch to persistent+auto-open mode when zoom > this
@@ -19,10 +19,7 @@ const WIKIMAP_MAX_OVERLAP_RATIO = 0.1; // 10%
 // Set to 0 to allow any intersection; increase to be stricter
 const WIKIMAP_POPUP_MIN_VISIBLE_PX = 1;
 
-export const useWikimapPopup = (
-  mapInstance: MapboxMap | null,
-  isWikimapFavorited: (url: string) => boolean,
-) => {
+export const useWikimapPopup = (mapInstance: MapboxMap | null) => {
   const persistentPopupsRef = useRef<Map<number, Popup>>(
     new Map<number, Popup>(),
   );
@@ -76,7 +73,7 @@ export const useWikimapPopup = (
         </svg>
       </button>`;
     },
-    [isWikimapFavorited],
+    [],
   );
 
   // 生成 popup HTML 的共用函数

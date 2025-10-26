@@ -1,6 +1,6 @@
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useFavoriteStore } from "@/helper/store/favoriteStore";
+import { useFavoriteStore } from "@/helper/supabase/favoriteStore";
 import { openImageLightbox } from "../../../helper/imageLightbox";
 import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
 import usePanelStore from "./panelStore";

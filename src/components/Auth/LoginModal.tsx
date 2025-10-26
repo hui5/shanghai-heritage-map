@@ -2,7 +2,7 @@
 
 import { Github, Mail, X } from "lucide-react";
 import { useId, useState } from "react";
-import { useAuthStore } from "../../helper/store/authStore";
+import { useAuthStore } from "../../helper/supabase/authStore";
 
 interface LoginModalProps {
   isOpen: boolean;
