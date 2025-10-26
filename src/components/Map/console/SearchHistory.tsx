@@ -104,10 +104,15 @@ export function SearchHistory({ mapInstance }: SearchHistoryProps) {
           >
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <MapPin className="w-3 h-3 text-gray-400 flex-shrink-0" />
-                  <span className="text-sm font-medium text-gray-900 truncate">
-                    {item.query}
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <MapPin className="w-3 h-3 text-gray-400 flex-shrink-0" />
+                    <span className="text-sm font-medium text-gray-900 truncate">
+                      {item.query}
+                    </span>
+                  </div>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 flex-shrink-0 ml-2">
+                    {item.locationInfo.dataSource}
                   </span>
                 </div>
 
