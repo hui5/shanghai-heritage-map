@@ -14,9 +14,9 @@ import {
   getVirtualShanghaiLocationInfo,
 } from "@/helper/map-data/virtualshanghai";
 import { findConfigInfo } from "@/utils/unifiedConfig";
-import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
-import { getWikidataLocationInfo } from "../../../helper/map-data/wikidata";
-import { config, getSubtypeIdFromLayerId } from "../historical/data";
+import type { LocationInfo } from "../../helper/map-data/LocationInfo";
+import { getWikidataLocationInfo } from "../../helper/map-data/wikidata";
+import { config, getSubtypeIdFromLayerId } from "../Map/historical/data";
 
 export const getHistoricalLocationInfo = (
   feature: GeoJSONFeature,

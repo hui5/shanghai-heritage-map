@@ -6,7 +6,7 @@ import {
   getBuildingMapboxDataSourceConfig,
 } from "@/components/Map/building/convertConfig";
 import { useBuildingClusterInteractions } from "@/components/Map/building/useClusterInteractions";
-import { addInteraction } from "../interaction/addInteraction";
+import { addInteraction } from "../../interaction/addInteraction";
 import { state, updateMapDataDebounced } from "./data";
 
 const sourceId = "openda_building-source";

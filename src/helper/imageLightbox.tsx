@@ -1,7 +1,7 @@
 "use client";
 import "photoswipe/style.css";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
-import type { Image } from "../components/Map/interaction/panel/_Images";
+import type { Image } from "../components/interaction/panel/_Images";
 
 let currentLightbox: PhotoSwipeLightbox | null = null;
 

@@ -10,7 +10,7 @@ import {
   Maximize2,
 } from "lucide-react";
 import type React from "react";
-import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
+import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
 import type { PanelContent, PanelTabId } from "./FloatingInfoPanel";
 
 interface FloatingInfoPanelFullscreenProps {

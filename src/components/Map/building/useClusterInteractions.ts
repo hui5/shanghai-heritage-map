@@ -7,8 +7,8 @@ declare global {
 
 import type { GeoJSONSource, Map, MapMouseEvent } from "mapbox-gl";
 import { useEffect, useRef } from "react";
-import { createInfoTag } from "@/components/Map/interaction/building";
-import { canInteract } from "@/components/Map/interaction/interactionConfig";
+import { createInfoTag } from "@/components/interaction/building";
+import { canInteract } from "@/components/interaction/interactionConfig";
 
 // 建筑类型配置
 const BUILDING_TYPES = [

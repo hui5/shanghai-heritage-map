@@ -9,19 +9,19 @@ import U, { type UtilsMap } from "map-gl-utils";
 import { useEffect, useRef, useState } from "react";
 import FavoriteButton from "@/app/(modal)/favorites/FavoriteButton";
 import { setMapInstance as setGlobalMapInstance } from "@/app/globalStore";
-import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
-import { MapConsole } from "@/components/Map/console";
+import { MapConsole } from "@/components/console";
 import {
   saveMapPositionDebounced,
   useMapPosition,
-} from "@/components/Map/console/mapPosition";
+} from "@/components/console/mapPosition";
+import FloatingInfoController from "@/components/interaction/panel/FloatingInfoController";
+import { useGlobalClick } from "@/components/interaction/useGlobalClick";
+import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
 import { HistoricalLayers } from "@/components/Map/historical/Layers";
-import FloatingInfoController from "@/components/Map/interaction/panel/FloatingInfoController";
-import { useGlobalClick } from "@/components/Map/interaction/useGlobalClick";
 import MapContextMenu from "@/components/Map/MapContextMenu";
-import { WikimapLayer } from "@/components/Map/WikimapLayer";
+import { WikimapLayer } from "@/components/Map/wikimap/WikimapLayer";
 import { getParamsFromUrl } from "../../helper/mapbox/getParamsFromUrl";
-import { addEventListeners } from "./interaction/addInteraction";
+import { addEventListeners } from "../interaction/addInteraction";
 
 interface MapContainerProps {
   onStyleReady?: (ready: boolean) => void;

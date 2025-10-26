@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Image } from "../../components/Map/interaction/panel/_Images";
+import type { Image } from "../../components/interaction/panel/_Images";
 import type { LocationInfo } from "../map-data/LocationInfo";
 import { useAuthStore } from "./authStore";
 import {

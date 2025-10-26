@@ -1,9 +1,9 @@
 import { includes } from "lodash";
 import type { Map as MapboxMap, MapMouseEvent, Point } from "mapbox-gl";
 import { useCallback, useEffect, useRef } from "react";
-import { canInteract } from "@/components/Map/interaction/interactionConfig";
-import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
-import { getInteractionLayerIds } from "../historical/data";
+import { canInteract } from "@/components/interaction/interactionConfig";
+import type { LocationInfo } from "../../helper/map-data/LocationInfo";
+import { getInteractionLayerIds } from "../Map/historical/data";
 import { getBuildingLocationInfo, unclusteredLayerIds } from "./building";
 import { getHistoricalLocationInfo } from "./historical";
 import usePanelStore from "./panel/panelStore";

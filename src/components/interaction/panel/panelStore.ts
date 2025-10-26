@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
+import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
 import { PANEL } from "./panelConfig";
 
 interface PanelState {

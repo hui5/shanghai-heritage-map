@@ -5,7 +5,7 @@ import { generateMapbookAttributeRows } from "@/helper/map-data/mapbook";
 import { generateOSMAttributeRows } from "@/helper/map-data/openstreetmap";
 import { generateVirtualShanghaiAttributeRows } from "@/helper/map-data/virtualshanghai";
 import { findConfigInfo } from "@/utils/unifiedConfig";
-import { config } from "../../historical/data";
+import { config } from "../../Map/historical/data";
 
 interface BasicInfoProps {
   locationInfo: LocationInfo;

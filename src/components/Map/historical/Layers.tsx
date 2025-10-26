@@ -2,7 +2,7 @@ import type { UtilsMap } from "map-gl-utils";
 import { useEffect } from "react";
 import { subscribe } from "valtio";
 import { generateHistoricalLayerConfig } from "@/components/Map/historical/convertConfig";
-import { addInteraction } from "../interaction/addInteraction";
+import { addInteraction } from "../../interaction/addInteraction";
 import { cleanupMapInstance, initializeMapData, state } from "./data";
 
 export const HistoricalLayers = ({

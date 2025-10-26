@@ -1,7 +1,7 @@
 import { cloneDeep } from "lodash";
 import type { GeoJSONFeature } from "mapbox-gl";
 import type { LocationInfo } from "@/helper/map-data/LocationInfo";
-import type { Geometry } from "../historical/types";
+import type { Geometry } from "../Map/historical/types";
 
 export const unclusteredLayerIds = [
   "openda_building-unclustered-point",

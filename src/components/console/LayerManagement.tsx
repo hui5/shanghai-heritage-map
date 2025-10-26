@@ -6,12 +6,13 @@ import { useSnapshot } from "valtio";
 import {
   state as stateB,
   toggleSubtypeVisible as toggleBuildingSubtypeVisible,
-} from "../building/data";
+} from "../Map/building/data";
 import {
   type SubtypeData,
   state as stateH,
   toggleSubtypeVisible,
-} from "../historical/data";
+} from "../Map/historical/data";
+import { WikimapConsole } from "../Map/wikimap/WikimapConsole";
 
 interface LayerManagementProps {
   mapInstance: UtilsMap;
@@ -37,6 +38,7 @@ export function LayerManagement({ mapInstance }: LayerManagementProps) {
         subtypeDatas={snapshotH.subtypeDatas as SubtypeData[]}
         toggle={toggleSubtypeVisible}
       />
+      <WikimapConsole />
     </div>
   );
 }

@@ -13,7 +13,7 @@ import { highlightLocation } from "@/helper/mapbox/locationHighlight";
 import {
   getVirtualShanghaiBuildingLink,
   getVirtualShanghaiImageUrl_proxy,
-} from "../../../../helper/map-data/virtualshanghai";
+} from "../../../helper/map-data/virtualshanghai";
 import { AIStreamingDisplay } from "../AI/AIStreamingDisplay";
 import { ImagesPreview } from "./_Images";
 import { NianpuPreview } from "./_Nianpu";

@@ -12,7 +12,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
+import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
 import { BasicInfoPreview } from "./_BasicInfo";
 import type { PanelContent, PanelTabId } from "./FloatingInfoPanel";
 import { usePanelStore } from "./panelStore";

@@ -3,7 +3,7 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
+import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
 import { AIStreamingDisplay } from "./AIStreamingDisplay";
 
 interface DetailedInfoModalProps {

@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef } from "react";
-import { usePanelStore } from "@/components/Map/interaction/panel/panelStore";
+import { usePanelStore } from "@/components/interaction/panel/panelStore";
 
 function SearchPageContent() {
   const searchParams = useSearchParams();
