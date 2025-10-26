@@ -640,7 +640,7 @@
       "id": "virtual_shanghai",
       "name": "虚拟上海",
       "icon": "📍",
-      "enabled": false,
+      "enabled": true,
       "subtypes": [
         {
           "id": "virtual_shanghai_1",
