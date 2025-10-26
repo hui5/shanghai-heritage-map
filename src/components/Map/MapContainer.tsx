@@ -9,14 +9,14 @@ import U, { type UtilsMap } from "map-gl-utils";
 import { useEffect, useRef, useState } from "react";
 import FavoriteButton from "@/app/(modal)/favorites/FavoriteButton";
 import { setMapInstance as setGlobalMapInstance } from "@/app/globalStore";
-import { MapConsole } from "@/components/console";
-import {
-  saveMapPositionDebounced,
-  useMapPosition,
-} from "@/components/console/mapPosition";
 import FloatingInfoController from "@/components/interaction/panel/FloatingInfoController";
 import { useGlobalClick } from "@/components/interaction/useGlobalClick";
 import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
+import { MapConsole } from "@/components/Map/console";
+import {
+  saveMapPositionDebounced,
+  useMapPosition,
+} from "@/components/Map/console/mapPosition";
 import { HistoricalLayers } from "@/components/Map/historical/Layers";
 import MapContextMenu from "@/components/Map/MapContextMenu";
 import { WikimapLayer } from "@/components/Map/wikimap/WikimapLayer";

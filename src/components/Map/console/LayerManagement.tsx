@@ -6,13 +6,13 @@ import { useSnapshot } from "valtio";
 import {
   state as stateB,
   toggleSubtypeVisible as toggleBuildingSubtypeVisible,
-} from "../Map/building/data";
+} from "../building/data";
 import {
   type SubtypeData,
   state as stateH,
   toggleSubtypeVisible,
-} from "../Map/historical/data";
-import { WikimapConsole } from "../Map/wikimap/WikimapConsole";
+} from "../historical/data";
+import { WikimapConsole } from "../wikimap/WikimapConsole";
 
 interface LayerManagementProps {
   mapInstance: UtilsMap;
