@@ -124,7 +124,7 @@ export function MapConsole({ mapInstance }: MapConsoleProps) {
         title="打开控制台"
         aria-label="打开控制台"
       >
-        <Settings className="w-5 h-5 text-gray-700" />
+        <Settings className="w-6 h-6 text-gray-700" />
       </button>
     </>
   );
