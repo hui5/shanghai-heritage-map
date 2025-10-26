@@ -93,7 +93,7 @@ export function SearchHistory({ mapInstance }: SearchHistoryProps) {
       </div>
 
       {/* 历史记录列表 */}
-      <div className="space-y-2 max-h-96 overflow-y-auto custom-scrollbar">
+      <div className="space-y-2  overflow-y-auto custom-scrollbar">
         {history.map((item) => (
           <button
             key={item.id}
