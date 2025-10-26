@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
+import { usePanelStore } from "./panelStore";
 
 export interface SearchHistoryItem {
   id: string;
@@ -80,6 +81,24 @@ export const useSearchHistoryStore = create<SearchHistoryState>()(
       version: 1,
     },
   ),
+);
+
+// 使用选择器只监听我们关心的状态，减少不必要的回调
+usePanelStore.subscribe(
+  (state) => state.isFullscreen,
+  (isFullscreen, _prevIsFullscreen) => {
+    if (isFullscreen) {
+      const locationInfo = usePanelStore.getState().locationInfo;
+      if (locationInfo?.coordinates) {
+        const { addSearchHistory } = useSearchHistoryStore.getState();
+        addSearchHistory({
+          query: locationInfo.name,
+          locationInfo: locationInfo,
+          coordinates: locationInfo.coordinates,
+        });
+      }
+    }
+  },
 );
 
 export default useSearchHistoryStore;

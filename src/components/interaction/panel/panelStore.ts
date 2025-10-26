@@ -1,7 +1,7 @@
 import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
 import { PANEL } from "./panelConfig";
-import { useSearchHistoryStore } from "./searchStore";
 
 interface PanelState {
   isOpen: boolean;
@@ -47,136 +47,117 @@ interface PanelState {
   cancelAll: () => void;
 }
 
-export const usePanelStore = create<PanelState>((set, get) => ({
-  isOpen: false,
-  isPinned: false,
-  isFullscreen: false,
-  showOverview: false,
-  aiActive: false,
+export const usePanelStore = create(
+  subscribeWithSelector<PanelState>((set, get) => ({
+    isOpen: false,
+    isPinned: false,
+    isFullscreen: false,
+    showOverview: false,
+    aiActive: false,
 
-  hoverTimerId: null,
-  hideTimerId: null,
+    hoverTimerId: null,
+    hideTimerId: null,
 
-  openDelayMs: PANEL.openDelayMs,
-  autoHideDelayMs: PANEL.autoHideDelayMs,
-  minZoom: PANEL.minZoom,
+    openDelayMs: PANEL.openDelayMs,
+    autoHideDelayMs: PANEL.autoHideDelayMs,
+    minZoom: PANEL.minZoom,
 
-  locationInfo: null,
-  triggerPoint: null,
+    locationInfo: null,
+    triggerPoint: null,
 
-  scheduleOpen: ({ locationInfo, currentZoom, triggerPoint }) => {
-    const { openDelayMs, minZoom, isOpen, isPinned } = get();
-    const { cancelAll } = get();
-    cancelAll();
+    scheduleOpen: ({ locationInfo, currentZoom, triggerPoint }) => {
+      const { openDelayMs, minZoom, isOpen, isPinned } = get();
+      const { cancelAll } = get();
+      cancelAll();
 
-    if (isOpen && isPinned) return;
-    if (typeof currentZoom === "number" && currentZoom < minZoom) return;
+      if (isOpen && isPinned) return;
+      if (typeof currentZoom === "number" && currentZoom < minZoom) return;
 
-    const id = window.setTimeout(() => {
-      const { isPinned } = get();
+      const id = window.setTimeout(() => {
+        const { isPinned } = get();
+        if (isPinned) return;
+
+        set({ isOpen: true, locationInfo, triggerPoint, hoverTimerId: null });
+      }, openDelayMs) as unknown as number;
+
+      set({ hoverTimerId: id });
+    },
+
+    cancelOpen: () => {
+      const { hoverTimerId } = get();
+      if (hoverTimerId) window.clearTimeout(hoverTimerId);
+      set({ hoverTimerId: null });
+    },
+
+    scheduleHide: () => {
+      const { isPinned, autoHideDelayMs, hide, cancelHide } = get();
+      cancelHide();
       if (isPinned) return;
+      const id = window.setTimeout(hide, autoHideDelayMs) as unknown as number;
+      set({ hideTimerId: id });
+    },
 
-      set({ isOpen: true, locationInfo, triggerPoint, hoverTimerId: null });
-    }, openDelayMs) as unknown as number;
+    cancelHide: () => {
+      const { hideTimerId } = get();
+      if (hideTimerId) window.clearTimeout(hideTimerId);
+      set({ hideTimerId: null });
+    },
 
-    set({ hoverTimerId: id });
-  },
+    cancelAll: () => {
+      const { cancelOpen, cancelHide } = get();
+      cancelOpen();
+      cancelHide();
+    },
 
-  cancelOpen: () => {
-    const { hoverTimerId } = get();
-    if (hoverTimerId) window.clearTimeout(hoverTimerId);
-    set({ hoverTimerId: null });
-  },
-
-  scheduleHide: () => {
-    const { isPinned, autoHideDelayMs, hide, cancelHide } = get();
-    cancelHide();
-    if (isPinned) return;
-    const id = window.setTimeout(hide, autoHideDelayMs) as unknown as number;
-    set({ hideTimerId: id });
-  },
-
-  cancelHide: () => {
-    const { hideTimerId } = get();
-    if (hideTimerId) window.clearTimeout(hideTimerId);
-    set({ hideTimerId: null });
-  },
-
-  cancelAll: () => {
-    const { cancelOpen, cancelHide } = get();
-    cancelOpen();
-    cancelHide();
-  },
-
-  hide: () => {
-    const { cancelHide, isPinned, isFullscreen } = get();
-    cancelHide();
-    if (isPinned) return;
-    if (isFullscreen) return;
-    set({
-      isOpen: false,
-      aiActive: false,
-    });
-  },
-
-  setPinned: (p) => set({ isPinned: p }),
-  setFullscreen: (v) => {
-    const state = get();
-    set({ isFullscreen: v });
-
-    // 当进入全屏模式且有 locationInfo 时，保存到查询历史
-    if (v && state.locationInfo && state.locationInfo.coordinates) {
-      const searchHistoryStore = useSearchHistoryStore.getState();
-      searchHistoryStore.addSearchHistory({
-        query: state.locationInfo.name,
-        locationInfo: state.locationInfo,
-        coordinates: state.locationInfo.coordinates,
+    hide: () => {
+      const { cancelHide, isPinned, isFullscreen } = get();
+      cancelHide();
+      if (isPinned) return;
+      if (isFullscreen) return;
+      set({
+        isOpen: false,
+        aiActive: false,
       });
-    }
-  },
-  toggleFullscreen: () => {
-    const state = get();
-    if (state.isFullscreen) {
-      set({ isFullscreen: false, showOverview: false, isPinned: true });
-    } else {
-      set({ isFullscreen: true, showOverview: true, isPinned: true });
+    },
 
-      // 当进入全屏模式且有 locationInfo 时，保存到查询历史
-      if (state.locationInfo?.coordinates) {
-        const searchHistoryStore = useSearchHistoryStore.getState();
-        searchHistoryStore.addSearchHistory({
-          query: state.locationInfo.name,
-          locationInfo: state.locationInfo,
-          coordinates: state.locationInfo.coordinates,
-        });
+    setPinned: (p) => set({ isPinned: p }),
+    setFullscreen: (v) => {
+      set({ isFullscreen: v });
+    },
+    toggleFullscreen: () => {
+      const state = get();
+      if (state.isFullscreen) {
+        set({ isFullscreen: false, showOverview: false, isPinned: true });
+      } else {
+        set({ isFullscreen: true, showOverview: true, isPinned: true });
       }
-    }
-  },
+    },
 
-  setOverview: (v) => set({ showOverview: v }),
-  toggleOverview: () => set((s) => ({ showOverview: !s.showOverview })),
+    setOverview: (v) => set({ showOverview: v }),
+    toggleOverview: () => set((s) => ({ showOverview: !s.showOverview })),
 
-  setAiActive: (v) => set({ aiActive: v }),
-  toggleAiActive: () => set((s) => ({ aiActive: !s.aiActive })),
+    setAiActive: (v) => set({ aiActive: v }),
+    toggleAiActive: () => set((s) => ({ aiActive: !s.aiActive })),
 
-  forceHide: () => {
-    const { cancelHide } = get();
-    cancelHide();
+    forceHide: () => {
+      const { cancelHide } = get();
+      cancelHide();
 
-    set({
-      isOpen: false,
-      isPinned: false,
-      isFullscreen: false,
-      showOverview: false,
-      aiActive: false,
-    });
-  },
+      set({
+        isOpen: false,
+        isPinned: false,
+        isFullscreen: false,
+        showOverview: false,
+        aiActive: false,
+      });
+    },
 
-  close: () => {
-    const { cancelAll, forceHide } = get();
-    cancelAll();
-    forceHide();
-  },
-}));
+    close: () => {
+      const { cancelAll, forceHide } = get();
+      cancelAll();
+      forceHide();
+    },
+  })),
+);
 
 export default usePanelStore;

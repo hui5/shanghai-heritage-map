@@ -1,4 +1,4 @@
-import { Clock, ExternalLink, MapPin, Trash2 } from "lucide-react";
+import { Clock, MapPin, Trash2 } from "lucide-react";
 import type { UtilsMap } from "map-gl-utils";
 import { usePanelStore } from "../../interaction/panel/panelStore";
 import { useSearchHistoryStore } from "../../interaction/panel/searchStore";
@@ -95,15 +95,17 @@ export function SearchHistory({ mapInstance }: SearchHistoryProps) {
       {/* 历史记录列表 */}
       <div className="space-y-2  overflow-y-auto custom-scrollbar">
         {history.map((item) => (
-          <button
+          <div
             key={item.id}
-            type="button"
-            onClick={() => handleSearchItemClick(item)}
-            aria-label={`查看 ${item.locationInfo.name} 的详细信息`}
-            className="group w-full p-3 bg-white border border-gray-200 rounded-lg hover:border-indigo-300 hover:shadow-md transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 text-left"
+            className="group w-full py-3 px-2 bg-white border border-gray-200 rounded-lg hover:border-indigo-300 hover:shadow-md transition-all cursor-pointer"
           >
             <div className="flex items-start justify-between">
-              <div className="flex-1 min-w-0">
+              <button
+                type="button"
+                className="flex-1 min-w-0 cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+                onClick={() => handleSearchItemClick(item)}
+                aria-label={`查看 ${item.locationInfo.name} 的详细信息`}
+              >
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <MapPin className="w-3 h-3 text-gray-400 flex-shrink-0" />
@@ -127,21 +129,21 @@ export function SearchHistory({ mapInstance }: SearchHistoryProps) {
                     </span>
                   )}
                 </div>
-              </div>
+              </button>
 
-              <div className="flex items-center gap-1 ml-2">
+              <div className="flex items-center gap-1 ">
                 <button
                   type="button"
                   onClick={(e) => handleRemoveItem(item.id, e)}
                   className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 transition-all"
                   title="删除此记录"
+                  aria-label="删除此记录"
                 >
                   <Trash2 className="w-3 h-3" />
                 </button>
-                <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-indigo-500 transition-colors" />
               </div>
             </div>
-          </button>
+          </div>
         ))}
       </div>
     </div>
