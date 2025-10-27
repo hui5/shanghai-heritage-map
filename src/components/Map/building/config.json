@@ -79,7 +79,7 @@
         {
           "id": "data_points",
           "name": "文物保护点",
-          "dataFile": "data.json",
+          "dataFile": "data_points.json",
           "geometryType": "Point",
           "enabled": false,
           "priority": 5,

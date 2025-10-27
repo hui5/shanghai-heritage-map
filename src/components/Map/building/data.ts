@@ -41,12 +41,11 @@ config.categories.forEach((category) => {
       data: { type: "FeatureCollection", features: [] },
       visible: category.enabled && subtype.enabled,
     };
-    if (category.enabled && subtype.enabled) {
-      state.subtypeDatas.push(subtypeData);
-    }
+
+    state.subtypeDatas.push(subtypeData);
   });
 });
-const files = ["data/data.json", "data/data_1.json"];
+const files = ["data/data.json", "data/data_1.json", "data/data_points.json"];
 state.loading.processing = files;
 files.forEach(async (url) => {
   try {
