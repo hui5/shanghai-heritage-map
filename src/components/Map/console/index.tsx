@@ -1,11 +1,11 @@
 import { Settings } from "lucide-react";
 import type { UtilsMap } from "map-gl-utils";
 import { useEffect, useRef, useState } from "react";
-import { useSearchHistoryStore } from "../../interaction/panel/searchStore";
+import { useLocalStorage } from "react-use";
 import { ConsoleHeader } from "./ConsoleHeader";
 import { LayerManagement } from "./LayerManagement";
-import { MapSettingsComponent } from "./MapSettings";
-import { SearchHistory } from "./SearchHistory";
+import { SearchHistory } from "./search/SearchHistory";
+import { MapSettingsComponent } from "./settings/MapSettings";
 
 interface MapConsoleProps {
   mapInstance: UtilsMap;
@@ -16,11 +16,11 @@ type TabType = "searchHistory" | "dataLayers" | "mapSettings";
 
 export function MapConsole({ mapInstance }: MapConsoleProps) {
   const [isExpanded, setIsExpanded] = useState(() => false);
-  const { history } = useSearchHistoryStore();
 
-  // 如果有查询记录，默认显示查询历史，否则显示数据图层
-  const [activeTab, setActiveTab] = useState<TabType>(() =>
-    history.length > 0 ? "searchHistory" : "dataLayers",
+  // 使用 react-use 的 useLocalStorage hook，默认为 "dataLayers"
+  const [activeTab, setActiveTab] = useLocalStorage<TabType>(
+    "mapConsoleActiveTab",
+    "dataLayers",
   );
 
   const panelRef = useRef<HTMLDivElement | null>(null);

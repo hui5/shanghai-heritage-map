@@ -1,7 +1,7 @@
 import { Clock, MapPin, Trash2 } from "lucide-react";
 import type { UtilsMap } from "map-gl-utils";
-import { usePanelStore } from "../../interaction/panel/panelStore";
-import { useSearchHistoryStore } from "../../interaction/panel/searchStore";
+import { usePanelStore } from "../../../interaction/panel/panelStore";
+import { useSearchHistoryStore } from "./searchStore";
 
 interface SearchHistoryProps {
   mapInstance: UtilsMap;

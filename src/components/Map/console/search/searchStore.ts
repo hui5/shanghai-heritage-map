@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { LocationInfo } from "../../../helper/map-data/LocationInfo";
-import { usePanelStore } from "./panelStore";
+import type { LocationInfo } from "../../../../helper/map-data/LocationInfo";
+import { usePanelStore } from "../../../interaction/panel/panelStore";
 
 export interface SearchHistoryItem {
   id: string;

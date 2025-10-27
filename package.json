@@ -48,6 +48,7 @@
     "react-markdown": "^10.1.0",
     "react-rnd": "^10.5.2",
     "react-typed": "^2.0.12",
+    "react-use": "^17.6.0",
     "rehype-raw": "^7.0.0",
     "rehype-sanitize": "^6.0.0",
     "remark": "^15.0.1",

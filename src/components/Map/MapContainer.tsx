@@ -13,12 +13,12 @@ import FloatingInfoController from "@/components/interaction/panel/FloatingInfoC
 import { useGlobalClick } from "@/components/interaction/useGlobalClick";
 import { BuildingClusterLayers } from "@/components/Map/building/ClusterLayers";
 import { MapConsole } from "@/components/Map/console";
+import { HistoricalLayers } from "@/components/Map/historical/Layers";
+import MapContextMenu from "@/components/Map/MapContextMenu";
 import {
   saveMapPositionDebounced,
   useMapPosition,
-} from "@/components/Map/console/mapPosition";
-import { HistoricalLayers } from "@/components/Map/historical/Layers";
-import MapContextMenu from "@/components/Map/MapContextMenu";
+} from "@/components/Map/mapPosition";
 import { WikimapLayer } from "@/components/Map/wikimap/WikimapLayer";
 import { getParamsFromUrl } from "../../helper/mapbox/getParamsFromUrl";
 import { addEventListeners } from "../interaction/addInteraction";
