@@ -1,3 +1,7 @@
+> [!WARNING]
+> **本仓库为上海历史建筑地图的阶段成果。后续更新地址：[heritage-map](https://github.com/hui5/heritage-map)**
+
+
 # 上海历史建筑地图:
 
 https://sh.openda.top
