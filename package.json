@@ -37,7 +37,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.303.0",
     "map-gl-utils": "^0.50.4",
-    "next": "16.0.1-canary.2",
+    "next": "16.1.0-canary.12",
     "openai": "^5.16.0",
     "opencc-js": "^1.0.5",
     "photoswipe": "^5.4.4",
